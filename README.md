@@ -22,6 +22,7 @@
         +"remove($.age)";
         //JsonConvertor 请创建为单实列不要重复创建，每一组commands 只需创建一个JsonConvertor
         JsonConvertor jc = new JsonConvertor(commands);
+        //转换JSON
         String dest = jc.convert(json);
         System.out.println(dest);
 ```
@@ -84,9 +85,9 @@ remove($.data)
 ```
 
 # 计划支持的特性
->1.支持从其服务中添加属性
->2.支持运算表达式包括：字符串连接、数值运算、逻辑运算
->3.支持输入输出流（不生成字符串）
+* 1.支持从其服务中添加属性
+* 2.支持运算表达式包括：字符串连接、数值运算、逻辑运算
+* 3.支持输入输出流（不生成字符串）
 
 
 
