@@ -72,7 +72,7 @@ public class JsonString {
 			Map.Entry e=(Map.Entry)o;
 			if(e.getValue()==null)continue;
 			if(isFirst){isFirst=false;}else{json.append(',');}
-			json.append('"').append(e.getKey()).append("\" : ");
+			json.append('"').append(e.getKey()).append("\":");
 			asJson(json,e.getValue(),level+1);
 		}
 		json.append('}');
