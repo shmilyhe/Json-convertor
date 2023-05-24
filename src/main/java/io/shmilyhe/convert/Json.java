@@ -11,11 +11,12 @@ import io.shmilyhe.convert.api.ISet;
 import io.shmilyhe.convert.impl.Getter;
 import io.shmilyhe.convert.impl.Remove;
 import io.shmilyhe.convert.impl.Setter;
+import io.shmilyhe.tools.JBean;
 import io.shmilyhe.tools.JsonString;
 import io.shmilyhe.tools.SimpleJson;
 import io.shmilyhe.tools.StringValue;
 /**
- * 
+ * JSON 
  */
 public class Json {
     protected Object raw=new HashMap();
@@ -24,6 +25,11 @@ public class Json {
     protected Map<String,IRemove> mMap= new HashMap<String,IRemove>();
     boolean array;
 
+    /**
+     * parse json-string
+     * @param json json-string
+     * @return Json 
+     */
     public static Json parse(String json){
         SimpleJson sj = SimpleJson.parse(json);
         Json j = new Json();
@@ -31,12 +37,21 @@ public class Json {
         return j;
     }
 
+    /**
+     * wrap Object to raw data;
+     * @param o object
+     */
     public void wrap(Object o){
         raw=o;
         array=isArray(o)||isCollection(o);
     }
 
 
+    /**
+     * set json value
+     * @param path property path
+     * @param value value
+     */
     public void set(String path,Object value){
         ISet s =setMap.get(path);
         if(s==null){
@@ -46,6 +61,10 @@ public class Json {
         s.set(raw, value);
     }    
 
+    /**
+     * 
+     * @param path
+     */
     public void remove(String path){
         IRemove s =mMap.get(path);
         if(s==null){
@@ -120,6 +139,15 @@ public class Json {
         if(raw instanceof Number)return raw.toString();
         if(raw instanceof String)return  raw.toString();
         return toString();
+    }
+
+    public <T> T asBean(Class<T> t){
+        try {
+            return (T) JBean.mapToBean((Map)raw, t.newInstance());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public String toString(){

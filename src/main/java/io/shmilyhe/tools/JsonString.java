@@ -1,5 +1,9 @@
 package io.shmilyhe.tools;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -31,6 +35,7 @@ public class JsonString {
 				||o instanceof Byte
 				||o instanceof BigDecimal
 				||o instanceof Boolean
+				||o.getClass().equals(boolean.class)
 				){
 			json.append(o);
 		}else if (o instanceof Date){
@@ -87,21 +92,39 @@ public class JsonString {
 		json.append('{');
 		boolean isFirst=true;
 		Method [] methods = o.getClass().getDeclaredMethods();
-		for(Method m:methods){
-			String name =m.getName();
-			if(!name.startsWith("get"))continue;
+		BeanInfo beanInfo=null;
+		try {
+			beanInfo = Introspector.getBeanInfo(o.getClass());
+		} catch (IntrospectionException e) {
+			e.printStackTrace();
+		}
+		if(beanInfo==null){json.append('}');return;}
+        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+		//for(Method m:methods){
+			for (PropertyDescriptor pd : propertyDescriptors) {
+			String name =pd.getName();
+			Method m=pd.getReadMethod();
+			String mname=m.getName();
+			if(m.getName().equals("getClass"))continue;
+			if("class".equals(name)
+			||"annotations".equals(name)
+			||"annotatedInterfaces".equals(name)
+			||"annotatedOwnerType".equals(name)
+			)continue;
+			if(!mname.startsWith("get")&&!mname.startsWith("is"))continue;
+			//System.out.println(mname);
 			Object value=null;
 			try {
 				value=m.invoke(o, null);
 			} catch (Exception e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 				//log.warn(" fail to get value:",o.getClass(),m.getName(), e);
 			} 
 			if(value==null)continue;
-			name=firstLower(name.substring(3));
+			//name=firstLower(name.substring(3));
 			
 			if(isFirst){isFirst=false;}else{json.append(',');}
-			json.append('"').append(name).append("\" : ");
+			json.append('"').append(name).append("\":");
 			asJson(json,value,level+1);
 		}
 		json.append('}');
