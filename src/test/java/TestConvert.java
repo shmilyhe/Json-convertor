@@ -6,7 +6,7 @@ import org.junit.Test;
 import io.shmilyhe.convert.ConvertorFactory;
 import io.shmilyhe.convert.api.IConvertor;
 import io.shmilyhe.convert.impl.Setter;
-import io.shmilyhe.tools.JsonString;
+import io.shmilyhe.convert.tools.JsonString;
 
 public class TestConvert {
     @Test

@@ -11,10 +11,10 @@ import io.shmilyhe.convert.api.ISet;
 import io.shmilyhe.convert.impl.Getter;
 import io.shmilyhe.convert.impl.Remove;
 import io.shmilyhe.convert.impl.Setter;
-import io.shmilyhe.tools.JBean;
-import io.shmilyhe.tools.JsonString;
-import io.shmilyhe.tools.SimpleJson;
-import io.shmilyhe.tools.StringValue;
+import io.shmilyhe.convert.tools.JBean;
+import io.shmilyhe.convert.tools.JsonString;
+import io.shmilyhe.convert.tools.SimpleJson;
+import io.shmilyhe.convert.tools.StringValue;
 /**
  * JSON 
  */
@@ -62,8 +62,8 @@ public class Json {
     }    
 
     /**
-     * 
-     * @param path
+     * remove json property
+     * @param path path
      */
     public void remove(String path){
         IRemove s =mMap.get(path);
@@ -74,8 +74,17 @@ public class Json {
         s.remove(raw);
     }
 
+    /**
+     * get raw object
+     * @return raw
+     */
     public Object getRaw(){return raw;}
 
+    /**
+     * query value
+     * @param path path
+     * @return Json
+     */
     public Json Q(String path){
         IGet g =getMap.get(path);
         if(g==null){
@@ -88,6 +97,10 @@ public class Json {
         return j;
     }
 
+    /**
+     * read intValue
+     * @return int value
+     */
     public Integer asInt(){
         if(raw==null)return null;
         if(raw instanceof Integer)return (Integer)raw;
@@ -98,6 +111,10 @@ public class Json {
         return null;
     }
 
+    /**
+     * read doubleValue
+     * @return doubleValue
+     */
     public Double asDouble(){
         if(raw==null)return null;
         if(raw instanceof Boolean)return (double)((Boolean)raw?1:0);
@@ -107,6 +124,10 @@ public class Json {
         return null;
     }
 
+    /**
+     * read as Date
+     * @return date
+     */
     public Date asDate(){
         if(raw==null)return null;
         if(raw instanceof Boolean)return null;
@@ -116,6 +137,10 @@ public class Json {
         return null;
     }
 
+    /**
+     * read bigIntValue
+     * @return bigIntValue
+     */
     public Long asLong(){
         if(raw==null)return null;
         if(raw instanceof Boolean)return (long)((Boolean)raw?1:0);
@@ -124,6 +149,11 @@ public class Json {
         if(raw instanceof String)return Long.valueOf((String)raw);
         return null;
     }
+
+    /**
+     *  read booleanValue
+     * @return booleanValue
+     */
     public Boolean asBoolean(){
         if(raw==null)return null;
         if(raw instanceof Boolean)return (Boolean)raw;
@@ -132,6 +162,10 @@ public class Json {
         return null;
     }
 
+    /**
+     * read string
+     * @return string
+     */
     public String asString(){
         if(raw==null)return null;
         if(raw instanceof Boolean)return raw.toString();
@@ -141,6 +175,12 @@ public class Json {
         return toString();
     }
 
+    /**
+     * read as Bean
+     * @param <T> type
+     * @param t class
+     * @return Bean
+     */
     public <T> T asBean(Class<T> t){
         try {
             return (T) JBean.mapToBean((Map)raw, t.newInstance());
@@ -150,9 +190,13 @@ public class Json {
         return null;
     }
 
+    /**
+     * json to string
+     */
     public String toString(){
         return JsonString.asJsonString(raw);
     }
+
     private static boolean isArray(Object o){
 		if(o==null)return false;
 		return o.getClass().isArray();
@@ -160,5 +204,14 @@ public class Json {
     private static boolean isCollection(Object o){
         if (o instanceof Collection){return true;}
         return false;
+    }
+
+    /**
+     * convert object to jsonString
+     * @param obj object
+     * @return jsonString
+     */
+    public static String asJsonString(Object obj){
+        return JsonString.asJsonString(obj);
     }
 }

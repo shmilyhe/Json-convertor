@@ -1,7 +1,7 @@
 import org.junit.Test;
 
-import io.shmilyhe.tools.JsonString;
-import io.shmilyhe.tools.SimpleJson;
+import io.shmilyhe.convert.tools.JsonString;
+import io.shmilyhe.convert.tools.SimpleJson;
 
 public class TestJson {
 

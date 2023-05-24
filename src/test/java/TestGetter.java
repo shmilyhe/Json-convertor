@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import io.shmilyhe.convert.impl.Getter;
 import io.shmilyhe.convert.impl.Setter;
-import io.shmilyhe.tools.JsonString;
+import io.shmilyhe.convert.tools.JsonString;
 
 public class TestGetter {
     
