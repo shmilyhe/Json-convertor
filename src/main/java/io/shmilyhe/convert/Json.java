@@ -1,8 +1,10 @@
 package io.shmilyhe.convert;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.shmilyhe.convert.api.IGet;
@@ -173,6 +175,30 @@ public class Json {
         if(raw instanceof Number)return raw.toString();
         if(raw instanceof String)return  raw.toString();
         return toString();
+    }
+
+    /**
+     * 数据作为list
+     * @return jsonList
+     */
+    public List<Json> asList(){
+        if(!array)return null;
+        List<Json> jlist = new ArrayList<Json>();
+        if(isArray(raw)){
+            Object[] oa =(Object[]) raw;
+            for(Object o:oa){
+                Json j = new Json();
+                j.wrap(o);
+                jlist.add(j);
+            }
+        }else if(isCollection(raw)){
+            for(Object o:(Collection)raw){
+                Json j = new Json();
+                j.wrap(o);
+                jlist.add(j);
+            }
+        }
+        return jlist;
     }
 
     /**
