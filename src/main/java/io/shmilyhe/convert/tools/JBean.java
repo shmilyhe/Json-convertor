@@ -8,6 +8,10 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.Map;
 public class JBean {
@@ -52,6 +56,10 @@ public class JBean {
                     //System.out.println(propertyName+"|"+classFromPropertyType+"|"+v.getClass()+"|"+v);
                 }else  if(Date.class.equals(classFromPropertyType)){
                     writeMethod.invoke(t, getDate(v));
+                }else  if(LocalDateTime.class.equals(classFromPropertyType)){
+                    writeMethod.invoke(t, getLocalDateTime(v));
+                }else  if(LocalDate.class.equals(classFromPropertyType)){
+                    writeMethod.invoke(t, getLocalDate(v));
                 }else {
                     System.out.println(propertyName+"|"+classFromPropertyType+"|"+v.getClass());
                 }
@@ -107,6 +115,18 @@ public class JBean {
         if(raw instanceof Number)return new Date(((Number)raw).longValue());
         if(raw instanceof String)return StringValue.toDate((String)raw);
         return null;
+    }
+
+    private static LocalDateTime getLocalDateTime(Object raw){
+        Date d= getDate(raw);
+        if(d==null)return null;
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(d.getTime()), ZoneOffset.systemDefault());
+    }
+
+    private static LocalDate getLocalDate(Object raw){
+        Date d= getDate(raw);
+        if(d==null)return null;
+        return LocalDate.ofInstant(Instant.ofEpochMilli(d.getTime()), ZoneOffset.systemDefault());
     }
 
 }

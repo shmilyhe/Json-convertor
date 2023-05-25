@@ -25,7 +25,7 @@ public class TestJBean {
         m.put("list", list);
         Vo1 v = JBean.mapToBean(m,  new Vo1());
         System.out.println(JsonString.asJsonString(v));
-        String jsons="{\"time\":\"2023-01-01\",\"up\":true,\"name\" : \"erc\",\"v1\" : {\"name\" : \"eric\",\"age\" : 1,\"v3\":{\"title\":\"tttt\"},\"list\":[{\"title\":\"ooooo\"}]},\"list\" : [{\"name\":\"eric\"},{\"name\":\"eric1\"}]}";
+        String jsons="{\"datetime\":\"2023-02-03\",\"time\":\"2023-01-01\",\"up\":true,\"name\" : \"erc\",\"v1\" : {\"name\" : \"eric\",\"age\" : 1,\"v3\":{\"title\":\"tttt\"},\"list\":[{\"title\":\"ooooo\"}]},\"list\" : [{\"name\":\"eric\"},{\"name\":\"eric1\"}]}";
         
         Vo1 v2 = JBean.mapToBean((Map)SimpleJson.parse(jsons).getRoot(),  new Vo1());
 

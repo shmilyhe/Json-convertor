@@ -1,5 +1,6 @@
 package com;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -10,6 +11,14 @@ public class Vo1 {
 
     private Date time;
 
+    private LocalDateTime datetime;
+
+    public LocalDateTime getDatetime() {
+        return datetime;
+    }
+    public void setDatetime(LocalDateTime datetime) {
+        this.datetime = datetime;
+    }
     public Date getTime() {
         return time;
     }

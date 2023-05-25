@@ -8,6 +8,9 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
@@ -40,6 +43,16 @@ public class JsonString {
 			json.append(o);
 		}else if (o instanceof Date){
 			json.append('"').append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(o)).append('"');
+		}else if (o instanceof LocalDateTime){
+			LocalDateTime lt= (LocalDateTime)o;
+			json.append('"').append(lt.format(
+				DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+			)).append('"');
+		}else if (o instanceof LocalDate){
+			LocalDate lt= (LocalDate)o;
+			json.append('"').append(lt.format(
+				DateTimeFormatter.ofPattern("yyyy-MM-dd")
+			)).append('"');
 		}else if (isArray(o)){
 			jsonArray(json,(Object[])o,level);
 		}else if (o instanceof Map){
