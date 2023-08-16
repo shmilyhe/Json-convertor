@@ -9,7 +9,7 @@ import io.shmilyhe.convert.tools.JsonString;
 
 public class TestJsonConvertor{
 
-    private Object testData(){
+    private static Object testData(){
         Map data = new HashMap();
         {
             Setter seter = new Setter("name");
@@ -49,6 +49,19 @@ public class TestJsonConvertor{
         String commands ="set(.age,12)\r\n"
         +"set(.group[4],1)\r\n"
         +".ext=.addr\r\n"
+        +"move(.addr.contry,.contry)\r\n"
+        +"remove(.age)";
+        JsonConvertor jc = new JsonConvertor(commands);
+       // String dest = jc.convert(json);
+        //System.out.println(dest);
+    }
+    public static void main(String []args){
+        String json =JsonString.asJsonString(testData());
+        System.out.println(json);
+        String commands ="set(.age,12)\r\n"
+        +"set(.group[4],1)\r\n"
+        +".ext=123\r\n"
+        +"each(.group){.=.+9999}\r\n"
         +"move(.addr.contry,.contry)\r\n"
         +"remove(.age)";
         JsonConvertor jc = new JsonConvertor(commands);

@@ -9,15 +9,15 @@ import io.shmilyhe.convert.api.IConvertor;
  * 
  */
 public abstract class BaseConvertor implements IConvertor {
-    protected IConvertor parent;
+    protected BaseConvertor parent;
 
     protected List<IConvertor> clist = new ArrayList<IConvertor>();
 
-    public IConvertor getParent() {
+    public BaseConvertor getParent() {
         return parent;
     }
 
-    public void setParent(IConvertor parent) {
+    public void setParent(BaseConvertor parent) {
         this.parent = parent;
     }
 

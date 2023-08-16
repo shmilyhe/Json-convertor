@@ -37,7 +37,7 @@ public class Getter implements IGet{
             b =flag.get(b);
             
             if(b==null){
-                System.out.println("out:"+flag);
+                //System.out.println("out:"+flag);
                 return null;
             }  
         }

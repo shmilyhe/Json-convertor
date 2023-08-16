@@ -15,12 +15,13 @@ import io.shmilyhe.convert.api.ISet;
  */
 public class Setter implements ISet{
     IDataAccess da;
-
+    boolean self=false;
     /**
      * 
      * @param ext 表达式
      */
     public Setter(String ext){
+        if(ext==null||ext.trim().length()==0)self=true;
         ExpPartVo vo =  TokenizeExpress.tokenize(ext);
         for(;vo!=null;vo=vo.getNext()){
             IDataAccess ida =null;
@@ -42,6 +43,7 @@ public class Setter implements ISet{
 
     @Override
     public void set(Object o,Object v) {
+        if(self)return;
         Object b=o;
         IDataAccess flag =da;
         IDataAccess last=da;

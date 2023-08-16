@@ -36,7 +36,7 @@ public class Remove  implements IRemove{
             b =flag.get(b);
             
             if(b==null){
-                System.out.println("out:"+flag);
+                //System.out.println("out:"+flag);
                 return ;
             }  
         }

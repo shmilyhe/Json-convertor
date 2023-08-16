@@ -7,6 +7,7 @@ import io.shmilyhe.convert.api.IGet;
 import io.shmilyhe.convert.impl.ConstantGetter;
 import io.shmilyhe.convert.impl.ExpGeter;
 import io.shmilyhe.convert.impl.Getter;
+import io.shmilyhe.convert.impl.SelfGetter;
 
 /**
  * 算式编译器
@@ -133,6 +134,8 @@ public class ExpCalculate {
             } else {// 遇到数字，直接压入数字栈
                 IGet get = null;
                 if (temp.startsWith(".")) {
+                    get = new SelfGetter();
+                }else if (temp.startsWith(".")) {
                     get = new Getter(temp);
                 }else if (temp.startsWith("-.")) {
                     get = new ExpGeter(new ConstantGetter("-1"),new Getter(temp.substring(1)), '*');
