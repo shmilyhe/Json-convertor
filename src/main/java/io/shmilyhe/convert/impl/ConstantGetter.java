@@ -18,8 +18,8 @@ public class ConstantGetter implements IGet {
         return v;
     }
 
-    Pattern pd =Pattern.compile("[123456789]\\.[0123456789]*");
-    Pattern pl =Pattern.compile("[123456789][0123456789]*");
+    Pattern pd =Pattern.compile("-?[123456789]\\.[0123456789]*");
+    Pattern pl =Pattern.compile("-?[123456789][0123456789]*");
     
     private Object valueOf(String v){
 		if(v==null||v.trim().length()==0||"null".equals(v))return null;

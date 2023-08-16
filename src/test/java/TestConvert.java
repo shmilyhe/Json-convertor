@@ -18,23 +18,23 @@ public class TestConvert {
         seter.set(data, "test");
         seter2.set(data, "90");
         {
-        IConvertor c =cf.exp("move($.aa.bb,$.cc.ii)");
+        IConvertor c =cf.func("move(.aa.bb,.cc.ii)",1);
         c.convert(data);
         System.out.println(JsonString.asJsonString(data));
         }
         {
-            IConvertor c =cf.exp("set($.t1.b[3],$.cc.ii)");
+            IConvertor c =cf.func("set(.t1.b[3],.cc.ii)",1);
             c.convert(data);
             System.out.println(JsonString.asJsonString(data));
         }
         {
-            IConvertor c =cf.exp("remove($.aa)");
+            IConvertor c =cf.func("remove(.aa)",1);
             c.convert(data);
             System.out.println(JsonString.asJsonString(data));
         }
 
         {
-            IConvertor c =cf.exp("move($,$.data)");
+            IConvertor c =cf.func("move(.,.data)");
             data = (Map) c.convert(data);
             System.out.println(JsonString.asJsonString(data));
         }
@@ -48,11 +48,15 @@ public class TestConvert {
         Setter seter = new Setter("aa.bb");
         Setter seter2 = new Setter("aa.p1");
         seter.set(data, "test");
-        seter2.set(data, "90");
-        String commands="move($.aa.bb,$.cc.ii)\r\n"
-        +"set($.t1.b[3],$.cc.ii)\r\n"
-        +"remove($.aa)\r\n"
-        +"move($,$.data)\r\n";
+        seter2.set(data, 90);
+        String commands="move(.aa.bb,.cc.ii)\r\n"
+        +"set(.t1.b[3],.cc.ii)\r\n"
+        +".t1.b[4]=.cc.ii\r\n"
+        +".t3=-(.aa.p1*2+(7*2))\r\n"
+        +"remove(.aa)\r\n"
+        +"move(.,.data)\r\n"
+        +"setNotExists(.name,4rt)\r\n"
+        ;
         {
         IConvertor c =cf.getConvertor(commands);
         data = (Map) c.convert(data);

@@ -46,11 +46,11 @@ public class TestJsonConvertor{
     public void test(){
         String json =JsonString.asJsonString(testData());
         System.out.println(json);
-        String commands ="set($.age,12)\r\n"
-        +"set($.group[4],1)\r\n"
-        +"set($.ext,$.addr)\r\n"
-        +"move($.addr.contry,$.contry)\r\n"
-        +"remove($.age)";
+        String commands ="set(.age,12)\r\n"
+        +"set(.group[4],1)\r\n"
+        +".ext=.addr\r\n"
+        +"move(.addr.contry,.contry)\r\n"
+        +"remove(.age)";
         JsonConvertor jc = new JsonConvertor(commands);
         String dest = jc.convert(json);
         System.out.println(dest);
