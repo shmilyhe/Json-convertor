@@ -16,6 +16,10 @@ import io.shmilyhe.convert.api.ISet;
 public class Setter implements ISet{
     IDataAccess da;
     boolean self=false;
+    boolean isVar=false;
+   
+
+
     /**
      * 
      * @param ext 表达式
@@ -80,5 +84,13 @@ public class Setter implements ISet{
             
         }
     }
-    
+    public boolean isVar() {
+        return isVar;
+    }
+
+
+    public Setter setVar(boolean isVar) {
+        this.isVar = isVar;
+        return this;
+    }
 }

@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import io.shmilyhe.convert.api.IGet;
+import io.shmilyhe.convert.tools.ExpEnv;
 
 public class ConstantGetter implements IGet {
 
@@ -14,16 +15,17 @@ public class ConstantGetter implements IGet {
     }
 
     @Override
-    public Object get(Object data) {
+    public Object get(Object data,ExpEnv evn) {
         return v;
     }
 
     Pattern pd =Pattern.compile("-?[123456789]\\.[0123456789]*");
-    Pattern pl =Pattern.compile("-?[123456789][0123456789]*");
+    Pattern pl =Pattern.compile("-?[123456789][0123456789]*|0");
     
     private Object valueOf(String v){
 		if(v==null||v.trim().length()==0||"null".equals(v))return null;
 		v=v.trim();
+        if(v.matches("[\"''].*[\"\']"))return v.substring(1,v.length()-1);
 		if("true".equalsIgnoreCase(v))return Boolean.TRUE;
 		if("false".equalsIgnoreCase(v))return Boolean.FALSE;
 		if(isFloat(v)){

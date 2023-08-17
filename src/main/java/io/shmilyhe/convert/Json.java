@@ -93,7 +93,7 @@ public class Json {
             g= new Getter(path);
             getMap.put(path, g);
         }
-        Object o=g.get(raw);
+        Object o=g.get(raw,null);
         Json j = new Json();
         j.wrap(o);
         return j;

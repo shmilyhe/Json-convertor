@@ -1,6 +1,7 @@
 package io.shmilyhe.convert;
 
 import io.shmilyhe.convert.api.IConvertor;
+import io.shmilyhe.convert.tools.ExpEnv;
 import io.shmilyhe.convert.tools.JsonString;
 import io.shmilyhe.convert.tools.SimpleJson;
 
@@ -14,7 +15,7 @@ public class JsonConvertor {
     public String convert(String json){
             if(convertor==null)return json;
             Object jdata = SimpleJson.parse(json).getRoot();
-            jdata=convertor.convert(jdata);
+            jdata=convertor.convert(jdata,new ExpEnv(null));
             return JsonString.asJsonString(jdata);
     }
 }

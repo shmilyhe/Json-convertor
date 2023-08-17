@@ -1,6 +1,7 @@
 package io.shmilyhe.convert.impl;
 
 import io.shmilyhe.convert.api.IGet;
+import io.shmilyhe.convert.tools.ExpEnv;
 
 /**
  * 算式计算器
@@ -33,9 +34,9 @@ public class ExpGeter implements IGet{
     }
 
     @Override
-    public Object get(Object data) {
-        Object param1=p1.get(data);
-        Object param2=p2.get(data);
+    public Object get(Object data,ExpEnv env) {
+        Object param1=p1.get(data,env);
+        Object param2=p2.get(data,env);
         
         Object res=null;
         switch(operator){
@@ -80,6 +81,7 @@ public class ExpGeter implements IGet{
             res= neq(param1, param2);
             break;
         }
+        System.out.println(param1+" :"+(param1.getClass())+" "+param2+":"+(param2.getClass()));
         System.out.println("cal:"+param1+" "+operator+" "+param2+"="+res);
         return res;
     }

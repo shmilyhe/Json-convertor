@@ -51,9 +51,11 @@ public class SimpleJson {
 		int level=0;
 		int flag=0;
 		String name=null;
+		int line=0;
 		while(flag<str.length()){
 			flag+=readBlank(str, flag);
 			char c =str.charAt(flag);
+			//System.out.print(c);
 			if(c=='{'){
 				Map m =new HashMap();
 				add(level,m,name);
@@ -75,9 +77,14 @@ public class SimpleJson {
 				flag++;
 			}else if(c=='\r'||c=='\n'){
 				flag++;
+				char c2=str.charAt(flag);
+				if(c2=='\r'||c2=='\n'){
+					flag++;
+				}
+				line++;
 			}else{//同级的
 				flag+=readBlank(str, flag);
-				
+				//if(level==0)System.out.println("line:"+line);
 				if(lt[level-1]==0){//JSONOBJECT
 					if(name==null){
 						Object  text = readString(str, flag,false);

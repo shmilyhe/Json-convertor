@@ -240,10 +240,22 @@ public class ExpCalculate {
                     get = new SelfGetter();
                 }else if (temp.startsWith(".")) {
                     get = new Getter(temp);
-                }else if (temp.startsWith("-.")) {
-                    get = new ExpGeter(new ConstantGetter("-1"),new Getter(temp.substring(1)), OperatorType.MULT);
+                }else if (temp.startsWith("-")) {
+                    Getter g = new Getter(temp.substring(1)).setVar(!(temp.charAt(1)=='.'));
+                    get = new ExpGeter(new ConstantGetter("-1"),g, OperatorType.MULT);
                 }else {
-                    get = new ConstantGetter(temp);
+                    if(temp.startsWith("\"")
+                    ||temp.startsWith("\'")
+                    ||temp.equalsIgnoreCase("true")
+                    ||temp.equalsIgnoreCase("false")
+                    ||temp.equalsIgnoreCase("null")
+                    ||temp.matches("[+\\-]?\\d+\\.?\\d*")
+                    ){
+                        get = new ConstantGetter(temp);
+                    }else{
+                        get = new Getter(temp).setVar(true);
+                    }
+                    
                 }
                 number.push(get);
                 //System.out.println("数字栈更新："+temp);
@@ -383,7 +395,7 @@ public class ExpCalculate {
            String str = ".x*(1-20/2 )/2";
             IGet exp =getExpression(str);
             System.out.println("计算:"+exp);
-            System.out.println(exp.get(evn));
+            System.out.println(exp.get(evn,null));
   
         }
 

@@ -3,6 +3,8 @@ package io.shmilyhe.convert.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import io.shmilyhe.convert.tools.ExpEnv;
+
 /**
  * 遍历
  */
@@ -17,30 +19,32 @@ public class EachConvertor extends ComplexConvertor {
     }
 
     @Override
-    public Object convert(Object root) {
-         Object data =get.get(root);
+    public Object convert(Object root,ExpEnv env) {
+        ExpEnv p=env;
+        env= new ExpEnv(p);
+         Object data =get.get(root,env);
          if(data==null)return root;
         if (data instanceof Collection){
             Collection els =  (Collection)data;
             ArrayList ndata= new ArrayList<>();
             for(Object el:els){
-                Object r=each(el);
+                Object r=each(el,env);
                 if(r!=null)ndata.add(r);
             }
             set.set(root, ndata);
         }else if (isArray(data)){
          Object[] els =  (Object[])data;
          for(int i=0;i<els.length;i++){
-            els[i]=each(els[i]);
+            els[i]=each(els[i],env);
          }
          set.set(root, els);
         }
          return root;
     }
 
-    protected Object each(Object o){
+    protected Object each(Object o,ExpEnv env){
         try{
-            return super.convert(o);
+            return super.convert(o,env);
         }catch(Exception e){
             e.printStackTrace();
         }

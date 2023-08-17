@@ -80,11 +80,11 @@ move(.,.data)
 //{"name":"eric"}==>{"data":{"name":"eric"}}
 ```
 
-### remove 指令
+### del 指令
 移除某个属性
 
 ```
-remove(.data)
+del(.data)
 //{"data":"eric"}==>{}
 ```
 

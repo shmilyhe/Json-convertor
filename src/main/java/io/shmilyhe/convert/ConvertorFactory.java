@@ -40,16 +40,18 @@ public class ConvertorFactory {
         String f=str[0];
         if("set".equals(f.trim())){
             
-            if(str.length !=3||!str[1].startsWith(".")){throw  new RuntimeException("syntax error:"+exp+" at line:"+line);}
+            if(str.length !=3){throw  new RuntimeException("syntax error:"+exp+" at line:"+line);}
             //final IGet get =str[2].startsWith(".")?new Getter(removeRootString(str[2])):new ConstantGetter(str[2]);
             final IGet get =ExpCalculate.getExpression(str[2], line);
             final Setter set = new Setter(removeRootString(str[1]));
+            set.setVar(!str[1].startsWith("."));
+            
             System.out.println("set path:"+removeRootString(str[1]));
-            return data->{ 
+            return (data,env)->{ 
                 //System.out.println("执行："+exp);
-                Object d = get.get(data);
+                Object d = get.get(data,env);
                 //System.out.println(d);
-                set.set(data,d);return data;
+                set.set(set.isVar()?env:data,d);return data;
             };
         }else if("move".equals(f.trim())){
             String gStr=str[1];
@@ -59,19 +61,19 @@ public class ConvertorFactory {
             if(".".equals(gStr)){
                 final Setter set = new Setter(removeRootString(str[2]));
                 final SelfGetter get = new SelfGetter();
-                return data->{  HashMap m= new HashMap(); set.set(m, get.get(data));return m;};
+                return (data,env)->{  HashMap m= new HashMap(); set.set(m, get.get(data,env));return m;};
             }
             final Getter get = new Getter(removeRootString(str[1]));
             final Setter set = new Setter(removeRootString(str[2]));
             final Remove remove= new Remove(removeRootString(str[1]));
-            return data->{ set.set(data, get.get(data));remove.remove(data);return data;};
-        }else if("remove".equals(f.trim())){
+            return (data,env)->{ set.set(data, get.get(data,env));remove.remove(data);return data;};
+        }else if("del".equals(f.trim())||"remove".equals(f.trim())){
             if(str.length !=2||!str[1].startsWith(".")){throw  new RuntimeException("syntax error(remove):"+exp+" at line:"+line);}
             if(".".equals(str[1])){
-                return data->{return null;};
+                return (data,env)->{return null;};
             }
             final Remove remove= new Remove(removeRootString(str[1]));
-            return data->{remove.remove(data);return data;};
+            return (data,env)->{remove.remove(data);return data;};
         }else if("setNotExists".equals(f.trim())){
             if(str.length !=3||!str[1].startsWith(".")){throw  new RuntimeException("syntax error(setNotExists):"+exp+" at line:"+line);}
 
@@ -79,10 +81,10 @@ public class ConvertorFactory {
             final IGet get =ExpCalculate.getExpression(str[2], line);
             final IGet old= new Getter(removeRootString(str[1]));
             final Setter set = new Setter(removeRootString(str[1]));
-            return data->{ 
-                Object oldvalue=old.get(data);
+            return (data,env)->{ 
+                Object oldvalue=old.get(data,env);
                 if(oldvalue==null||"".equals(oldvalue)){
-                    set.set(data, get.get(data));
+                    set.set(data, get.get(data,env));
                 }  
                 return data; 
             };
@@ -90,9 +92,9 @@ public class ConvertorFactory {
             if(str.length !=2){throw  new RuntimeException("syntax error:"+exp+" at line:"+line);}
             //final IGet get =str[2].startsWith(".")?new Getter(removeRootString(str[2])):new ConstantGetter(str[2]);
             final IGet get =ExpCalculate.getExpression(str[1], line);
-            return data->{ 
+            return (data,env)->{ 
                 //System.out.println("exp:"+str[1]);
-                Object oldvalue=get.get(data);
+                Object oldvalue=get.get(data,env);
                 System.out.println(oldvalue); 
                 return data; 
             };
@@ -153,6 +155,7 @@ public class ConvertorFactory {
 
             if(this.isBolckEnd(c)){
                 convertor=convertor.getParent();
+                if(convertor==null)throw new RuntimeException("syntax error:"+c+" at line:"+line);
                 System.out.println("back:"+convertor.getName());
             }
             
@@ -174,13 +177,15 @@ public class ConvertorFactory {
     IConvertor assignment(String exp,Integer line){
         String a=exp.substring(0, exp.indexOf('=')).trim();
         String v=exp.substring(exp.indexOf('=')+1).trim();
-        if(!a.startsWith(".")){throw  new RuntimeException("syntax error:"+exp+" at line:"+line);}
+        //if(!a.startsWith(".")){throw  new RuntimeException("syntax error:"+exp+" at line:"+line);}
         final IGet get = ExpCalculate.getExpression(v, line);
         if(".".equals(a)){
-            return data->{ return get.get(data);};
+            return (data,env)->{ return get.get(data,env);};
         }
-        final Setter set = new Setter(removeRootString(a));
-        return data->{ set.set(data, get.get(data));return data;};
+        final Setter set =new Setter(removeRootString(a));
+        set.setVar(!a.startsWith("."));
+        System.out.println(a+" isVar:"+set.isVar());
+        return (data,env)->{ set.set(set.isVar()?env:data, get.get(data,env));return data;};
     }
 
     //ASSIGNMENT

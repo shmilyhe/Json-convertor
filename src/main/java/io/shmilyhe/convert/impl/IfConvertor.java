@@ -6,6 +6,7 @@ import java.util.List;
 import io.shmilyhe.convert.api.IConvertor;
 import io.shmilyhe.convert.api.IGet;
 import io.shmilyhe.convert.tools.ExpCalculate;
+import io.shmilyhe.convert.tools.ExpEnv;
 
 /**
  * 分支计算
@@ -25,24 +26,24 @@ public class IfConvertor extends ComplexConvertor{
     }
 
     @Override
-    public Object convert(Object root) {
-        if(calCondition(root)){
-            return super.convert(root);
+    public Object convert(Object root,ExpEnv env) {
+        if(calCondition(root,env)){
+            return super.convert(root,new ExpEnv(env));
         }else{
             System.out.println("条件不能成"+this);
             if(elseList==null||elseList.size()==0)
             return root;
-            return convertElse(root);
+            return convertElse(root,new ExpEnv(env));
         }
         
     }
 
     
-    public Object convertElse(Object root) {
+    public Object convertElse(Object root,ExpEnv env) {
         Object o=root;
         for(IConvertor c:clist){
             if(c==null)continue;
-            o=c.convert(o);
+            o=c.convert(o,env);
         }
         return o;
     }
@@ -59,10 +60,10 @@ public class IfConvertor extends ComplexConvertor{
      * @param root
      * @return
      */
-    protected boolean calCondition(Object root){
+    protected boolean calCondition(Object root,ExpEnv env){
         System.out.println("cond:"+cond);
         if(cond==null)return false;
-        Object o = cond.get(root);
+        Object o = cond.get(root,env);
         if(o==null)return false;
         if(o instanceof Boolean)return (Boolean)o;
         return false;
