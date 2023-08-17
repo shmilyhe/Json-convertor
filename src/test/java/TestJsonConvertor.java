@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,6 +40,16 @@ public class TestJsonConvertor{
             Setter seter = new Setter("group");
             seter.set(data,new Object[]{"g1","g2"});
         }
+        {
+            Setter seter = new Setter("persons");
+            ArrayList list = new ArrayList();
+            for(int i=0;i<2;i++){
+                HashMap el = new HashMap();
+                el.put("name", "eric");
+                list.add(el);
+            }
+            seter.set(data,list);
+        }
         return data;
     }
 
@@ -58,11 +69,21 @@ public class TestJsonConvertor{
     public static void main(String []args){
         String json =JsonString.asJsonString(testData());
         System.out.println(json);
-        String commands ="set(.age,12)\r\n"
+        String commands ="set(.age,13)\r\n"
         +"set(.group[4],1)\r\n"
         +".ext=123\r\n"
+        +"set(.ext,123)\r\n"
         +"each(.group){.=.+9999}\r\n"
         +"move(.addr.contry,.contry)\r\n"
+        //+"if .ext==123 {print(success)} \r\n"
+        +"if (.ext==123) {.abc=true} \r\n"
+        +".tmp=1 \r\n"
+        +"each(.persons){ \r\n"
+        +"   .name=.name+1 \r\n"
+        +"   .age= 123\r\n"
+        //+"   remove(.)\r\n"
+        +"   } \r\n"
+        +".success1 = false&&(.ext==123)  \r\n"
         +"remove(.age)";
         JsonConvertor jc = new JsonConvertor(commands);
         String dest = jc.convert(json);

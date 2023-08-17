@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.shmilyhe.convert.api.IConvertor;
+import io.shmilyhe.convert.api.IGet;
+import io.shmilyhe.convert.tools.ExpCalculate;
 
 /**
  * 分支计算
@@ -14,15 +16,20 @@ public class IfConvertor extends ComplexConvertor{
     protected List<IConvertor> elseList = new ArrayList<IConvertor>();
 
     String exp;
+    IGet cond;
 
     public IfConvertor(String exp){
         this.exp=exp;
+        System.out.println("condexp:"+exp);
+       cond = ExpCalculate.getExpression(exp);
     }
+
     @Override
     public Object convert(Object root) {
         if(calCondition(root)){
             return super.convert(root);
         }else{
+            System.out.println("条件不能成"+this);
             if(elseList==null||elseList.size()==0)
             return root;
             return convertElse(root);
@@ -53,7 +60,11 @@ public class IfConvertor extends ComplexConvertor{
      * @return
      */
     protected boolean calCondition(Object root){
-        //TODO 计算条件是否成立
+        System.out.println("cond:"+cond);
+        if(cond==null)return false;
+        Object o = cond.get(root);
+        if(o==null)return false;
+        if(o instanceof Boolean)return (Boolean)o;
         return false;
     }
 

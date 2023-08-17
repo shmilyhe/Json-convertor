@@ -35,16 +35,22 @@ public class ConvertorFactory {
      * @return
      */
     public IConvertor func(String exp,int line){
-        //System.out.println("exp:"+exp);
+        System.out.println("exp:"+exp);
         String str[] =exp.split("\\(|\\)|\\,");
         String f=str[0];
         if("set".equals(f.trim())){
+            
             if(str.length !=3||!str[1].startsWith(".")){throw  new RuntimeException("syntax error:"+exp+" at line:"+line);}
-
             //final IGet get =str[2].startsWith(".")?new Getter(removeRootString(str[2])):new ConstantGetter(str[2]);
             final IGet get =ExpCalculate.getExpression(str[2], line);
             final Setter set = new Setter(removeRootString(str[1]));
-            return data->{ set.set(data, get.get(data));return data;};
+            System.out.println("set path:"+removeRootString(str[1]));
+            return data->{ 
+                //System.out.println("执行："+exp);
+                Object d = get.get(data);
+                //System.out.println(d);
+                set.set(data,d);return data;
+            };
         }else if("move".equals(f.trim())){
             String gStr=str[1];
             if(str.length !=3
@@ -61,6 +67,9 @@ public class ConvertorFactory {
             return data->{ set.set(data, get.get(data));remove.remove(data);return data;};
         }else if("remove".equals(f.trim())){
             if(str.length !=2||!str[1].startsWith(".")){throw  new RuntimeException("syntax error(remove):"+exp+" at line:"+line);}
+            if(".".equals(str[1])){
+                return data->{return null;};
+            }
             final Remove remove= new Remove(removeRootString(str[1]));
             return data->{remove.remove(data);return data;};
         }else if("setNotExists".equals(f.trim())){
@@ -100,16 +109,18 @@ public class ConvertorFactory {
      * @return
      */
     public IConvertor getConvertor(String commands){
-        BaseConvertor convertor = new ComplexConvertor();
+        BaseConvertor convertor = new ComplexConvertor().setName("root");
         String[] cs =commands.split("[\r\n]+");
         int line=0;
         for(String c :cs){
+            System.out.println(c);
             line++;
             if(c==null||c.length()==0)continue;
             c=c.trim();
             if(c.startsWith("#"))continue;
             if(this.isForEach(c)){
-                BaseConvertor bc=new EachConvertor(this.getEachExpression(c));
+                
+                BaseConvertor bc=new EachConvertor(this.getEachExpression(c)).setName(c);
                 convertor.addConvertor(bc);
                 convertor=bc;
                 String ep= this.getExpression(c);
@@ -119,28 +130,34 @@ public class ConvertorFactory {
                     if(ic!=null)convertor.addConvertor(ic);
                 }
             }else if(this.isCondition(c)){
-                BaseConvertor bc=new IfConvertor(this.getIfExpression(c));
+                System.out.println("if:"+c);
+                BaseConvertor bc=new IfConvertor(this.getIfExpression(c)).setName(c);
                 convertor.addConvertor(bc);
                 convertor=bc;
                 String ep= this.getExpression(c);
                 if(ep!=null&&ep.length()>0){
-                    IConvertor ic = expressionline(c,line);
+                    IConvertor ic = expressionline(ep,line);
                     if(ic!=null)convertor.addConvertor(ic);
                 }
-            }else if(this.isBolckEnd(c)){
-                convertor=convertor.getParent();
             }else if(this.isBolckStart(c)){
                 String ep= this.getExpression(c);
                 if(ep!=null&&ep.length()>0){
-                    IConvertor ic = expressionline(c,line);
+                    IConvertor ic = expressionline(ep,line);
                     if(ic!=null)convertor.addConvertor(ic);
                 }
             }else{
+                 System.out.println("func:"+c);
                 IConvertor ic = expressionline(c,line);
                 if(ic!=null)convertor.addConvertor(ic);
             }
+
+            if(this.isBolckEnd(c)){
+                convertor=convertor.getParent();
+                System.out.println("back:"+convertor.getName());
+            }
             
         }
+        System.out.println("final:"+convertor.getName());
         return convertor;
     }
 
@@ -224,8 +241,10 @@ public class ConvertorFactory {
             line=line.substring(0,p);
         }
         line=line.trim();
+        
         if(line.startsWith("(")&&line.endsWith(")"))
-        line=line.substring(2, line.length()-1);
+        line=line.substring(1, line.length()-1);
+        //System.out.println("xxx:"+line);
         return line.trim();
     }
 

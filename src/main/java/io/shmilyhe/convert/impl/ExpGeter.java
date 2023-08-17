@@ -14,6 +14,7 @@ public class ExpGeter implements IGet{
     static int TYPE_DATE=4;
     static final char[] OPS = {'=', '>', '<', '+', '-', '*', '/', '%', '!', '&', '|'};
 
+
     //表达式
     private String expression;
    //参数 代码的行号
@@ -24,8 +25,8 @@ public class ExpGeter implements IGet{
     //参数2
     private IGet p2;
 
-    private char operator;
-    public ExpGeter(IGet g1,IGet g2,char operator){
+    private OperatorType operator;
+    public ExpGeter(IGet g1,IGet g2,OperatorType operator){
         p1=g1;
         p2=g2;
         this.operator=operator;
@@ -35,20 +36,126 @@ public class ExpGeter implements IGet{
     public Object get(Object data) {
         Object param1=p1.get(data);
         Object param2=p2.get(data);
-        //System.out.println("cal:"+param1+operator+param2);
+        
+        Object res=null;
         switch(operator){
-            case '+':
-            return add(param1,param2);
-            case '-':
-            return sub(param1,param2);
-            case '/':
-            return div(param1,param2);
-            case '*':
-            return mult(param1,param2);
-            case '%':
-            return mod(param1,param2);
+            case ADD:
+            res= add(param1,param2);
+            break;
+            case SUB:
+            res= sub(param1,param2);
+            break;
+            case DIV:
+            res= div(param1,param2);
+            break;
+            case MULT:
+            res= mult(param1,param2);
+            break;
+            case MOD:
+            System.out.println(p1);
+            res= mod(param1,param2);
+            break;
+            case OR:
+            res= or(param1, param2);
+            break;
+            case AND:
+            res= and(param1, param2);
+            break;
+            case LT:
+            res= lt(param1, param2);
+            break;
+            case GT:
+            res= gt(param1, param2);
+            break;
+            case GE:
+            res= ge(param1, param2);
+            break;
+            case LE:
+            res= le(param1, param2);
+            break;
+            case EQ:
+            res= eq(param1, param2);
+            break;
+            case NEQ:
+            res= neq(param1, param2);
+            break;
         }
-        return null;
+        System.out.println("cal:"+param1+" "+operator+" "+param2+"="+res);
+        return res;
+    }
+
+    public static Boolean eq(Object num1, Object num2){
+        System.out.println("eq:"+num1+","+num2);
+        if(num1!=null){
+            return num1.equals(num2);
+        }
+        return false;
+    }
+
+    public static Boolean neq(Object num1, Object num2){
+        return !eq(num1,num2);
+    }
+
+    public static Boolean and(Object num1, Object num2){
+        if(num1==null)num1=false;
+        if(num2==null)num2=false;
+        if(num1 instanceof Boolean && num2 instanceof Boolean){
+            return (Boolean)num1&&(Boolean)num2;
+        }
+        return false;
+    }
+
+    public static Boolean or(Object num1, Object num2){
+        if(num1==null)num1=false;
+        if(num2==null)num2=false;
+        if(num1 instanceof Boolean && num2 instanceof Boolean){
+            return (Boolean)num1||(Boolean)num2;
+        }
+        return false;
+    }
+
+    public static Boolean lt(Object num1, Object num2){
+        if(!isNumber(num1)||!isNumber(num2))return false;
+        Number n1=(Number)num1;
+        Number n2=(Number)num2;
+        if (isInteger(n1) && isInteger(n2)) {
+            return n1.longValue() < n2.longValue();
+        } else {
+            return n1.doubleValue() < n2.doubleValue();
+        }
+    }
+
+     public static Boolean gt(Object num1, Object num2){
+        if(!isNumber(num1)||!isNumber(num2))return false;
+        Number n1=(Number)num1;
+        Number n2=(Number)num2;
+        if (isInteger(n1) && isInteger(n2)) {
+            return n1.longValue() > n2.longValue();
+        } else {
+            return n1.doubleValue() > n2.doubleValue();
+        }
+    }
+
+    public static Boolean le(Object num1, Object num2){
+        if(!isNumber(num1)||!isNumber(num2))return false;
+        Number n1=(Number)num1;
+        Number n2=(Number)num2;
+        if (isInteger(n1) && isInteger(n2)) {
+            return n1.longValue() <= n2.longValue();
+        } else {
+            return n1.doubleValue() <= n2.doubleValue();
+        }
+    }
+
+     public static Boolean ge(Object num1, Object num2){
+        if(!isNumber(num1)||!isNumber(num2))return false;
+        Number n1=(Number)num1;
+        Number n2=(Number)num2;
+        if (isInteger(n1) && isInteger(n2)) {
+            return n1.longValue() >= n2.longValue();
+        } else {
+            return n1.doubleValue() >= n2.doubleValue();
+        }
     }
 
     public static Object add(Object num1, Object num2) {

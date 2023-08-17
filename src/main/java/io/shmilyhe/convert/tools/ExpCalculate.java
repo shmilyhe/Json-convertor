@@ -7,6 +7,7 @@ import io.shmilyhe.convert.api.IGet;
 import io.shmilyhe.convert.impl.ConstantGetter;
 import io.shmilyhe.convert.impl.ExpGeter;
 import io.shmilyhe.convert.impl.Getter;
+import io.shmilyhe.convert.impl.OperatorType;
 import io.shmilyhe.convert.impl.SelfGetter;
 
 /**
@@ -15,12 +16,17 @@ import io.shmilyhe.convert.impl.SelfGetter;
  */
 public class ExpCalculate {
 
-    private static int getPriority(String s) throws RuntimeException {
+    /**
+     * 优先级
+     * @param s
+     * @return
+     */
+    private static int getPriority(String s){
         if (s == null)
-            return 0;
+            return -10;
         switch (s) {
             case "(":
-                return 1;
+                return -9;
             case "+":
                 ;
             case "-":
@@ -31,10 +37,31 @@ public class ExpCalculate {
                 return 3;
             case "%":
                 return 3;
+            case ">>":
+            case "<<":
+            case ">>>":
+                return 0;
+            case ">":
+            case "<":
+            case ">=":
+            case "<=":
+                return -1;
+            case "==":
+            case "!=":
+                return -2;
+            case "&":
+                return -3;
+            case "^":
+                return -4;
+            case "|":
+                return -5;
+            case "&&":
+                return -6;
+            case "||":
+                return -7;
             default:
-                break;
+                return -8;
         }
-        throw new RuntimeException("illegal operator!");
     }
 
     public static String[] tokenizer(String exp) {
@@ -68,6 +95,73 @@ public class ExpCalculate {
                     part = new StringBuilder();
                     offset = 0;
                     break;
+                case '>':
+                    if (part.length() > 0)
+                        tokens.add(part.toString());
+                    if(exp.length()>i+2 
+                    &&exp.charAt(i+1)=='>'
+                    &&exp.charAt(i+2)=='>'){
+                        tokens.add(">>>");
+                        i+=2; 
+                    }else if(exp.length()>i+1 
+                    &&exp.charAt(i+1)=='>'){
+                        tokens.add(">>");
+                        i+=1; 
+                    }else if(exp.length()>i+1 
+                    &&exp.charAt(i+1)=='='){
+                        tokens.add(">=");
+                        i+=1; 
+                    }else{
+                        tokens.add(">");
+                    }
+                    part = new StringBuilder();
+                    offset = 0;
+                    break;
+                case '<':
+                if (part.length() > 0)
+                        tokens.add(part.toString());
+                     if(exp.length()>i+1 
+                    &&exp.charAt(i+1)=='<'){
+                        tokens.add("<<");
+                        i+=1; 
+                    }else if(exp.length()>i+1 
+                    &&exp.charAt(i+1)=='='){
+                        tokens.add("<=");
+                        i+=1; 
+                    }else{
+                        tokens.add("<");
+                    }
+                    part = new StringBuilder();
+                    offset = 0;
+                    break;
+                case '!':
+                if (part.length() > 0)
+                        tokens.add(part.toString());
+                     if(exp.length()>i+1 
+                    &&exp.charAt(i+1)=='='){
+                        tokens.add("!=");
+                        i+=1;  
+                    }else{
+                        tokens.add("!");
+                    }
+                    part = new StringBuilder();
+                    offset = 0;
+                    break;
+                case '=':
+                case '|':
+                case '&':
+                    if (part.length() > 0)
+                        tokens.add(part.toString());
+                    if(exp.length()>i+2 
+                    &&exp.charAt(i+1)==ch){
+                        tokens.add(new String(new char[]{ch,ch}));
+                        i+=1; 
+                    }else{
+                        tokens.add(String.valueOf(ch));
+                    }
+                    part = new StringBuilder();
+                    offset = 0;
+                    break;
                 default:
                     part.append(ch);
                     break;
@@ -82,25 +176,33 @@ public class ExpCalculate {
         return tokens.toArray(new String[tokens.size()]);
     }
 
-    public static IGet getExpression(String expr) throws Exception {
+    public static IGet getExpression(String expr) throws RuntimeException {
         return getExpression(expr,null);
     }
 
 
 
-    static String operate="+-*/%";
+    static String operate="+-*/%<<=>>>==^||&&)()";
 
     public static IGet getExpression(String expr,Integer line) throws RuntimeException {
-        //System.out.println("计算" + expr);
+        System.out.println("计算" + expr);
         /* 数字栈 */
         Stack<IGet> number = new Stack<IGet>();
         /* 符号栈 */
         Stack<String> operator = new Stack<String>();
         operator.push(null);// 在栈顶压人一个null，配合它的优先级，目的是减少下面程序的判断
-        String[] tks = tokenizer(expr);
+       String[] tks = tokenizer(expr);
+         for(String k:tks){
+            System.out.print(k+"_");
+        }
+        System.out.println();
         for (String temp : tks) {
             // System.out.println("split:"+temp);
-            if (temp.matches("[+\\-*/()%]")) {// 遇到符号
+
+            //if (temp.matches("[+\\-*/()%=><\\|\\!&]")) {// 遇到符号
+                System.out.println(temp+":"+(operate.indexOf(temp)));
+            if(operate.indexOf(temp)>-1){
+
                 if (temp.equals("(")) {// 遇到左括号，直接入符号栈
                     operator.push(temp);
                     // System.out.println("符号栈更新："+operator);
@@ -113,19 +215,20 @@ public class ExpCalculate {
                         IGet a2 = number.pop();
                         // System.out.println("数字栈更新："+number);
                         // System.out.println("计算"+a2+b+a1);
-                        number.push(new ExpGeter(a2, a1, b.charAt(0)));
+                        number.push(new ExpGeter(a2, a1, OperatorType.find(b)));
                         // System.out.println("数字栈更新："+number);
                     }
                     // System.out.println("符号栈更新："+operator);
                 } else {// 遇到运算符，满足该运算符的优先级大于栈顶元素的优先级压栈；否则计算后压栈
                     while (getPriority(temp) <= getPriority(operator.peek())) {
                         IGet a1 = number.pop();
+                        System.out.println("excp:"+temp);
                         IGet a2 = number.pop();
                         String b = operator.pop();
                         // System.out.println("符号栈更新："+operator);
                         // System.out.println("数字栈更新："+number);
                         // System.out.println("计算"+a2+b+a1);
-                        number.push(new ExpGeter(a2, a1, b.charAt(0)));
+                        number.push(new ExpGeter(a2, a1, OperatorType.find(b)));
                         // System.out.println("数字栈更新："+number);
                     }
                     operator.push(temp);
@@ -133,12 +236,12 @@ public class ExpCalculate {
                 }
             } else {// 遇到数字，直接压入数字栈
                 IGet get = null;
-                if (temp.startsWith(".")) {
+                if (temp.equals(".")) {
                     get = new SelfGetter();
                 }else if (temp.startsWith(".")) {
                     get = new Getter(temp);
                 }else if (temp.startsWith("-.")) {
-                    get = new ExpGeter(new ConstantGetter("-1"),new Getter(temp.substring(1)), '*');
+                    get = new ExpGeter(new ConstantGetter("-1"),new Getter(temp.substring(1)), OperatorType.MULT);
                 }else {
                     get = new ConstantGetter(temp);
                 }
@@ -154,7 +257,7 @@ public class ExpCalculate {
             if(number.size()>0){
                 a2=number.pop();
             }else{
-                number.push(new ExpGeter(new ConstantGetter(b+"1"), a1, '*'));
+                number.push(new ExpGeter(new ConstantGetter(b+"1"), a1, OperatorType.MULT));
                 break;
             }
             
@@ -162,7 +265,7 @@ public class ExpCalculate {
             // System.out.println("符号栈更新："+operator);
             // System.out.println("数字栈更新："+number);
             // System.out.println("计算"+a2+b+a1);
-            number.push(new ExpGeter(a2, a1, b.charAt(0)));
+            number.push(new ExpGeter(a2, a1, OperatorType.find(b)));
             // System.out.println("数字栈更新："+number);
         }
         IGet get =number.pop();
@@ -173,7 +276,7 @@ public class ExpCalculate {
     }
 
     public static void main(String[] args) throws Exception {
-        {
+        /*{
             String str = "-3.5*( 4.5 -( 4 + (-1       -1/2)))";
             IGet exp =getExpression(str);
             System.out.println("计算:"+exp);
@@ -271,6 +374,17 @@ public class ExpCalculate {
             System.out.println(exp.get(evn));
             evn.put("x", 7);
             System.out.println(exp.get(evn));
+        }
+*/
+        {
+            System.out.println("================");
+            HashMap evn = new HashMap();
+            evn.put("x", 5);
+           String str = ".x*(1-20/2 )/2";
+            IGet exp =getExpression(str);
+            System.out.println("计算:"+exp);
+            System.out.println(exp.get(evn));
+  
         }
 
     }

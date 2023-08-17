@@ -24,7 +24,8 @@ public class EachConvertor extends ComplexConvertor {
             Collection els =  (Collection)data;
             ArrayList ndata= new ArrayList<>();
             for(Object el:els){
-                ndata.add(each(el));
+                Object r=each(el);
+                if(r!=null)ndata.add(r);
             }
             set.set(root, ndata);
         }else if (isArray(data)){
