@@ -185,22 +185,22 @@ public class ExpCalculate {
     static String operate="+-*/%<<=>>>==^||&&)()";
 
     public static IGet getExpression(String expr,Integer line) throws RuntimeException {
-        System.out.println("计算" + expr);
+        DEBUG.debug("parse exp:",expr);
         /* 数字栈 */
         Stack<IGet> number = new Stack<IGet>();
         /* 符号栈 */
         Stack<String> operator = new Stack<String>();
         operator.push(null);// 在栈顶压人一个null，配合它的优先级，目的是减少下面程序的判断
        String[] tks = tokenizer(expr);
-         for(String k:tks){
+        /*for(String k:tks){
             System.out.print(k+"_");
-        }
-        System.out.println();
+        }*/
+        //System.out.println();
         for (String temp : tks) {
             // System.out.println("split:"+temp);
 
             //if (temp.matches("[+\\-*/()%=><\\|\\!&]")) {// 遇到符号
-                System.out.println(temp+":"+(operate.indexOf(temp)));
+            //    System.out.println(temp+":"+(operate.indexOf(temp)));
             if(operate.indexOf(temp)>-1){
 
                 if (temp.equals("(")) {// 遇到左括号，直接入符号栈
@@ -222,7 +222,7 @@ public class ExpCalculate {
                 } else {// 遇到运算符，满足该运算符的优先级大于栈顶元素的优先级压栈；否则计算后压栈
                     while (getPriority(temp) <= getPriority(operator.peek())) {
                         IGet a1 = number.pop();
-                        System.out.println("excp:"+temp);
+                        //System.out.println("excp:"+temp);
                         IGet a2 = number.pop();
                         String b = operator.pop();
                         // System.out.println("符号栈更新："+operator);

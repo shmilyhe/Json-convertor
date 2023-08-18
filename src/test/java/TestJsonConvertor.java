@@ -1,90 +1,13 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
-import org.junit.Test;
 
 import io.shmilyhe.convert.JsonConvertor;
-import io.shmilyhe.convert.impl.Setter;
-import io.shmilyhe.convert.tools.JsonString;
+import io.shmilyhe.convert.tools.ResourceReader;
 
 public class TestJsonConvertor{
 
-    private static Object testData(){
-        Map data = new HashMap();
-        {
-            Setter seter = new Setter("name");
-            seter.set(data, "eric");
-        }
-        {
-            Setter seter = new Setter("id");
-            seter.set(data, 1);
-        }
-        {
-            Setter seter = new Setter("age");
-            seter.set(data, 23);
-        }
-        {
-            Setter seter = new Setter("addr.contry");
-            seter.set(data, "china");
-        }
-        {
-            Setter seter = new Setter("addr.province");
-            seter.set(data, "gd");
-        }
-        {
-            Setter seter = new Setter("addr.ctiy");
-            seter.set(data, "gz");
-        }
-        {
-            Setter seter = new Setter("group");
-            seter.set(data,new Object[]{"g1","g2"});
-        }
-        {
-            Setter seter = new Setter("persons");
-            ArrayList list = new ArrayList();
-            for(int i=0;i<2;i++){
-                HashMap el = new HashMap();
-                el.put("name", "eric");
-                list.add(el);
-            }
-            seter.set(data,list);
-        }
-        return data;
-    }
-
-    @Test
-    public void test(){
-        String json =JsonString.asJsonString(testData());
-        System.out.println(json);
-        String commands ="set(.age,12)\r\n"
-        +"set(.group[4],1)\r\n"
-        +".ext=.addr\r\n"
-        +"move(.addr.contry,.contry)\r\n"
-        +"remove(.age)";
-        JsonConvertor jc = new JsonConvertor(commands);
-       // String dest = jc.convert(json);
-        //System.out.println(dest);
-    }
     public static void main(String []args){
-        String json =JsonString.asJsonString(testData());
-        System.out.println(json);
-        String commands ="set(.age,13)\r\n"
-        +"set(.group[4],1)\r\n"
-        +".ext=123\r\n"
-        +"set(.ext,123)\r\n"
-        +"each(.group){.=.+9999}\r\n"
-        +"move(.addr.contry,.contry)\r\n"
-        //+"if .ext==123 {print(success)} \r\n"
-        +"if (.ext==123) {.abc=true} \r\n"
-        +".tmp=1 \r\n"
-        +"each(.persons){ \r\n"
-        +"   .name=.name+1 \r\n"
-        +"   .age= 123\r\n"
-        //+"   remove(.)\r\n"
-        +"   } \r\n"
-        +".success1 = false&&(.ext==123)  \r\n"
-        +"remove(.age)";
+        String json =ResourceReader.read("testfile/test1.json");
+        String commands =ResourceReader.read("testfile/test1.script");
         JsonConvertor jc = new JsonConvertor(commands);
         String dest = jc.convert(json);
         System.out.println(dest);

@@ -5,6 +5,7 @@ import java.util.List;
 
 import io.shmilyhe.convert.api.IConvertor;
 import io.shmilyhe.convert.api.IGet;
+import io.shmilyhe.convert.tools.DEBUG;
 import io.shmilyhe.convert.tools.ExpCalculate;
 import io.shmilyhe.convert.tools.ExpEnv;
 
@@ -21,18 +22,23 @@ public class IfConvertor extends ComplexConvertor{
 
     public IfConvertor(String exp){
         this.exp=exp;
-        System.out.println("condexp:"+exp);
+        DEBUG.debug("condexp:",exp);
+        
        cond = ExpCalculate.getExpression(exp);
     }
 
     @Override
     public Object convert(Object root,ExpEnv env) {
+        DEBUG.debug("========start:",this.getName(),"========"); 
         if(calCondition(root,env)){
             return super.convert(root,new ExpEnv(env));
         }else{
-            System.out.println("条件不能成"+this);
-            if(elseList==null||elseList.size()==0)
-            return root;
+            //System.out.println("条件不能成"+this);
+            DEBUG.debug("condexp:",exp," is ",false);
+            if(elseList==null||elseList.size()==0){
+                DEBUG.debug("========end:",this.getName(),"========"); 
+                return root;
+            }
             return convertElse(root,new ExpEnv(env));
         }
         
@@ -45,6 +51,7 @@ public class IfConvertor extends ComplexConvertor{
             if(c==null)continue;
             o=c.convert(o,env);
         }
+        DEBUG.debug("========end:",this.getName(),"========"); 
         return o;
     }
 
@@ -61,7 +68,6 @@ public class IfConvertor extends ComplexConvertor{
      * @return
      */
     protected boolean calCondition(Object root,ExpEnv env){
-        System.out.println("cond:"+cond);
         if(cond==null)return false;
         Object o = cond.get(root,env);
         if(o==null)return false;

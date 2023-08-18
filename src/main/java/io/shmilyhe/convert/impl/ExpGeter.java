@@ -1,6 +1,7 @@
 package io.shmilyhe.convert.impl;
 
 import io.shmilyhe.convert.api.IGet;
+import io.shmilyhe.convert.tools.DEBUG;
 import io.shmilyhe.convert.tools.ExpEnv;
 
 /**
@@ -53,7 +54,6 @@ public class ExpGeter implements IGet{
             res= mult(param1,param2);
             break;
             case MOD:
-            System.out.println(p1);
             res= mod(param1,param2);
             break;
             case OR:
@@ -81,13 +81,11 @@ public class ExpGeter implements IGet{
             res= neq(param1, param2);
             break;
         }
-        System.out.println(param1+" :"+(param1.getClass())+" "+param2+":"+(param2.getClass()));
-        System.out.println("cal:"+param1+" "+operator+" "+param2+"="+res);
+        DEBUG.debug("cal:",param1," ",operator," ",param2,"=",res);
         return res;
     }
 
     public static Boolean eq(Object num1, Object num2){
-        System.out.println("eq:"+num1+","+num2);
         if(num1!=null){
             return num1.equals(num2);
         }

@@ -12,6 +12,7 @@ import io.shmilyhe.convert.impl.IfConvertor;
 import io.shmilyhe.convert.impl.Remove;
 import io.shmilyhe.convert.impl.SelfGetter;
 import io.shmilyhe.convert.impl.Setter;
+import io.shmilyhe.convert.tools.DEBUG;
 import io.shmilyhe.convert.tools.ExpCalculate;
 
 /**
@@ -35,7 +36,7 @@ public class ConvertorFactory {
      * @return
      */
     public IConvertor func(String exp,int line){
-        System.out.println("exp:"+exp);
+        DEBUG.debug("parse script:",exp," at line:",line);
         String str[] =exp.split("\\(|\\)|\\,");
         String f=str[0];
         if("set".equals(f.trim())){
@@ -46,12 +47,13 @@ public class ConvertorFactory {
             final Setter set = new Setter(removeRootString(str[1]));
             set.setVar(!str[1].startsWith("."));
             
-            System.out.println("set path:"+removeRootString(str[1]));
             return (data,env)->{ 
-                //System.out.println("执行："+exp);
+                DEBUG.debug("========start:",exp,"========"); 
                 Object d = get.get(data,env);
-                //System.out.println(d);
-                set.set(set.isVar()?env:data,d);return data;
+                DEBUG.debug("set:",exp,"=",d);
+                set.set(set.isVar()?env:data,d);
+                DEBUG.debug("========end:",exp,"========"); 
+                return data;
             };
         }else if("move".equals(f.trim())){
             String gStr=str[1];
@@ -61,12 +63,22 @@ public class ConvertorFactory {
             if(".".equals(gStr)){
                 final Setter set = new Setter(removeRootString(str[2]));
                 final SelfGetter get = new SelfGetter();
-                return (data,env)->{  HashMap m= new HashMap(); set.set(m, get.get(data,env));return m;};
+                return (data,env)->{
+                    DEBUG.debug("========start:",exp,"========"); 
+                    HashMap m= new HashMap(); set.set(m, get.get(data,env));
+                    DEBUG.debug("========end:",exp,"========"); 
+                    return m;};
             }
             final Getter get = new Getter(removeRootString(str[1]));
             final Setter set = new Setter(removeRootString(str[2]));
             final Remove remove= new Remove(removeRootString(str[1]));
-            return (data,env)->{ set.set(data, get.get(data,env));remove.remove(data);return data;};
+            return (data,env)->{ 
+                DEBUG.debug("========start:",exp,"========"); 
+                set.set(data, get.get(data,env));remove.remove(data);
+                DEBUG.debug("========end:",exp,"========"); 
+                return data;
+                
+            };
         }else if("del".equals(f.trim())||"remove".equals(f.trim())){
             if(str.length !=2||!str[1].startsWith(".")){throw  new RuntimeException("syntax error(remove):"+exp+" at line:"+line);}
             if(".".equals(str[1])){
@@ -82,10 +94,12 @@ public class ConvertorFactory {
             final IGet old= new Getter(removeRootString(str[1]));
             final Setter set = new Setter(removeRootString(str[1]));
             return (data,env)->{ 
+                DEBUG.debug("========start:",exp,"========"); 
                 Object oldvalue=old.get(data,env);
                 if(oldvalue==null||"".equals(oldvalue)){
                     set.set(data, get.get(data,env));
                 }  
+                DEBUG.debug("========end:",exp,"========"); 
                 return data; 
             };
         }else if("print".equals(f.trim())){
@@ -93,9 +107,8 @@ public class ConvertorFactory {
             //final IGet get =str[2].startsWith(".")?new Getter(removeRootString(str[2])):new ConstantGetter(str[2]);
             final IGet get =ExpCalculate.getExpression(str[1], line);
             return (data,env)->{ 
-                //System.out.println("exp:"+str[1]);
                 Object oldvalue=get.get(data,env);
-                System.out.println(oldvalue); 
+                System.out.println("[print]:"+oldvalue); 
                 return data; 
             };
         }else if("convert".equals(f.trim())){
@@ -111,11 +124,12 @@ public class ConvertorFactory {
      * @return
      */
     public IConvertor getConvertor(String commands){
+        DEBUG.debug("=======parse start========");
         BaseConvertor convertor = new ComplexConvertor().setName("root");
         String[] cs =commands.split("[\r\n]+");
         int line=0;
         for(String c :cs){
-            System.out.println(c);
+            DEBUG.debug("line",line,":",c);
             line++;
             if(c==null||c.length()==0)continue;
             c=c.trim();
@@ -132,11 +146,12 @@ public class ConvertorFactory {
                     if(ic!=null)convertor.addConvertor(ic);
                 }
             }else if(this.isCondition(c)){
-                System.out.println("if:"+c);
+                //System.out.println("if:"+c);
                 BaseConvertor bc=new IfConvertor(this.getIfExpression(c)).setName(c);
                 convertor.addConvertor(bc);
                 convertor=bc;
                 String ep= this.getExpression(c);
+                DEBUG.debug("if:",ep," at line",line);
                 if(ep!=null&&ep.length()>0){
                     IConvertor ic = expressionline(ep,line);
                     if(ic!=null)convertor.addConvertor(ic);
@@ -148,7 +163,7 @@ public class ConvertorFactory {
                     if(ic!=null)convertor.addConvertor(ic);
                 }
             }else{
-                 System.out.println("func:"+c);
+                 DEBUG.debug("func:",c);
                 IConvertor ic = expressionline(c,line);
                 if(ic!=null)convertor.addConvertor(ic);
             }
@@ -156,11 +171,13 @@ public class ConvertorFactory {
             if(this.isBolckEnd(c)){
                 convertor=convertor.getParent();
                 if(convertor==null)throw new RuntimeException("syntax error:"+c+" at line:"+line);
-                System.out.println("back:"+convertor.getName());
+                DEBUG.debug("back:",convertor.getName());
+                //System.out.println("back:"+convertor.getName());
             }
             
         }
-        System.out.println("final:"+convertor.getName());
+       DEBUG.debug("final:",convertor.getName());
+       DEBUG.debug("=======parse finished========");
         return convertor;
     }
 
@@ -175,6 +192,7 @@ public class ConvertorFactory {
     }
 
     IConvertor assignment(String exp,Integer line){
+        
         String a=exp.substring(0, exp.indexOf('=')).trim();
         String v=exp.substring(exp.indexOf('=')+1).trim();
         //if(!a.startsWith(".")){throw  new RuntimeException("syntax error:"+exp+" at line:"+line);}
@@ -184,8 +202,12 @@ public class ConvertorFactory {
         }
         final Setter set =new Setter(removeRootString(a));
         set.setVar(!a.startsWith("."));
-        System.out.println(a+" isVar:"+set.isVar());
-        return (data,env)->{ set.set(set.isVar()?env:data, get.get(data,env));return data;};
+        //System.out.println(a+" isVar:"+set.isVar());
+        return (data,env)->{ 
+            DEBUG.debug("========start:",exp,"========"); 
+            set.set(set.isVar()?env:data, get.get(data,env));
+            DEBUG.debug("========end:",exp,"========"); 
+            return data;};
     }
 
     //ASSIGNMENT
@@ -262,7 +284,7 @@ public class ConvertorFactory {
         }
         line=line.trim();
         if(line.startsWith("(")&&line.endsWith(")"))
-        line=line.substring(2, line.length()-1);
+        line=line.substring(1, line.length()-1);
         return line.trim();
     }
 

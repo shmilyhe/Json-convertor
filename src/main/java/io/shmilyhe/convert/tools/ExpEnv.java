@@ -22,12 +22,8 @@ public class ExpEnv extends HashMap {
 
     @Override
     public boolean containsKey(Object key) {
-        boolean contains=false;
-        if(this.parent!=null){
-            contains=parent.containsKey(key);
-            if(contains){
+        if(this.parent!=null&&parent.containsKey(key)){
                 return true;
-            }
         }
         return super.containsKey(key);
     }
@@ -39,12 +35,15 @@ public class ExpEnv extends HashMap {
             o=parent.get(key);
         }
         if(o!=null)return o;
+        //DEBUG.debug("evn ",key," ",o);
         return super.get(key);
     }
 
     @Override
     public Object put(Object key, Object value) {
+        //DEBUG.debug("env put ",key," ",value);
         if(this.parent!=null&&parent.containsKey(key)){
+            //DEBUG.debug("env containsKey:",key);
             parent.put(key, value);
         }
         return super.put(key, value);
