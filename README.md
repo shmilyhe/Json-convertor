@@ -23,7 +23,7 @@
 
 转换脚本
 见文件testfile/test1.script
-[测试JSON，请点击这里](testfile/test1.script "测试JSON")
+[测试脚本，请点击这里](testfile/test1.script "测试脚本")
 测试代码
 ```
 import io.shmilyhe.convert.JsonConvertor;
