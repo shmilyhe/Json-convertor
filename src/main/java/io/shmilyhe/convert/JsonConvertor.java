@@ -14,8 +14,23 @@ public class JsonConvertor {
     }
     public String convert(String json){
             if(convertor==null)return json;
-            Object jdata = SimpleJson.parse(json).getRoot();
-            jdata=convertor.convert(jdata,new ExpEnv(null));
+            Object jdata = toData(json);//SimpleJson.parse(json).getRoot();
+            jdata=convert(jdata,null);
             return JsonString.asJsonString(jdata);
+    }
+
+    public static Object toData(String json){
+        return SimpleJson.parse(json).getRoot();
+    }
+
+    public static String toJsonString(Object obj){
+        return JsonString.asJsonString(obj);
+    }
+
+    public Object convert(Object jdata,ExpEnv env){
+            if(convertor==null)return jdata;
+            env=env==null?new ExpEnv(null):env;
+            jdata=convertor.convert(jdata,env);
+            return jdata;
     }
 }

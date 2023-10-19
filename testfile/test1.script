@@ -16,7 +16,7 @@ var4 =var1*.ext*(1+13/2)
 
 # 把变量的值赋给 属性
 .fromvar= var4
-
+.fromvar=.fromvar/3
 # 移动属性 ，把.addr.contry， 提到根下
 move(.addr.contry,.contry)
 

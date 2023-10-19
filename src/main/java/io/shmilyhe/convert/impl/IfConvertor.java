@@ -22,7 +22,7 @@ public class IfConvertor extends ComplexConvertor{
 
     public IfConvertor(String exp){
         this.exp=exp;
-        DEBUG.debug("condexp:",exp);
+        DEBUG.debug("condexp1:",exp);
         
        cond = ExpCalculate.getExpression(exp);
     }
@@ -69,6 +69,7 @@ public class IfConvertor extends ComplexConvertor{
      */
     protected boolean calCondition(Object root,ExpEnv env){
         if(cond==null)return false;
+        //DEBUG.debug("info:",cond,cond.getClass());
         Object o = cond.get(root,env);
         if(o==null)return false;
         if(o instanceof Boolean)return (Boolean)o;

@@ -43,6 +43,10 @@ public class ConstantGetter implements IGet {
     private boolean isFloat(String s){
         return pd.matcher(s).matches();
     }
+
+    public String toString(){
+        return "constant:"+v;
+    }
     
 
 }

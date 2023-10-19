@@ -3,11 +3,13 @@ package io.shmilyhe.convert.impl;
 import io.shmilyhe.convert.api.ExpPartVo;
 import io.shmilyhe.convert.api.IDataAccess;
 import io.shmilyhe.convert.api.IGet;
+import io.shmilyhe.convert.tools.DEBUG;
 import io.shmilyhe.convert.tools.ExpEnv;
 
 public class Getter implements IGet{
     IDataAccess da;
     private boolean isVar;
+    String exp;
 
     public Getter(String ext){
         this(ext,false);
@@ -15,6 +17,7 @@ public class Getter implements IGet{
 
     public Getter(String ext,boolean isVar){
         this.isVar=isVar;
+        exp=ext;
         ExpPartVo vo =  TokenizeExpress.tokenize(ext);
         for(;vo!=null;vo=vo.getNext()){
             IDataAccess ida =null;
@@ -58,6 +61,10 @@ public class Getter implements IGet{
     public Getter setVar(boolean isVar) {
         this.isVar = isVar;
         return this;
+    }
+
+    public String toString(){
+        return "getter:"+this.exp;
     }
     
 }

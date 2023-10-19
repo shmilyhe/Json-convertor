@@ -12,6 +12,7 @@ public abstract class DEBUG {
     }
 
     public static void debug(Object ...o){
+        if(!isDebug)return;
         StringBuilder sb =new StringBuilder();
         sb.append("[DEBUG]:");
         for(Object a:o){

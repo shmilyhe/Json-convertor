@@ -7,20 +7,24 @@ import org.junit.Test;
 
 import io.shmilyhe.convert.impl.Getter;
 import io.shmilyhe.convert.impl.Setter;
+import io.shmilyhe.convert.tools.ExpEnv;
 import io.shmilyhe.convert.tools.JsonString;
 
 public class TestGetter {
     
     @Test
     public void test(){
+
+        ExpEnv env = new ExpEnv(null);
         Map data= new HashMap();
+        
         {
             Setter seter = new Setter("aab");
             Getter geter = new Getter("aab");
             String v =UUID.randomUUID().toString();
             seter.set(data,v);
-            Assert.assertEquals("not eq",geter.get(data), v);
-            System.out.println(geter.get(data));
+            Assert.assertEquals("not eq",geter.get(data,env), v);
+            System.out.println(geter.get(data,env));
         }
         
         {
@@ -29,8 +33,8 @@ public class TestGetter {
             Getter geter = new Getter(path);
             String v =UUID.randomUUID().toString();
             seter.set(data,v);
-            Assert.assertEquals("not eq",geter.get(data), v);
-            System.out.println(geter.get(data));
+            Assert.assertEquals("not eq",geter.get(data,env), v);
+            System.out.println(geter.get(data,env));
         }
 
         {
@@ -39,8 +43,8 @@ public class TestGetter {
             Getter geter = new Getter(path);
             String v =UUID.randomUUID().toString();
             seter.set(data,v);
-            Assert.assertEquals("not eq",geter.get(data), v);
-            System.out.println(geter.get(data));
+            Assert.assertEquals("not eq",geter.get(data,env), v);
+            System.out.println(geter.get(data,env));
             System.out.println(JsonString.asJsonString(data));
         }
         {
@@ -49,8 +53,8 @@ public class TestGetter {
             Getter geter = new Getter(path);
             String v =UUID.randomUUID().toString();
             seter.set(data,v);
-            Assert.assertEquals("not eq",geter.get(data), v);
-            System.out.println(geter.get(data));
+            Assert.assertEquals("not eq",geter.get(data,env), v);
+            System.out.println(geter.get(data,env));
             System.out.println(JsonString.asJsonString(data));
         }
 
@@ -60,8 +64,8 @@ public class TestGetter {
             Getter geter = new Getter(path);
             String v =UUID.randomUUID().toString();
             seter.set(data,v);
-            Assert.assertEquals("not eq",geter.get(data), v);
-            System.out.println(geter.get(data));
+            Assert.assertEquals("not eq",geter.get(data,env), v);
+            System.out.println(geter.get(data,env));
             System.out.println(JsonString.asJsonString(data));
         }
 

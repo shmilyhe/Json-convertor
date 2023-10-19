@@ -1,0 +1,10 @@
+
+.names[12]="q"
+
+tmp=0
+each(.names){ 
+    tmp=tmp+1
+    if(. ==null ){
+        .="nb"+tmp
+    }
+}

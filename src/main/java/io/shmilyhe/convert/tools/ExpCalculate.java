@@ -182,7 +182,7 @@ public class ExpCalculate {
 
 
 
-    static String operate="+-*/%<<=>>>==^||&&)()";
+    static String operate="+-*/%<<=>>>==^||&&)()!=";
 
     public static IGet getExpression(String expr,Integer line) throws RuntimeException {
         DEBUG.debug("parse exp:",expr);
@@ -215,7 +215,7 @@ public class ExpCalculate {
                         IGet a2 = number.pop();
                         // System.out.println("数字栈更新："+number);
                         // System.out.println("计算"+a2+b+a1);
-                        number.push(new ExpGeter(a2, a1, OperatorType.find(b)));
+                        number.push(new ExpGeter(a2, a1, OperatorType.find(b)).setExpression(temp).setLine(line));
                         // System.out.println("数字栈更新："+number);
                     }
                     // System.out.println("符号栈更新："+operator);
@@ -228,7 +228,7 @@ public class ExpCalculate {
                         // System.out.println("符号栈更新："+operator);
                         // System.out.println("数字栈更新："+number);
                         // System.out.println("计算"+a2+b+a1);
-                        number.push(new ExpGeter(a2, a1, OperatorType.find(b)));
+                        number.push(new ExpGeter(a2, a1, OperatorType.find(b)).setExpression(temp).setLine(line));
                         // System.out.println("数字栈更新："+number);
                     }
                     operator.push(temp);

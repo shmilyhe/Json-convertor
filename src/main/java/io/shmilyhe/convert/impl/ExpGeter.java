@@ -38,7 +38,8 @@ public class ExpGeter implements IGet{
     public Object get(Object data,ExpEnv env) {
         Object param1=p1.get(data,env);
         Object param2=p2.get(data,env);
-        
+        //if(p1==null)DEBUG.debug("==================================");
+        //DEBUG.debug(expression,"?????:",p1.getClass(),p1,operator,p2);
         Object res=null;
         switch(operator){
             case ADD:
@@ -86,6 +87,7 @@ public class ExpGeter implements IGet{
     }
 
     public static Boolean eq(Object num1, Object num2){
+        if(num1==null&& num2==null)return true;
         if(num1!=null){
             return num1.equals(num2);
         }
