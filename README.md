@@ -182,6 +182,53 @@ each(.persons){
 .removes = removecount
 
 ```
+### 退出
+函数：exit,
+退出转换，exit 后面的逻辑将不再执行。当多个脚本合并执行时，后面的脚本出不会执行。
+
+示例：
+```
+.name="Alice"
+
+if .name == "Alice" {
+    exit()
+}
+.name="Bob"
+
+```
+执行的结果为：
+```
+{"name":"Alice"}
+```
+
+### 强制全局
+函数：global
+变量 强制为全局
+示例：
+```
+max=0;
+each(.persons){
+        # 移除18岁以下的人员
+        if (.age>max){
+                max=.age
+                global(maxage,max);
+        }
+}
+```
+
+### 命名空间
+函数：namespace
+设置消息的命名空间，在执行器外可以获取命令空间
+
+示例：
+```
+
+if messageType == "online" {
+    namespace("onOffLine");
+}
+
+```
+
 
 
 # 计划支持的特性

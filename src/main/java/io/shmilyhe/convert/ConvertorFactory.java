@@ -111,7 +111,7 @@ public class ConvertorFactory {
                 System.out.println("[print]:"+oldvalue); 
                 return data; 
             };
-        }else if("nameSpace".equals(f.trim())){
+        }else if("namespace".equalsIgnoreCase(f.trim())){
             if(str.length !=2){throw  new RuntimeException("syntax error:"+exp+" at line:"+line);}
             final IGet get =ExpCalculate.getExpression(str[1], line);
             return (data,env)->{ 
@@ -121,11 +121,12 @@ public class ConvertorFactory {
                 return data; 
             };
         }else if("global".equals(f.trim())){
-            if(str.length !=2){throw  new RuntimeException("syntax error:"+exp+" at line:"+line);}
-            final IGet get =ExpCalculate.getExpression(str[1], line);
+            if(str.length !=3){throw  new RuntimeException("syntax error:"+exp+" at line:"+line);}
+            //final IGet get =ExpCalculate.getExpression(str[1], line);
+            final IGet get2 =ExpCalculate.getExpression(str[2], line);
             return (data,env)->{ 
-                Object v=get.get(data,env);
-                if(env!=null)env.global(v);
+                Object v=get2.get(data,env);
+                if(env!=null)env.global(str[1],v);
                 return data; 
             };
         }else if("exit".equals(f.trim())){
