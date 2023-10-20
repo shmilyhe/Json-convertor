@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.shmilyhe.convert.api.IConvertor;
+import io.shmilyhe.convert.tools.DEBUG;
 import io.shmilyhe.convert.tools.ExpEnv;
 
 public class ComplexConvertor  extends BaseConvertor {
@@ -14,6 +15,9 @@ public class ComplexConvertor  extends BaseConvertor {
         for(IConvertor c:clist){
             if(c==null)continue;
             o=c.convert(o,env);
+            if(env.isExited()){
+                break;
+            }
         }
         return o;
     }

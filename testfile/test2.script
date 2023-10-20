@@ -8,3 +8,13 @@ each(.names){
         .="nb"+tmp
     }
 }
+
+.desc=title
+.opk=notExists
+if title != null {
+    .title=title
+}
+
+if notExists != null {
+    .newpro=notExists
+}

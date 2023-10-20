@@ -1,6 +1,7 @@
 package io.shmilyhe.convert;
 
 import io.shmilyhe.convert.api.IConvertor;
+import io.shmilyhe.convert.impl.ComplexConvertor;
 import io.shmilyhe.convert.tools.ExpEnv;
 import io.shmilyhe.convert.tools.JsonString;
 import io.shmilyhe.convert.tools.SimpleJson;
@@ -12,6 +13,16 @@ public class JsonConvertor {
     public JsonConvertor(String commands){
         convertor= new ConvertorFactory().getConvertor(commands);
     }
+
+    public JsonConvertor(String[] cmds){
+        ComplexConvertor con  = new ComplexConvertor();
+        convertor=con;
+        ConvertorFactory cf = new ConvertorFactory();
+        for(String c:cmds){
+            con.addConvertor(cf.getConvertor(c));
+        }
+    }
+
     public String convert(String json){
             if(convertor==null)return json;
             Object jdata = toData(json);//SimpleJson.parse(json).getRoot();
@@ -29,7 +40,7 @@ public class JsonConvertor {
 
     public Object convert(Object jdata,ExpEnv env){
             if(convertor==null)return jdata;
-            env=env==null?new ExpEnv(null):env;
+            if(env==null){env= new ExpEnv(null);throw new RuntimeException();}
             jdata=convertor.convert(jdata,env);
             return jdata;
     }

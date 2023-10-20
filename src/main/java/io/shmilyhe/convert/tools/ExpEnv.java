@@ -7,9 +7,14 @@ import java.util.HashMap;
  */
 public class ExpEnv extends HashMap {
     private ExpEnv parent;
+    private boolean exited=false;
+    int level=1;
 
     public ExpEnv(ExpEnv p){
         parent=p;
+        if(p!=null){
+            this.level+=p.level;
+        }
     }
 
     public ExpEnv getParent() {
@@ -55,6 +60,22 @@ public class ExpEnv extends HashMap {
             parent.remove(key);
         }
         return super.remove(key);
+    }
+
+    public void exit(){  
+        if(parent!=null){
+            parent.exit();
+        }else{
+            this.exited=true;
+        }  
+    }
+
+    public boolean isExited(){
+        if(parent!=null){
+            return parent.isExited();
+        }else{
+            return this.exited;
+        } 
     }
 
     

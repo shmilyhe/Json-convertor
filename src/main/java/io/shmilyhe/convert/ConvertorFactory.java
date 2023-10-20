@@ -113,6 +113,12 @@ public class ConvertorFactory {
             };
         }else if("convert".equals(f.trim())){
             
+        }else if("exit".equals(f.trim())){
+            return (data,env)->{  
+                env.exit();
+                DEBUG.debug("exit at line ",line," exp:",exp);
+                return data; 
+            };
         }
         return null;
     }

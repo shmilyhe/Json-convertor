@@ -1,0 +1,17 @@
+
+
+.names[13]="ooooo"
+tmp=0
+each(.names){ 
+    tmp=tmp+1
+    if(. ==null ){
+        .="bbbbbbb"+tmp
+    }
+}
+
+
+if .names[13]=="ooooo" {
+  exit()
+}
+
+
