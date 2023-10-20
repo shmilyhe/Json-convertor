@@ -40,7 +40,7 @@ public class JsonConvertor {
 
     public Object convert(Object jdata,ExpEnv env){
             if(convertor==null)return jdata;
-            if(env==null){env= new ExpEnv(null);throw new RuntimeException();}
+            if(env==null){env= new ExpEnv(null);}
             jdata=convertor.convert(jdata,env);
             return jdata;
     }

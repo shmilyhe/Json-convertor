@@ -111,8 +111,23 @@ public class ConvertorFactory {
                 System.out.println("[print]:"+oldvalue); 
                 return data; 
             };
-        }else if("convert".equals(f.trim())){
-            
+        }else if("nameSpace".equals(f.trim())){
+            if(str.length !=2){throw  new RuntimeException("syntax error:"+exp+" at line:"+line);}
+            final IGet get =ExpCalculate.getExpression(str[1], line);
+            return (data,env)->{ 
+                Object v=get.get(data,env);
+                if(env!=null)
+                env.nameSpace(String.valueOf(v));
+                return data; 
+            };
+        }else if("global".equals(f.trim())){
+            if(str.length !=2){throw  new RuntimeException("syntax error:"+exp+" at line:"+line);}
+            final IGet get =ExpCalculate.getExpression(str[1], line);
+            return (data,env)->{ 
+                Object v=get.get(data,env);
+                if(env!=null)env.global(v);
+                return data; 
+            };
         }else if("exit".equals(f.trim())){
             return (data,env)->{  
                 env.exit();

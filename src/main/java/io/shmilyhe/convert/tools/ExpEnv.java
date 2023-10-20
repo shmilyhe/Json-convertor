@@ -62,6 +62,59 @@ public class ExpEnv extends HashMap {
         return super.remove(key);
     }
 
+
+    /**
+     * 设置全局
+     * @param k KEY
+     * @param v VALUE
+     */
+    public void global(Object k,Object v){
+        if(parent!=null){
+            parent.global(k,v);
+        }else{
+            super.put(k,v);
+        } 
+    }
+
+    /**
+     * 获取全局变量
+     * @param k KEY
+     * @return  VALUE
+     */
+    public Object global(Object k){
+        if(parent!=null){
+            return parent.global(k);
+        }else{
+            return super.get(k);
+        } 
+    }
+
+    protected String namespace;
+
+    /**
+     * 获取命名空间
+     * @return 命名空间
+     */
+    public String nameSpace(){
+        if(parent!=null){
+            return parent.nameSpace();
+        }else{
+            return this.namespace;
+        } 
+    }
+
+    /**
+     * 设定命名空间
+     * @param ns 命名空间
+     */
+    public void nameSpace(String ns){
+        if(parent!=null){
+             parent.nameSpace(ns);
+        }else{
+             this.namespace=ns;
+        } 
+    }
+
     public void exit(){  
         if(parent!=null){
             parent.exit();
