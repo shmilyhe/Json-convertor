@@ -132,7 +132,7 @@ public class ConvertorFactory {
         }else if("exit".equals(f.trim())){
             return (data,env)->{
                 if(str.length>1){
-
+                    env.exit(str[1]);
                 }else{
                     env.exit();
                 }

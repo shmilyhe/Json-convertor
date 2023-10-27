@@ -124,6 +124,14 @@ public class ExpEnv extends HashMap {
     }
 
     private int exitCode=0;
+    public int getExitCode() {
+        return exitCode;
+    }
+
+    public void setExitCode(int exitCode) {
+        this.exitCode = exitCode;
+    }
+
     public void exit(String code){  
         if(parent!=null){
             parent.exit(code);
