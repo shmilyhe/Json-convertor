@@ -130,8 +130,12 @@ public class ConvertorFactory {
                 return data; 
             };
         }else if("exit".equals(f.trim())){
-            return (data,env)->{  
-                env.exit();
+            return (data,env)->{
+                if(str.length>1){
+
+                }else{
+                    env.exit();
+                }
                 DEBUG.debug("exit at line ",line," exp:",exp);
                 return data; 
             };

@@ -123,6 +123,20 @@ public class ExpEnv extends HashMap {
         }  
     }
 
+    private int exitCode=0;
+    public void exit(String code){  
+        if(parent!=null){
+            parent.exit(code);
+        }else{
+            try{
+                exitCode = Integer.valueOf(code);
+            } catch(Exception e){
+                exitCode=-1;
+            }
+            this.exited=true;
+        }  
+    }
+
     public boolean isExited(){
         if(parent!=null){
             return parent.isExited();
