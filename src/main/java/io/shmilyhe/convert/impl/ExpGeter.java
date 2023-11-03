@@ -88,6 +88,26 @@ public class ExpGeter implements IGet{
 
     public static Boolean eq(Object num1, Object num2){
         if(num1==null&& num2==null)return true;
+        if(num1==null||num2==null)return false;
+        if(num1 instanceof Number && num2 instanceof Number){
+            Number n1=(Number) num1;
+            Number n2=(Number) num2;
+            if(num1 instanceof Double||num2 instanceof Double){
+                return n1.doubleValue()==n2.doubleValue();
+            }
+            if(num1 instanceof Float||num2 instanceof Float){
+                return n1.floatValue()==n2.floatValue();
+            }
+            if(num1 instanceof Long||num2 instanceof Long){
+                return n1.longValue()==n2.longValue();
+            }
+            if(num1 instanceof Integer||num2 instanceof Integer){
+                return n1.intValue()==n2.intValue();
+            }
+            if(num1 instanceof Short||num2 instanceof Short){
+                return n1.shortValue()==n2.shortValue();
+            }
+        }
         if(num1!=null){
             return num1.equals(num2);
         }

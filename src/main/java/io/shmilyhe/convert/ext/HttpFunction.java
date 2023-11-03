@@ -5,11 +5,13 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 import io.shmilyhe.convert.Json;
 import io.shmilyhe.convert.api.IConvertor;
 import io.shmilyhe.convert.api.IGet;
 import io.shmilyhe.convert.impl.Setter;
 import io.shmilyhe.convert.tools.ExpCalculate;
+import io.shmilyhe.convert.tools.ExpEnv;
 
 public class HttpFunction {
     static Pattern p =Pattern.compile(" *(.+) *= *httpget *\\((.*)\\) *| *httpget *\\((.+)\\) *");
@@ -34,7 +36,7 @@ public class HttpFunction {
                 if(g3!=null){
                     final IGet get = ExpCalculate.getExpression(g3, num);
                    return (data,env)->{
-                    httpget(String.valueOf(get.get(data, env)));
+                    httpget(String.valueOf(get.get(data, env)),env);
                     return data;
                    };
                 }else{
@@ -45,7 +47,7 @@ public class HttpFunction {
                     final IGet get = ExpCalculate.getExpression(g2, num);
                     
                     return (data,env)->{
-                        Map res =httpget(String.valueOf(get.get(data, env)));
+                        Map res =httpget(String.valueOf(get.get(data, env)),env);
                         if(set.isVar()){
                             set.set(env, res);
                         }else{
@@ -61,7 +63,6 @@ public class HttpFunction {
 
 
    static void cache(String key,Map v){
-    if(v==null)return;
     if(cache!=null)cache.cache(key, v);
    }
    static  Map getCache(String key){
@@ -69,11 +70,20 @@ public class HttpFunction {
     return cache.getCache(key);
    }
 
-    public static Map httpget(String url){
+    public static Map httpget(String url,ExpEnv env){
+        Json jenv =new Json();
+        jenv.wrap(env);
+        Boolean cache=jenv.Q("http.config.cache").asBoolean();
+        Integer readTimeout=jenv.Q("http.config.readTimeout").asInt();
+        Integer connectTimeout=jenv.Q("http.config.connectTimeout").asInt();
+        if(cache==null)cache=true;
         try{
-            Map rest = getCache(url);
+            Map rest =null;
+            if(cache)rest = getCache(url);
             if(rest!=null)return rest;
             HTTP http = new HTTP();
+            http.setConnectTimeout(connectTimeout)
+            .setReadTimeout(readTimeout);
             String resp = http.url(url).get().asString();
             //System.out.println("rrr:"+resp);
             int code=http.getResponseCode();
@@ -92,9 +102,8 @@ public class HttpFunction {
             }else{
                 Json j= Json.parse(resp);
                 rest.put("data", j.getRaw());
-                //System.out.println(j.Q("data.summary"));
             }
-            cache(url,rest);
+            if(cache)cache(url,rest);
             return rest;
         }catch(Exception e){
             return null;

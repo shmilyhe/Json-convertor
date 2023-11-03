@@ -1,5 +1,7 @@
 package io.shmilyhe.convert.tools;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -33,8 +35,11 @@ public class ExpEnv extends HashMap {
         return super.containsKey(key);
     }
 
+    static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     @Override
     public Object get(Object key) {
+        if("now".equals(key))return sdf.format(new Date());
+        if("timestamp".equals(key))return System.currentTimeMillis();
         Object o=null;
         if(this.parent!=null){
             o=parent.get(key);

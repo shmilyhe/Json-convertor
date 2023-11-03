@@ -28,6 +28,7 @@ public class HTTP {
 
     private static final int DEFAULT_READ_TIMEOUT = 6000;
 
+
     private HttpURLConnection conn;
 
     private String url;
@@ -45,6 +46,8 @@ public class HTTP {
     private String errMsg = "";
 
     private int connectTimeout = DEFAULT_CONNECT_TIMEOUT;
+
+   
 
     private int readTimeout = DEFAULT_READ_TIMEOUT;
 
@@ -141,7 +144,8 @@ public class HTTP {
                 conn = (HttpURLConnection) uri.openConnection();
                 conn.setDoOutput(true);
                 conn.setUseCaches(false);
-                conn.setConnectTimeout(10000);
+                conn.setConnectTimeout(this.connectTimeout);
+                conn.setReadTimeout(this.readTimeout);
                 conn.setRequestMethod("POST");
                 setHeaders(conn, this.headers);
                 if (headers == null || !headers.containsKey("Content-Type"))
@@ -298,12 +302,14 @@ public class HTTP {
         return false;
     }
 
-    public HTTP setConnectTimeout(int timeout) {
+    public HTTP setConnectTimeout(Integer timeout) {
+        if(timeout==null)return this;
         connectTimeout = timeout;
         return this;
     }
 
-    public HTTP setReadTimeout(int timeout) {
+    public HTTP setReadTimeout(Integer timeout) {
+        if(timeout==null)return this;
         readTimeout = timeout;
         return this;
     }

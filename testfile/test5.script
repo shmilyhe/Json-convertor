@@ -1,0 +1,15 @@
+bt=timestamp
+http.config.connectTimeout=1000
+http.config.readTimeout=1000
+#http.config.cache=false
+resp=httpget("https://kaifa.baidu.com/rest/v1/cards?wd=http")
+.httpcode=resp.code
+.summary=resp.data.data.summary
+if resp.code == 200 {
+    .successed=true
+}
+.test = resp.code == 200 
+.time=now
+.timestamp=timestamp
+et=timestamp
+.tooks=et-bt

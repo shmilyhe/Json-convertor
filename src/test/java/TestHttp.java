@@ -13,7 +13,7 @@ public class TestHttp {
         System.out.println(http.getResponseHeader("Content-Type"));
         System.out.println(http.getResponseCode());
         System.out.println(http.getErrorMessage());
-        Map m = HttpFunction.httpget("https://www.baidu.com");
+        Map m = HttpFunction.httpget("https://www.baidu.com",null);
         System.out.println(Json.asJsonString(m));
     }
     
