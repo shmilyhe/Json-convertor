@@ -203,7 +203,7 @@ public class SimpleJson {
 		}
 		String value=str.substring(off,i);
 		if(hasReturnWord) {
-			value = value.replaceAll("[\\\\r\\\\n]+", "\r\n");
+			value = value.replaceAll("[\\r\\n]+", "\r\n");
 		}
 		tmp_read_len=i-off;
 		if(stop!=' ')tmp_read_len+=2;//没有引号的情况下算读取长度要加上两个引号

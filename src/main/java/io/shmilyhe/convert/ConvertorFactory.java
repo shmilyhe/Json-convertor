@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import io.shmilyhe.convert.api.IConvertor;
 import io.shmilyhe.convert.api.IGet;
+import io.shmilyhe.convert.ext.HttpFunction;
 import io.shmilyhe.convert.impl.BaseConvertor;
 import io.shmilyhe.convert.impl.ComplexConvertor;
 import io.shmilyhe.convert.impl.EachConvertor;
@@ -160,7 +161,11 @@ public class ConvertorFactory {
             if(c==null||c.length()==0)continue;
             c=c.trim();
             if(c.startsWith("#"))continue;
-            if(this.isForEach(c)){
+            IConvertor hc = HttpFunction.getHttpGetFuncion(c, line);
+            if(hc!=null){
+                //HTTPGET 请求
+                convertor.addConvertor(hc);
+            }else if(this.isForEach(c)){
                 
                 BaseConvertor bc=new EachConvertor(this.getEachExpression(c)).setName(c);
                 convertor.addConvertor(bc);

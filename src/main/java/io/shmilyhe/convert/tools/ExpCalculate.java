@@ -64,6 +64,31 @@ public class ExpCalculate {
         }
     }
 
+
+    private static int readToend(String exp,int i,StringBuilder part){
+        char c=exp.charAt(i++);
+        part.append(c);
+        char l=c;
+        char f=c;
+        for (; i < exp.length(); i++) {
+            f=exp.charAt(i);
+            if(f=='\r'||f=='\n'){
+                break;
+            }else if(c!=f){
+                part.append(f);
+            }else{
+                if(l!='\\'){
+                    part.append(f);
+                    break;
+                }else{
+                    part.append(f);
+                }
+            }
+            l=f;
+        }
+        return i;
+    }
+
     public static String[] tokenizer(String exp) {
         ArrayList<String> tokens = new ArrayList<String>();
         int offset = 0;
@@ -71,6 +96,11 @@ public class ExpCalculate {
         for (int i = 0; i < exp.length(); i++) {
             char ch = exp.charAt(i);
             switch (ch) {
+                case '"':
+                    i=readToend(exp,i,part);
+                    tokens.add(part.toString());
+                    part = new StringBuilder();
+                    break;
                 case ' ':
 
                     break;

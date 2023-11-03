@@ -28,7 +28,8 @@ public class JsonString {
 		if(o==null){
 			json.append("null");
 		}else if(o instanceof String){
-			json.append('"').append(o).append('"');
+			String resp=(String)o;
+			json.append('"').append(resp).append('"');
 			return;
 		}else if (o instanceof Integer
 				||o instanceof Double
