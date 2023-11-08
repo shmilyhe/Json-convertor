@@ -40,7 +40,9 @@ public class CacheTokenizer implements ITokenizer{
 
     @Override
     public Token next() {
+        if(flag==null)return null;
         flag=flag.next;
+        if(flag==null)return null;
         return flag.data;
     }
 

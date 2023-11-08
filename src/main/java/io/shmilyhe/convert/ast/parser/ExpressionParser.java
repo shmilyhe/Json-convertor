@@ -40,15 +40,17 @@ public class ExpressionParser {
                c.addArgument(getExpression(it));
             }
         }
+        c.setMinus(call.minus());
         return c;
     }
 
     static Expression getBracketExpression(BracketToken bracket){
-          return  getExpression(bracket.getTokens());
+          return  getExpression(bracket.getTokens()).setMinus(bracket.minus());
     }
 
     public static Expression getExpression(ITokenizer tks) throws RuntimeException {
         tks=BracketParser.parsebracket(tks);
+        tks=MinusParser.parseMinus(tks);
         /* 数字栈 */
         //Stack<IGet> number = new Stack<IGet>();
         Stack<Expression> number = new Stack<Expression>();
@@ -125,11 +127,13 @@ public class ExpressionParser {
                 }else{
                     System.out.println("ppppp:"+temp);
                 }
+                get.setMinus(temp.minus());
                 number.push(get);
                 //System.out.println("数字栈更新："+temp);
             }
         }
 
+        Token l=null;
         while (operator.peek() != null) {// 遍历结束后，符号栈数字栈依次弹栈计算，并将结果压入数字栈
             Token b = operator.pop();
             //IGet a1 = number.pop();
@@ -139,14 +143,13 @@ public class ExpressionParser {
             if(number.size()>0){
                 a2=number.pop();
             }else{
+                System.out.println("xxxxx:"+b);
+                System.out.println("xxxxxl:"+l);
                 number.push(a1);
                 break;
             }
+            l=b;
             
-            
-            // System.out.println("符号栈更新："+operator);
-            // System.out.println("数字栈更新："+number);
-            // System.out.println("计算"+a2+b+a1);
             BinaryExpression exp= new BinaryExpression();
                 exp.setLeft(a2);
                 exp.setRight(a1);

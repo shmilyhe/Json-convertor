@@ -3,6 +3,7 @@ package io.shmilyhe.convert.ast.token;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.shmilyhe.convert.ast.expression.Identifier;
 import io.shmilyhe.convert.tokenizer.StringTokenizer;
 
 public class Tokenizer implements ITokenizer{
@@ -224,7 +225,8 @@ public class Tokenizer implements ITokenizer{
             last=back;
             back=null;
         }else{
-            last=next1();
+            Token t=next1();
+            last=t;
         }
         return last;
     }

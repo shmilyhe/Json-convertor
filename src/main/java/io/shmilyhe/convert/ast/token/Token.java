@@ -15,6 +15,48 @@ public class Token {
     protected int end;
     protected int line;
 
+    protected boolean minus;
+
+    public Token minus(boolean tf){
+        minus=tf;
+        return this;
+    }
+
+    public boolean minus(){
+        return minus;
+    }
+
+    public boolean isLiteral(){
+        return this.getType()==LITERAL;
+    }
+
+    public boolean isCommons(){
+        return this.getType()==COMMONS;
+    }
+
+    public boolean isNewline(){
+        return this.getType()==NEWLINE;
+    }
+
+    public boolean isSymbol(){
+        return this.getType()==SYMBOL;
+    }
+    public boolean isIdentifier(){
+        return this.getType()==IDENTIFIER;
+    }
+
+    public boolean isSpace(){
+        return this.getType()==SPACE;
+    }
+
+    public boolean isBracket(){
+        return this.getType()==BRACKET;
+    }
+    
+    public boolean isCallee(){
+        return this.getType()==CALLEE;
+    }
+
     public Token(){}
 
     public Token(String value){

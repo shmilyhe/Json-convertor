@@ -15,6 +15,17 @@ public class Expression {
     protected int end;
     protected int line;
 
+    protected boolean minus;
+
+    public boolean isMinus() {
+        return minus;
+    }
+
+    public Expression setMinus(boolean minus) {
+        this.minus = minus;
+        return this;
+    }
+
     public int getLine() {
         return line;
     }

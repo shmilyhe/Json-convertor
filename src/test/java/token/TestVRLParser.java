@@ -8,6 +8,9 @@ import io.shmilyhe.convert.tools.ResourceReader;
 public class TestVRLParser {
     public static void main(String[] args) {
         String commands =ResourceReader.read("testfile/callee.script");
+        System.out.println("===============================");
+        System.out.println("===============================");
+        System.out.println("===============================");
         VRLParser vrl = new VRLParser();
         Statement stat = vrl.parse(commands);
         stat.clearParent();
