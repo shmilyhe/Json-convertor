@@ -1,6 +1,9 @@
 package io.shmilyhe.convert.ast.expression;
 
 public class Literal extends Expression {
+    public Literal(String name){
+        this.setRaw(name);
+    }
 
     @Override
     public String getType() {

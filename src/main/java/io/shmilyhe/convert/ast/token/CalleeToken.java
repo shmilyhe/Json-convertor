@@ -49,8 +49,9 @@ public class CalleeToken extends Token {
         for(ITokenizer tks:arguments){
             if(tks!=null)while(tks.hasNext()){
                 Token t=tks.next();
-                sb.append(t);
+                sb.append("_").append(t);
             }
+            tks.reset();
             sb.append(",");
         }
         sb.append(")");

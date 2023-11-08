@@ -2,8 +2,12 @@
 a = test(a);
 b = t1(t2(a),c)
 
-if( int(a)>0){
-    print("000000")
+z = a+c-b/d*x
+y = (a+b)/c
+y =((a+b)/c)*((c-d)*o)
+
+if( int(a)>kkkk){
+    print('000000')
 }else if(c==2){
     print('00000i')
 }else{

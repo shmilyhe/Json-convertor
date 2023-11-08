@@ -41,6 +41,12 @@ public class IfStatement extends Statement {
         return this;
     }
 
+    public void clearParent(){
+        super.clearParent();
+        if(alternate!=null)
+        alternate.clearParent();
+    }
+
     
 
 

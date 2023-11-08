@@ -6,6 +6,8 @@ public class CacheTokenizer implements ITokenizer{
     protected Node tail;
     protected Node flag;
 
+    int size=0;
+
     public void add(Token t){
         if(head==null){
             head=new Node();
@@ -17,6 +19,10 @@ public class CacheTokenizer implements ITokenizer{
         n.pre=tail;
         tail.next=n;
         tail=n;
+        size++;
+    }
+    public int size(){
+        return size;
     }
 
     public CacheTokenizer removeTail(){
@@ -43,6 +49,14 @@ public class CacheTokenizer implements ITokenizer{
         if(flag!=null&flag.pre!=null){
             flag=flag.pre;
         }
+    }
+    @Override
+    public void reset() {
+        flag=head;
+    }
+
+    public String toString(){
+        return String.valueOf(flag==head);
     }
     
 }

@@ -8,6 +8,7 @@ public class Token {
     public final static int COMMONS=4;
     public final static int SPACE=5;
     public final static int CALLEE=6;
+    public final static int BRACKET=7;
     protected String raw;
     protected int type;
     protected int start;

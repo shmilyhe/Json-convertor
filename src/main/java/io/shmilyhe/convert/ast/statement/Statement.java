@@ -3,8 +3,6 @@ package io.shmilyhe.convert.ast.statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.shmilyhe.convert.ast.token.ITokenizer;
-
 public class Statement {
     public static final String TYPE_IF    = "IfStatement";
     public static final String TYPE_FOR   = "ForStatement";
@@ -16,28 +14,36 @@ public class Statement {
     public static final String TYPE_ROOT= "RootStatement";
     
 
-    private ITokenizer tokens;
-
-    public ITokenizer getTokens() {
-        return tokens;
-    }
-
-    public Statement setTokens(ITokenizer tokens) {
-        this.tokens = tokens;
-        return this;
-    }
-
     protected String type;
     protected int start;
     protected int end;
     protected int line;
+
+    protected Statement parent;
     
+    public void clearParent(){
+        this.parent=null;
+        if(body!=null)
+        for(Statement b:body){
+            b.clearParent();
+        }
+    }
+    public Statement getParent() {
+        return parent;
+    }
+
+    public Statement setParent(Statement parent) {
+        this.parent = parent;
+        return this;
+    }
+
     protected List<Statement> body;
 
     public Statement addBody(Statement b){
         if(body==null){
             body= new ArrayList<>();
         }
+        b.parent=this;
         body.add(b);
         return this;
     }

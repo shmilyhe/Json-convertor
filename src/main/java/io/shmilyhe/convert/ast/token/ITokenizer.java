@@ -4,4 +4,5 @@ public interface ITokenizer {
     boolean hasNext();
     Token next();
     void back();
+    void reset();
 }

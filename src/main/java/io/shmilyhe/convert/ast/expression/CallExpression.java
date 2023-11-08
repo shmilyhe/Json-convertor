@@ -1,5 +1,6 @@
 package io.shmilyhe.convert.ast.expression;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CallExpression extends Expression{
@@ -24,6 +25,11 @@ public class CallExpression extends Expression{
 
     public List<Expression> getArguments() {
         return arguments;
+    }
+
+    public void addArgument(Expression exp){
+        if(arguments==null)arguments= new ArrayList<>();
+        arguments.add(exp);
     }
 
     public CallExpression setArguments(List<Expression> arguments) {
