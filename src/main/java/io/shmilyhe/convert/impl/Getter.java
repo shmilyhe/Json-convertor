@@ -67,7 +67,7 @@ public class Getter implements IGet{
     public Object get(Object data,ExpEnv env) {
         
         Object o =get1(data,env);
-        System.out.println("m:"+minus+" v:"+o);
+        //System.out.println("m:"+minus+" v:"+o);
         if(o==null)return null;
         if(this.minus){
             return SystemFunction.revert(o);
