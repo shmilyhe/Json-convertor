@@ -8,6 +8,10 @@ import io.shmilyhe.convert.callee.IFunction;
 import io.shmilyhe.convert.tools.ExpEnv;
 import io.shmilyhe.convert.tools.StringValue;
 
+/**
+ * 保留小数
+ * 用法 round(数值,保留位数) 如 round(3.33333,2) 结果是 3.33
+ */
 public class RoundRfuntion implements IFunction {
 
     @Override
@@ -15,7 +19,6 @@ public class RoundRfuntion implements IFunction {
         try{
             Object num =args.get(0);
             if(num==null)return null;
-            
             Integer scale =(Integer)args.get(1);
             if(scale==null)scale=2;
             BigDecimal dec =null;

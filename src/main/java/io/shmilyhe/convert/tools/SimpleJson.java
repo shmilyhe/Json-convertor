@@ -219,6 +219,9 @@ public class SimpleJson {
 		if(v.indexOf('.')>-1){
 			return Double.parseDouble(v);
 		}
+		if(v.length()<8){
+			return Integer.parseInt(v);
+		}
 		return Long.parseLong(v);
 	}
 	

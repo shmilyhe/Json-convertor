@@ -58,9 +58,9 @@ public class Literal extends Expression {
             try{
             if(isInt(raw)){
                 if(raw.length()<8){
-                    return Integer.valueOf(raw);
+                    return this.isMinus()?-Integer.valueOf(raw):Integer.valueOf(raw);
                 }
-                return Long.valueOf(raw);
+                return this.isMinus()?-Long.valueOf(raw):Long.valueOf(raw);
             }
             if(isDouble(raw))return Double.valueOf(raw);
             }catch(Exception e){
@@ -69,7 +69,7 @@ public class Literal extends Expression {
         }else if(getValueType()==V_STRING){
             return unwrap(raw);
         }else if(getValueType()==V_BOOLEAN){
-            return Boolean.valueOf(raw);
+            return this.isMinus()?!Boolean.valueOf(raw):Boolean.valueOf(raw);
         }else if(getValueType()==V_NULL){
             return null;
         }
@@ -94,7 +94,8 @@ public class Literal extends Expression {
             str.charAt(0)=='"'&&str.charAt(off)=='"'
             ||str.charAt(0)=='\''&&str.charAt(off)=='\''
             ){
-            return str.substring(1, off);
+            return str.substring(1, off)
+            .replaceAll("\\\\\"", "\"").replaceAll("\\\\'", "'");
         }
         return str;
     }

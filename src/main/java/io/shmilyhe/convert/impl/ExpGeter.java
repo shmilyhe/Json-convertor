@@ -100,6 +100,9 @@ public class ExpGeter implements IGet{
             ||operator.equals(OperatorType.SUB)
         )){
             res=mult(-1,res); 
+        }else if(minus&&(res instanceof Boolean)
+        ){
+            res= !((Boolean)res);
         }
         DEBUG.debug("cal:",param1," ",operator," ",param2,"=",res);
         return res;

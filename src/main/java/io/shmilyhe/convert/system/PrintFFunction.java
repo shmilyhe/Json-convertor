@@ -5,6 +5,9 @@ import java.util.List;
 import io.shmilyhe.convert.callee.IFunction;
 import io.shmilyhe.convert.tools.ExpEnv;
 
+/**
+ * 类似  c 的printf 方法
+ */
 public class PrintFFunction implements IFunction{
 
     @Override

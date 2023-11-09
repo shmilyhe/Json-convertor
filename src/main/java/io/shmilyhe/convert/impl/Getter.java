@@ -1,8 +1,11 @@
 package io.shmilyhe.convert.impl;
 
+import java.math.BigDecimal;
+
 import io.shmilyhe.convert.api.ExpPartVo;
 import io.shmilyhe.convert.api.IDataAccess;
 import io.shmilyhe.convert.api.IGet;
+import io.shmilyhe.convert.system.SystemFunction;
 import io.shmilyhe.convert.tools.DEBUG;
 import io.shmilyhe.convert.tools.ExpEnv;
 
@@ -10,6 +13,13 @@ public class Getter implements IGet{
     IDataAccess da;
     private boolean isVar;
     String exp;
+
+    protected boolean minus;
+
+    public Getter setMinus(boolean m){
+        this.minus=m;
+        return this;
+    }
 
     public Getter(String ext){
         this(ext,false);
@@ -36,8 +46,7 @@ public class Getter implements IGet{
         }
     }
 
-    @Override
-    public Object get(Object data,ExpEnv env) {
+    public Object get1(Object data,ExpEnv env) {
         Object b=data;
         if(isVar)b=env;
         IDataAccess flag =da;       
@@ -53,6 +62,17 @@ public class Getter implements IGet{
             }  
         }
         return null;
+    }
+    @Override
+    public Object get(Object data,ExpEnv env) {
+        
+        Object o =get1(data,env);
+        System.out.println("m:"+minus+" v:"+o);
+        if(o==null)return null;
+        if(this.minus){
+            return SystemFunction.revert(o);
+        }
+        return o;
     }
      public boolean isVar() {
         return isVar;

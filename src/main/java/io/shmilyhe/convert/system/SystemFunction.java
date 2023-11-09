@@ -21,6 +21,9 @@ import io.shmilyhe.convert.impl.SelfGetter;
 import io.shmilyhe.convert.impl.Setter;
 import io.shmilyhe.convert.tools.DEBUG;
 
+/**
+ * 系统的内置方法
+ */
 public class SystemFunction {
 
     public static String removeRootString(String s){
@@ -39,7 +42,7 @@ public class SystemFunction {
             if(".".equals(a)){
                 g= new SelfGetter();
             }else{
-                g=new Getter(SystemFunction.removeRootString(a))
+                g=new Getter(SystemFunction.removeRootString(a)).setMinus(exp.isMinus())
                 .setVar(!a.startsWith("."));
             }
             return g;
@@ -55,7 +58,7 @@ public class SystemFunction {
                 args .add(getExp(ex));
             }
             String name =((Identifier)ce.getCallee()).getName();
-            Callee callee = new Callee(name,args);
+            Callee callee = new Callee(name,args).setMinus(exp.isMinus());
             return callee;
         }else if(Expression.TYPE_BIN.equals(type)){
             BinaryExpression be = (BinaryExpression)exp;
@@ -68,6 +71,33 @@ public class SystemFunction {
         return null;
     }
 
+
+    public static Object revert(Object o){
+        if(o instanceof Boolean){
+            return !(Boolean)o;  
+        }
+        if(o instanceof Integer){
+            return -(Integer)o;  
+        }
+        if(o instanceof Long){
+            return -(Long)o;  
+        }
+        if(o instanceof Float){
+            return -(Float)o;  
+        }
+        if(o instanceof Double){
+            return -(Double)o;  
+        }
+        return o;
+    }
+
+    /**
+     * 内置的方法
+     * @param name 方法名
+     * @param args 参数
+     * @param line 脚本行数
+     * @return  执行器
+     */
     public IConvertor func(String name,List<Expression>  args,int line){
         String f=name;
         int argCount=0;
@@ -184,7 +214,18 @@ public class SystemFunction {
                 };
             }
         }
-        return null;
+        
+        List<IGet> as = new ArrayList<>();
+        if(args!=null){
+            for(Expression ex:args){
+                as.add(getExp(ex));
+            }
+        }
+        final Callee callee = new Callee(name,as);
+        return (data,env)->{
+            callee.get(data, env);
+            return data;
+        };
     }
     
 }

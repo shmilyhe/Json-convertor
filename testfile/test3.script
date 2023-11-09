@@ -10,7 +10,7 @@ each(.names){
 }
 
 
-if .names[13]=="ooooo" {
+if (.names[13]=="ooooo") {
   exit()
 }
 

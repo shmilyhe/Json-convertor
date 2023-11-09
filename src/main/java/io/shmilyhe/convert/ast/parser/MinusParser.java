@@ -12,7 +12,7 @@ public class MinusParser {
         for(;tks.hasNext();){
             Token t =tks.next();
             if(t.isCommons()||t.isSpace())continue;
-            if(t.isSymbol()&&"-".equals(t.getRaw())){
+            if(t.isSymbol()&&("-".equals(t.getRaw())||"!".equals(t.getRaw()))){
                 Token t2=tks.next();
                 if(t2==null){
                     ctks.add(t);

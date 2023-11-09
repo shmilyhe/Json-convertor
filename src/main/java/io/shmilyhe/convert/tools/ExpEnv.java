@@ -3,6 +3,7 @@ package io.shmilyhe.convert.tools;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.UUID;
 
 /**
  * 运行的上下文
@@ -40,6 +41,7 @@ public class ExpEnv extends HashMap {
     public Object get(Object key) {
         if("now".equals(key))return sdf.format(new Date());
         if("timestamp".equals(key))return System.currentTimeMillis();
+        if("uuid".equals(key))return UUID.randomUUID().toString().replaceAll("-", "");
         Object o=null;
         if(this.parent!=null){
             o=parent.get(key);

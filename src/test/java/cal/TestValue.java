@@ -4,6 +4,8 @@ import java.util.regex.Pattern;
 
 public class TestValue {
     public static void main(String[] args) {
+        String text ="123456789";
+        System.out.println(text.substring(1,text.length()-1));
         TestValue tv = new TestValue();
         System.out.println(tv.isDouble("192.01"));
         System.out.println(tv.isDouble("192"));
