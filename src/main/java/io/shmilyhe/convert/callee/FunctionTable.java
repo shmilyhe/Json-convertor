@@ -8,6 +8,7 @@ import io.shmilyhe.convert.system.JsonStringify;
 import io.shmilyhe.convert.system.Len;
 import io.shmilyhe.convert.system.PrintFFunction;
 import io.shmilyhe.convert.system.RoundRfuntion;
+import io.shmilyhe.convert.system.StringJoin;
 import io.shmilyhe.convert.system.StringLower;
 import io.shmilyhe.convert.system.StringSubstring;
 import io.shmilyhe.convert.system.StringUpper;
@@ -25,7 +26,10 @@ public class FunctionTable {
         function.put("String.toUpperCase", new StringUpper());
         function.put("String.toLowerCase", new StringLower());
         function.put("String.substring", new StringSubstring());
+        function.put("String.join", new StringJoin());
         function.put("len",new Len());
+
+        
         
         
     }
