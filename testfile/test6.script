@@ -29,9 +29,9 @@ each(temp1){
 .num=round(0.1*33.33/4.1,2)
 .num1=round("e",2)
 
-#resp=httpget("https://kaifa.baidu.com/rest/v1/cards?wd=http")
-#.httpcode=resp.code
-#.summary=resp.data.data.summary
+resp=http.get("https://kaifa.baidu.com/rest/v1/cards?wd=http")
+.httpcode=resp.code
+.summary=resp.data.data.summary
 .id=uuid
 .json=JSON.parse('{"name":"eric","age":18}');
 .age=.json.age*2.3
@@ -44,5 +44,6 @@ each(temp1){
 if(!.boolean){
     print('jkl-----')
 }
+.title=String.join(.age,.name,"-------",uuid,.text)
 move(.,.data)
 print('jkl')

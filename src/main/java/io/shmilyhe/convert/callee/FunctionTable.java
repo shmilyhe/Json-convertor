@@ -19,6 +19,7 @@ public class FunctionTable {
     static{
         function= new HashMap<>();
         function.put("httpget", new HttpFun());
+        function.put("http.get", new HttpFun());
         function.put("printf",new PrintFFunction());
         function.put("round", new RoundRfuntion());
         function.put("JSON.parse", new JsonParse());
