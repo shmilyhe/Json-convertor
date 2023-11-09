@@ -3,7 +3,7 @@ package io.shmilyhe.convert.ast.parser;
 import java.util.List;
 import java.util.Stack;
 
-
+import io.shmilyhe.convert.ast.expression.AssignmentExpression;
 import io.shmilyhe.convert.ast.expression.BinaryExpression;
 import io.shmilyhe.convert.ast.expression.CallExpression;
 import io.shmilyhe.convert.ast.expression.Expression;
@@ -89,12 +89,22 @@ public class ExpressionParser {
                         Expression  a1 = number.pop();
                         Expression a2 = number.pop();
                         Token b = operator.pop();
-                         BinaryExpression exp= new BinaryExpression();
-                        exp.setLeft(a2);
-                        exp.setRight(a1);
-                        exp.setOperater(b.getRaw());
-                        exp.setStart(a1.getStart()).setEnd(a2.getEnd())
-                        .setLine(b.getLine());
+                        Expression exp=null;
+                        if("=".equals(b.getRaw())){
+                            exp = new AssignmentExpression()
+                            .setLeft(a2)
+                            .setRight(a1)
+                            .setOperater(b.getRaw())
+                            .setStart(a1.getStart()).setEnd(a2.getEnd())
+                            .setLine(b.getLine());
+                        }else{
+                            exp = new BinaryExpression()
+                            .setLeft(a2)
+                            .setRight(a1)
+                            .setOperater(b.getRaw())
+                            .setStart(a1.getStart()).setEnd(a2.getEnd())
+                            .setLine(b.getLine());
+                        }
                         number.push(exp);
                         // System.out.println("符号栈更新："+operator);
                         // System.out.println("数字栈更新："+number);
@@ -116,7 +126,7 @@ public class ExpressionParser {
                     get.setStart(temp.getStart()).setEnd(temp.getEnd())
                     .setLine(temp.getLine());
                 }else if(temp.getType()==Token.LITERAL){
-                    get = new Literal(temp.getRaw());
+                    get = new Literal(temp.getRaw()).setValueType(temp.getValueType());
                     get.setStart(temp.getStart()).setEnd(temp.getEnd())
                     .setLine(temp.getLine());
                 }else if(temp.getType()==Token.CALLEE){
@@ -150,13 +160,29 @@ public class ExpressionParser {
             }
             l=b;
             
-            BinaryExpression exp= new BinaryExpression();
+            /*BinaryExpression exp= new BinaryExpression();
                 exp.setLeft(a2);
                 exp.setRight(a1);
                 exp.setOperater(b.getRaw());
                 exp.setStart(a1.getStart()).setEnd(a2.getEnd())
+                .setLine(b.getLine());*/
+            Expression exp=null;
+            if("=".equals(b.getRaw())){
+                exp = new AssignmentExpression()
+                .setLeft(a2)
+                .setRight(a1)
+                .setOperater(b.getRaw())
+                .setStart(a1.getStart()).setEnd(a2.getEnd())
                 .setLine(b.getLine());
-                number.push(exp);
+            }else{
+                exp = new BinaryExpression()
+                .setLeft(a2)
+                .setRight(a1)
+                .setOperater(b.getRaw())
+                .setStart(a1.getStart()).setEnd(a2.getEnd())
+                .setLine(b.getLine());
+            }
+            number.push(exp);
             //number.push(new ExpGeter(a2, a1, OperatorType.find(b)));
             // System.out.println("数字栈更新："+number);
         }

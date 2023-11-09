@@ -3,7 +3,6 @@ package io.shmilyhe.convert.ast.token;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import io.shmilyhe.convert.ast.expression.Identifier;
 import io.shmilyhe.convert.tokenizer.StringTokenizer;
 
 public class Tokenizer implements ITokenizer{
@@ -19,7 +18,6 @@ public class Tokenizer implements ITokenizer{
     }
 
     public Token next1(){
-        StringBuilder sb = new StringBuilder();
         char c=tks.next();
         Token t =null;
         int start =tks.offset();
@@ -189,16 +187,27 @@ public class Tokenizer implements ITokenizer{
                     }
             default:
                 String str=c+tks.toSymbol();
+                //System.out.println(str);
                 int type=Token.IDENTIFIER;
+                int vtype=Token.V_STRING;
                 if("true".equalsIgnoreCase(str)||"false".equalsIgnoreCase(str)){
                     type=Token.LITERAL;
+                    vtype=Token.V_BOOLEAN;
+                }else if(".".equals(str)) {
+                    type=Token.IDENTIFIER;
+                    vtype=Token.IDENTIFIER;
                 }else if(isNumber(str)) {
                     type=Token.LITERAL;
+                    vtype=Token.V_NUMBER;
+                }else if("null".equals(str)) {
+                    type=Token.LITERAL;
+                    vtype=Token.V_NULL;
                 }
                 return new Token(str)
                         .setType(type)
                         .setStart(start)
                         .setEnd(tks.offset())
+                        .setValueType(vtype)
                         .setLine(line);
         }
 
@@ -235,5 +244,10 @@ public class Tokenizer implements ITokenizer{
     public void reset() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'reset'");
+    }
+
+    @Override
+    public void print() {
+        
     }
 }

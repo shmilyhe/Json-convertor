@@ -18,4 +18,9 @@ public class ExpressionStatement extends Statement {
         this.experssion = experssion;
         return this;
     }
+
+    public boolean isCallee(){
+        if(experssion==null)return false;
+        return Expression.TYPE_CALL.equals(experssion.getType());
+    }
 }

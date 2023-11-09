@@ -60,6 +60,13 @@ public class CacheTokenizer implements ITokenizer{
     public String toString(){
         return String.valueOf(flag==head);
     }
+
+    public void print(){
+        while(hasNext()){
+            System.out.println(next());
+        }
+        reset();
+    }
     
 }
 class Node{

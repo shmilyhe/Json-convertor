@@ -12,7 +12,24 @@ public class Statement {
     public static final String TYPE_FUN   = "FunctionStatement";
     public static final String TYPE_RETURN= "ReturnStatement";
     public static final String TYPE_ROOT= "RootStatement";
-    
+
+    public boolean isCallee(){
+        return false;
+    }
+    public boolean isIf(){
+        return TYPE_IF.equals(getType());
+    }
+    public boolean isEach(){
+        return TYPE_EACH.equals(getType());
+    }
+    public boolean isBlock(){
+        return TYPE_BLOCK.equals(getType());
+    }
+
+    public boolean isExpression(){
+        //System.out.println("isExpression:"+(TYPE_EXP.equals(getType()))+"|"+getType());
+        return TYPE_EXP.equals(getType());
+    }
 
     protected String type;
     protected int start;

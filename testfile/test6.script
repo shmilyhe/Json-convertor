@@ -1,0 +1,36 @@
+a=1
+b=2
+c=3
+d=5
+e=6
+
+.a=a
+.y=-(1+2*3)
+.z=(1+2)*3
+
+if(.z==9){
+    .zz='qqqq'
+}else{
+    .zz='aaaa'
+}
+
+# 综合示例2 求0-10 之前的奇数
+# 初始化一个数组
+temp1[10]=1
+at=0
+each(temp1){
+    .=at
+    if (at%2==0) {del(.)}
+    at=at+1
+}
+.odd=temp1
+
+.text = printf("你好%s今天天气%s！%d\r现在的时间是:%s","小李","好",10,now)
+.num=round(0.1*33.33/4.1,2)
+.num1=round("e",2)
+
+resp=httpget("https://kaifa.baidu.com/rest/v1/cards?wd=http")
+.httpcode=resp.code
+.summary=resp.data.data.summary
+
+move(.,.data)

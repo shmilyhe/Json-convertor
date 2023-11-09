@@ -3,12 +3,12 @@ package io.shmilyhe.convert.ast.expression;
 import io.shmilyhe.convert.ast.token.ITokenizer;
 
 public class Expression {
-    public final String TYPE_ID="Identifier";
-    public final String TYPE_BIN="BinaryExpression";
-    public final String TYPE_CALL="CallExpression";
-    public final String TYPE_LIT="Literal";
-    public final String TYPE_ASSIGN="AssignmentExpression";
-    public final String TYPE_UPDATE="UpdateExpression";
+    public static final String TYPE_ID="Identifier";
+    public static final String TYPE_BIN="BinaryExpression";
+    public static final String TYPE_CALL="CallExpression";
+    public static final String TYPE_LIT="Literal";
+    public static final String TYPE_ASSIGN="AssignmentExpression";
+    public static final String TYPE_UPDATE="UpdateExpression";
     
     protected String type;
     protected int start;
@@ -19,6 +19,10 @@ public class Expression {
 
     public boolean isMinus() {
         return minus;
+    }
+
+    public boolean isAssignment(){
+        return false;
     }
 
     public Expression setMinus(boolean minus) {

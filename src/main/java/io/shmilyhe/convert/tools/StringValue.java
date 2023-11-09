@@ -48,7 +48,12 @@ public  class StringValue {
 	
 	public static double toDouble(String str){
 		if(str==null)return 0;
-		return Double.parseDouble(str);
+		try{
+			return Double.parseDouble(str);
+		}catch(Exception e){
+			return 0.0;
+		}
+		
 	}
 	
 	

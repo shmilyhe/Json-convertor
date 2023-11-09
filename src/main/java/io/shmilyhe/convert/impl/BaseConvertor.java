@@ -27,6 +27,7 @@ public abstract class BaseConvertor implements IConvertor {
     }
 
     public void addConvertor(IConvertor c){
+        if(c==null)return;
         parent(c);
         clist.add(c);
     }

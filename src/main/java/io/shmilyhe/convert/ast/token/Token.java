@@ -9,11 +9,31 @@ public class Token {
     public final static int SPACE=5;
     public final static int CALLEE=6;
     public final static int BRACKET=7;
+
+    public final static int V_NUMBER=1;
+    public final static int V_STRING=0;
+    public final static int V_BOOLEAN=2;
+    public final static int V_NULL=3;
+
     protected String raw;
     protected int type;
     protected int start;
     protected int end;
     protected int line;
+
+    protected int valueType;
+    
+
+
+    public int getValueType() {
+        return valueType;
+    }
+
+    public Token setValueType(int valueType) {
+        this.valueType = valueType;
+        return this;
+    }
+
 
     protected boolean minus;
 

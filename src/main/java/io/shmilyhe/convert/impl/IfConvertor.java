@@ -20,6 +20,18 @@ public class IfConvertor extends ComplexConvertor{
     String exp;
     IGet cond;
 
+    protected IConvertor alternate;
+
+    public IConvertor getAlternate() {
+        return alternate;
+    }
+    public IfConvertor setAlternate(IConvertor alternate) {
+        this.alternate = alternate;
+        return this;
+    }
+    public IfConvertor(IGet exp){
+            cond=exp;
+    }
     public IfConvertor(String exp){
         this.exp=exp;
         DEBUG.debug("condexp1:",exp);
@@ -35,11 +47,9 @@ public class IfConvertor extends ComplexConvertor{
         }else{
             //System.out.println("条件不能成"+this);
             DEBUG.debug("condexp:",exp," is ",false);
-            if(elseList==null||elseList.size()==0){
-                DEBUG.debug("========end:",this.getName(),"========"); 
-                return root;
-            }
-            return convertElse(root,new ExpEnv(env));
+            if(alternate!=null)
+            return this.alternate.convert(root, env);
+            return root;
         }
         
     }

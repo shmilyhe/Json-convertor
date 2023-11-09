@@ -5,4 +5,5 @@ public interface ITokenizer {
     Token next();
     void back();
     void reset();
+    void print();
 }

@@ -6,7 +6,7 @@
 # 变量赋值 变量 不以"." 开头
 # 变量与性属的区别 ：属性会在JSON转换结果里出现，而变量只是中间过程，不会在JSON中体现
 var1 = 2
-var2 = "2023"
+var2 = '2023'
 
 # 和字符串相加后，变量会变成字符串
 var3 = var1+var2
@@ -22,7 +22,7 @@ move(.addr.contry,.contry)
 
 # 分枝
 if (.ext==123) {.abc=true}
-if var2=="2023" {.att5="203333"}
+if (var2=='2023') {.att5='203333'}
 
 # 遍历
 each(.group){.=.+9999}
@@ -33,12 +33,12 @@ del(.age)
 # 综合用法
 
 tmp=0
-a="eric"
+a='eric'
 each(.persons){ 
     tmp = tmp+1
    .name=.name+tmp 
    .age= tmp%3*10+tmp*2
-   if tmp%3 ==0 {
+   if (tmp%3 ==0) {
     .a[0]=tmp
    }
 }
@@ -51,10 +51,11 @@ temp1[10]=1
 at=0
 each(temp1){
     .=at
-    if at%2==0 { del(.)}
+    if (at%2==0) { del(.)}
     at=at+1
 }
 .odd=temp1
 
 # 把自身往下移一个层
 move(.,.data)
+

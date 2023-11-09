@@ -16,6 +16,16 @@ public class ExpGeter implements IGet{
     static int TYPE_DATE=4;
     static final char[] OPS = {'=', '>', '<', '+', '-', '*', '/', '%', '!', '&', '|'};
 
+    private boolean minus;
+
+    public boolean isMinus() {
+        return minus;
+    }
+
+    public ExpGeter setMinus(boolean minus) {
+        this.minus = minus;
+        return this;
+    }
 
     //表达式
     private String expression;
@@ -81,6 +91,15 @@ public class ExpGeter implements IGet{
             case NEQ:
             res= neq(param1, param2);
             break;
+        }
+        if(minus&&(
+            operator.equals(OperatorType.ADD)
+            ||operator.equals(OperatorType.DIV)
+            ||operator.equals(OperatorType.MULT)
+            ||operator.equals(OperatorType.MOD)
+            ||operator.equals(OperatorType.SUB)
+        )){
+            res=mult(-1,res); 
         }
         DEBUG.debug("cal:",param1," ",operator," ",param2,"=",res);
         return res;

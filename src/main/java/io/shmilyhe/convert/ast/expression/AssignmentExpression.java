@@ -7,4 +7,7 @@ public class AssignmentExpression extends BinaryExpression {
     public String getType() {
         return TYPE_ASSIGN;
     }
+    public boolean isAssignment(){
+        return true;
+    }
 }

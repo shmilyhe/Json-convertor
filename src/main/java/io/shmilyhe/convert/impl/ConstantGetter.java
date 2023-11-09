@@ -10,6 +10,15 @@ public class ConstantGetter implements IGet {
 
     private Object v;
 
+    public ConstantGetter(){
+
+    }
+
+    public ConstantGetter setValue(Object o){
+        v=o;
+        return this;
+    }
+
     public ConstantGetter (String s){
         v=valueOf(s);
     }

@@ -40,6 +40,12 @@ public class VRLParser {
                     exptks.add(t);
                 }
             }else if(t.getType()==Token.SYMBOL&&"}".equals(t.getRaw())){
+                    if(exptks!=null&&exptks.size()>0){
+                        ExpressionStatement exps = new ExpressionStatement();
+                        exps.setExperssion(ExpressionParser.parseCallee(exptks));
+                        exptks=new CacheTokenizer();
+                        curr.addBody(exps);
+                    }
                     last=curr;
                     curr=curr.getParent();
                     exptks=new CacheTokenizer();
@@ -81,6 +87,12 @@ public class VRLParser {
             }else{
                     exptks.add(t);
             }
+        }
+        if(exptks!=null&&exptks.size()>0){
+            ExpressionStatement exps = new ExpressionStatement();
+            exps.setExperssion(ExpressionParser.parseCallee(exptks));
+            exptks=new CacheTokenizer();
+            curr.addBody(exps);
         }
         return root;
     }
