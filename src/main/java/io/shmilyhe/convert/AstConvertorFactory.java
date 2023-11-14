@@ -25,8 +25,17 @@ import io.shmilyhe.convert.impl.Setter;
 import io.shmilyhe.convert.system.SystemFunction;
 import io.shmilyhe.convert.tools.DEBUG;
 
+/**
+ * AST 生成转换器
+ */
 public class AstConvertorFactory {
     SystemFunction systemfunction=new SystemFunction();
+
+    /**
+     * AST 生成转换器
+     * @param commands 脚本
+     * @return 转换器
+     */
     public IConvertor getConvertor(String commands){
         Statement stat =parse(commands);
         BaseConvertor convertor = new ComplexConvertor().setName("root");
@@ -36,6 +45,11 @@ public class AstConvertorFactory {
         return convertor;
     }
 
+    /**
+     * 解析语法
+     * @param commands  脚本
+     * @return 分板
+     */
     private Statement parse(String commands){
         VRLParser vrl = new VRLParser();
         Statement stat = vrl.parse(commands);
@@ -46,6 +60,11 @@ public class AstConvertorFactory {
         return stat;
     }
 
+    /**
+     * 转换
+     * @param stat 代码块
+     * @param parent 父转换器
+     */
     private void getConvertor(Statement stat,BaseConvertor parent){
         //System.out.println("type:"+stat.getType());
         if(stat.isCallee()){
@@ -62,6 +81,12 @@ public class AstConvertorFactory {
         }
     }
 
+
+    /**
+     * 调用代码块
+     * @param stat
+     * @return
+     */
     private IConvertor calleeStatement(Statement stat){
        
         ExpressionStatement estat = (ExpressionStatement)stat;
@@ -72,6 +97,11 @@ public class AstConvertorFactory {
         return systemfunction.func(fname, args,estat.getLine());
     }
 
+    /**
+     * 表达式块
+     * @param stat
+     * @return
+     */
     private IConvertor expStatement(Statement stat){
         //System.out.println("exp:"+stat.getType());
         ExpressionStatement es = (ExpressionStatement)stat;
@@ -97,6 +127,13 @@ public class AstConvertorFactory {
     private IGet getExp(Expression exp){
         return SystemFunction.getExp(exp);
     }
+
+
+    /**
+     * IF块
+     * @param stat
+     * @return
+     */
     private IConvertor ifStatement(Statement stat){
         //System.out.println("if:"+stat.getType());
         IfStatement is = (IfStatement)stat;
@@ -120,6 +157,12 @@ public class AstConvertorFactory {
         return bc;
     }
 
+
+    /**
+     * Each 块
+     * @param stat
+     * @return
+     */
     private IConvertor eachStatement(Statement stat){
         //System.out.println("each:"+stat.getType());
         EachStatement es =(EachStatement)stat;
@@ -133,6 +176,12 @@ public class AstConvertorFactory {
         return eac;
     }
 
+
+    /**
+     * 块
+     * @param stat
+     * @return
+     */
     private IConvertor blockStatement(Statement stat){
         //System.out.println("block:"+stat.getType());
         BaseConvertor block = new ComplexConvertor().setName("block");

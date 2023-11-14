@@ -11,7 +11,7 @@ public class JsonConvertor {
     IConvertor convertor=null;
 
     public JsonConvertor(String commands){
-        convertor= new ConvertorFactory().getConvertor(commands);
+        convertor= new AstConvertorFactory().getConvertor(commands);
     }
 
     public JsonConvertor(String[] cmds){

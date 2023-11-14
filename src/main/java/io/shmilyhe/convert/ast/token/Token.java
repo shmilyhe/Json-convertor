@@ -1,6 +1,10 @@
 package io.shmilyhe.convert.ast.token;
 
 public class Token {
+
+    /**
+     * Token 类型
+     */
     public final static int SYMBOL=0;
     public final static int IDENTIFIER=1;
     public final static int LITERAL=2;
@@ -10,17 +14,27 @@ public class Token {
     public final static int CALLEE=6;
     public final static int BRACKET=7;
 
+    /**
+     * 值类型
+     */
     public final static int V_NUMBER=1;
     public final static int V_STRING=0;
     public final static int V_BOOLEAN=2;
     public final static int V_NULL=3;
 
+    /**
+     * 原始值
+     */
     protected String raw;
     protected int type;
     protected int start;
     protected int end;
     protected int line;
 
+
+    /**
+     * 值类型
+     */
     protected int valueType;
     
 

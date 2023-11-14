@@ -5,6 +5,9 @@ import io.shmilyhe.convert.ast.token.CacheTokenizer;
 import io.shmilyhe.convert.ast.token.ITokenizer;
 import io.shmilyhe.convert.ast.token.Token;
 
+/**
+ * 括号转化为token
+ */
 public class BracketParser {
     
     public static ITokenizer parsebracket(ITokenizer tks){

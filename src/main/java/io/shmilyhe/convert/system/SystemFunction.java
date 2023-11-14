@@ -34,6 +34,11 @@ public class SystemFunction {
     }
 
 
+    /**
+     * 表达式转成执行器
+     * @param exp
+     * @return
+     */
     public static IGet getExp(Expression exp){
         String type=exp.getType();
         if(Expression.TYPE_ID.equals(type)){
@@ -72,6 +77,11 @@ public class SystemFunction {
     }
 
 
+    /**
+     * 取反
+     * @param o
+     * @return
+     */
     public static Object revert(Object o){
         if(o instanceof Boolean){
             return !(Boolean)o;  

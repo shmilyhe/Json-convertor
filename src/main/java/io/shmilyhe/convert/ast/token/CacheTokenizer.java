@@ -1,5 +1,8 @@
 package io.shmilyhe.convert.ast.token;
 
+/**
+ * 缓存TOKEN序列化器
+ */
 public class CacheTokenizer implements ITokenizer{
 
     protected Node head;

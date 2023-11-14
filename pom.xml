@@ -8,7 +8,7 @@
 	<packaging>jar</packaging>
 	<description>json-convert</description>
 	<name>io.github.shmilyhe:uas-core</name>
-	<url>https://github.com/shmilyhe/json-convert</url>
+	<url>https://github.com/shmilyhe/json-convertor</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -34,12 +34,12 @@
 	</developers>
 	<scm>
 		<connection>
-         scm:git:https://github.com/shmilyhe/json-convert.git
+         scm:git:https://github.com/shmilyhe/json-convertor
       </connection>
 		<developerConnection>
-         scm:git:https://github.com/shmilyhe/json-convert.git
+         scm:git:https://github.com/shmilyhe/json-convertor
       </developerConnection>
-		<url>https://github.com/shmilyhe/json-convert</url>
+		<url>https://github.com/shmilyhe/json-convertor</url>
 		<tag>v1.12</tag>
 	</scm>
 

@@ -5,6 +5,9 @@ import java.util.regex.Pattern;
 
 import io.shmilyhe.convert.tokenizer.StringTokenizer;
 
+/**
+ * 序列化器
+ */
 public class Tokenizer implements ITokenizer{
     
     StringTokenizer tks;

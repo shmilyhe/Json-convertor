@@ -1,5 +1,8 @@
 package io.shmilyhe.convert.ast.token;
 
+/**
+ * 括号TOKEN
+ */
 public class BracketToken extends Token {
 
     public BracketToken(){
@@ -7,8 +10,6 @@ public class BracketToken extends Token {
     }
 
     protected ITokenizer tokens;
-
-    
 
     public ITokenizer getTokens() {
         return tokens;

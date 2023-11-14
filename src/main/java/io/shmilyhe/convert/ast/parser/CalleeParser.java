@@ -5,6 +5,9 @@ import io.shmilyhe.convert.ast.token.CalleeToken;
 import io.shmilyhe.convert.ast.token.ITokenizer;
 import io.shmilyhe.convert.ast.token.Token;
 
+/**
+ * 调用转化为TOKEN
+ */
 public class CalleeParser {
     
     public static ITokenizer parseCallee(ITokenizer tks){

@@ -3,6 +3,9 @@ package io.shmilyhe.convert.ast.token;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 调用TOKEN
+ */
 public class CalleeToken extends Token {
 
     protected ITokenizer tokens;
