@@ -28,6 +28,7 @@ public class CallExpression extends Expression{
     }
 
     public void addArgument(Expression exp){
+        if(exp==null)return;
         if(arguments==null)arguments= new ArrayList<>();
         arguments.add(exp);
     }

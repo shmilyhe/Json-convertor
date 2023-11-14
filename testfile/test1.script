@@ -1,4 +1,4 @@
-
+print("script1")
 # JSON 属性赋值示例，以 "."开头的代表转换的JSON 的根
 .group[4]=1
 .ext=123*123

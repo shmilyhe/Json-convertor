@@ -1,17 +1,22 @@
-
+print("script3")
 
 .names[13]="ooooo"
 tmp=0
 each(.names){ 
     tmp=tmp+1
+    #print(.==null)
     if(. ==null ){
         .="bbbbbbb"+tmp
+        print(.)
     }
+    
 }
 
-
+#print(.names)
+#print(.names[13])
 if (.names[13]=="ooooo") {
-  exit()
+  print('exit')
+  exit(9)
 }
 
 

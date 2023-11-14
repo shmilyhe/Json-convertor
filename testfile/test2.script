@@ -1,4 +1,4 @@
-
+print("script2")
 .names[12]="q"
 
 tmp=0

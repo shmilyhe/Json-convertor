@@ -21,6 +21,7 @@ public class TestExitJsonConvertor{
         JsonConvertor j = new JsonConvertor(cmds);
         data= j.convert(data,env);
         System.out.println(env.isExited());
+        System.out.println(env.getExitCode());
         System.out.println(JsonConvertor.toJsonString(data));
     }
 }

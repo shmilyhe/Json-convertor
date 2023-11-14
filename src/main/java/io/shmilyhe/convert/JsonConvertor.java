@@ -17,7 +17,7 @@ public class JsonConvertor {
     public JsonConvertor(String[] cmds){
         ComplexConvertor con  = new ComplexConvertor();
         convertor=con;
-        ConvertorFactory cf = new ConvertorFactory();
+        AstConvertorFactory cf = new AstConvertorFactory();
         for(String c:cmds){
             con.addConvertor(cf.getConvertor(c));
         }

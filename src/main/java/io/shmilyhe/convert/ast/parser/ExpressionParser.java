@@ -13,6 +13,7 @@ import io.shmilyhe.convert.ast.token.BracketToken;
 import io.shmilyhe.convert.ast.token.CalleeToken;
 import io.shmilyhe.convert.ast.token.ITokenizer;
 import io.shmilyhe.convert.ast.token.Token;
+import io.shmilyhe.convert.tools.DEBUG;
 
 
 public class ExpressionParser {
@@ -51,6 +52,15 @@ public class ExpressionParser {
     public static Expression getExpression(ITokenizer tks) throws RuntimeException {
         tks=BracketParser.parsebracket(tks);
         tks=MinusParser.parseMinus(tks);
+
+        /* 
+        System.out.println("==================1");
+        for(;tks.hasNext();){
+            System.out.println(tks.next());
+        }
+        System.out.println("==================2");
+        tks.reset();
+        */
         /* 数字栈 */
         //Stack<IGet> number = new Stack<IGet>();
         Stack<Expression> number = new Stack<Expression>();
@@ -62,11 +72,14 @@ public class ExpressionParser {
             System.out.print(k+"_");
         }*/
         //System.out.println();
+        int content =0;
         for(;tks.hasNext();){
             Token temp=tks.next();
+            //DEBUG.debug(temp);
             //System.out.println(temp+"|"+temp.getType());
-            if(temp.getType()==Token.SPACE||temp.getType()==Token.COMMONS||";".equals(temp.getRaw()))continue;
-        //for (String temp : tks) {
+            if(temp.getType()==Token.SPACE||temp.getType()==Token.COMMONS||";".equals(temp.getRaw())||temp.isNewline())continue;
+            content++;
+            //for (String temp : tks) {
             // System.out.println("split:"+temp);
 
             //if (temp.matches("[+\\-*/()%=><\\|\\!&]")) {// 遇到符号
@@ -142,10 +155,12 @@ public class ExpressionParser {
                 //System.out.println("数字栈更新："+temp);
             }
         }
-
+        if(content==0)return null;
         Token l=null;
+        Expression last =null;
         while (operator.peek() != null) {// 遍历结束后，符号栈数字栈依次弹栈计算，并将结果压入数字栈
             Token b = operator.pop();
+            //DEBUG.debug("2:",b,b.getClass());
             //IGet a1 = number.pop();
             //IGet a2 = null;
             Expression  a1 = number.pop();
@@ -156,6 +171,7 @@ public class ExpressionParser {
                 System.out.println("xxxxx:"+b);
                 System.out.println("xxxxxl:"+l);
                 number.push(a1);
+                last=a1;
                 break;
             }
             l=b;
@@ -182,11 +198,14 @@ public class ExpressionParser {
                 .setStart(a1.getStart()).setEnd(a2.getEnd())
                 .setLine(b.getLine());
             }
+            //DEBUG.debug("1:",exp);
+            last=exp;
             number.push(exp);
             //number.push(new ExpGeter(a2, a1, OperatorType.find(b)));
             // System.out.println("数字栈更新："+number);
         }
         //IGet get =number.pop();
+        //DEBUG.debug("LAST:",last);
         Expression  a1 = number.pop();
         return a1;
     }
