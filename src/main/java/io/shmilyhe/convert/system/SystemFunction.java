@@ -137,7 +137,7 @@ public class SystemFunction {
             String dest=((Identifier)args.get(1)).getName();
             if(argCount !=2
             ||!gStr.startsWith(".")
-            ||!dest.startsWith(".")){throw  new RuntimeException("syntax error(move): at line:"+line);}
+            ||!dest.startsWith(".")){throw  new RuntimeException("syntax error(move): at line:"+line+" near :"+name);}
             if(".".equals(gStr)){
                 final Setter set = new Setter(removeRootString(dest));
                 final SelfGetter get = new SelfGetter();

@@ -29,10 +29,12 @@ public class VRLParser {
                 if("if".equals(t.getRaw())){
                     IfStatement ifs = getIfStatement(t);
                     curr.addBody(ifs);
+                    ifs.setLine(t.getLine());
                     curr=ifs;
                     exptks=new CacheTokenizer();
                 }else if("each".equals(t.getRaw())){
                     EachStatement each= getEachStatement(t);
+                    each.setLine(t.getLine());
                     curr.addBody(each);
                     curr=each;
                     exptks=new CacheTokenizer();
@@ -42,6 +44,7 @@ public class VRLParser {
             }else if(t.getType()==Token.SYMBOL&&"}".equals(t.getRaw())){
                     if(exptks!=null&&exptks.size()>0){
                         ExpressionStatement exps = new ExpressionStatement();
+                        exps.setLine(t.getLine());
                         exps.setExperssion(ExpressionParser.parseCallee(exptks));
                         exptks=new CacheTokenizer();
                         curr.addBody(exps);
@@ -54,6 +57,7 @@ public class VRLParser {
             }else if(t.getType()==Token.NEWLINE){
                     if(exptks!=null&&exptks.size()>0){
                         ExpressionStatement exps = new ExpressionStatement();
+                        exps.setLine(t.getLine());
                         //System.out.println("6666:"+exptks);
                         exps.setExperssion(ExpressionParser.parseCallee(exptks));
                         exptks=new CacheTokenizer();
@@ -72,6 +76,7 @@ public class VRLParser {
                     }
                     if(t1.getType()==Token.CALLEE&&"if".equals(t1.getRaw())){
                         IfStatement al = getIfStatement(t1);
+                        al.setLine(t1.getLine());
                         ifs.setAlternate(al);
                         al.setParent(ifs.getParent());
                         curr=al;
