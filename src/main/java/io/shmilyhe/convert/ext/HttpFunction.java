@@ -12,6 +12,7 @@ import io.shmilyhe.convert.api.IGet;
 import io.shmilyhe.convert.impl.Setter;
 import io.shmilyhe.convert.tools.ExpCalculate;
 import io.shmilyhe.convert.tools.ExpEnv;
+import io.shmilyhe.convert.tools.JsonString;
 
 public class HttpFunction {
     static Pattern p =Pattern.compile(" *(.+) *= *httpget *\\((.*)\\) *| *httpget *\\((.+)\\) *");
@@ -68,6 +69,62 @@ public class HttpFunction {
    static  Map getCache(String key){
     if(key==null||cache==null)return null;
     return cache.getCache(key);
+   }
+
+
+
+   public static Map httpPost(String url,Map param,ExpEnv env){
+    Json jenv =new Json();
+        jenv.wrap(env);
+        Boolean cache=jenv.Q("http.config.cache").asBoolean();
+        Integer readTimeout=jenv.Q("http.config.readTimeout").asInt();
+        Integer connectTimeout=jenv.Q("http.config.connectTimeout").asInt();
+        if(cache==null)cache=false;
+        String key=null;
+        try{
+            Map rest =null;
+            if(cache){
+                key=url+JsonString.asJsonString(param);
+                rest = getCache(key);
+            }
+            if(rest!=null)return rest;
+            HTTP http = new HTTP();
+            http.setConnectTimeout(connectTimeout)
+            .setReadTimeout(readTimeout);
+            Map headers =(Map)jenv.Q("http.config.headers").getRaw();
+            if(headers!=null){
+                if(headers.get("Content-Type")==null){
+                    headers.put("Content-Type", "application/json");
+                    http.header(headers);
+                }
+            }else{
+                http.header("Content-Type", "application/json");
+            }
+            String resp = http.url(url).param(param).post().asString();
+            //System.out.println("rrr:"+resp);
+            int code=http.getResponseCode();
+            rest = new HashMap();
+            rest.put("code", code);
+            if(code!=200&&code!=201){
+                rest.put("data", http.getErrorMessage());
+                cache(url,rest);
+                return rest;
+            }
+            String ctype = http.getResponseHeader("Content-Type");
+            if(ctype==null||ctype.indexOf("json")<0){
+                resp=resp.replaceAll("[\r\n]+", "\\\\n");
+                resp=resp.replaceAll("\"", "\\\\\"");
+                rest.put("data", resp);
+            }else{
+                Json j= Json.parse(resp);
+                rest.put("data", j.getRaw());
+            }
+            if(cache)cache(key,rest);
+            return rest;
+        }catch(Exception e){
+            return null;
+        }
+
    }
 
     public static Map httpget(String url,ExpEnv env){

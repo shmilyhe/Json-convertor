@@ -3,6 +3,7 @@ package io.shmilyhe.convert.callee;
 import java.util.HashMap;
 
 import io.shmilyhe.convert.ext.HttpFun;
+import io.shmilyhe.convert.ext.HttpPostFun;
 import io.shmilyhe.convert.system.JsonParse;
 import io.shmilyhe.convert.system.JsonStringify;
 import io.shmilyhe.convert.system.Len;
@@ -20,6 +21,7 @@ public class FunctionTable {
         function= new HashMap<>();
         function.put("httpget", new HttpFun());
         function.put("http.get", new HttpFun());
+        function.put("http.post", new HttpPostFun());
         function.put("printf",new PrintFFunction());
         function.put("round", new RoundRfuntion());
         function.put("JSON.parse", new JsonParse());
@@ -30,8 +32,6 @@ public class FunctionTable {
         function.put("String.join", new StringJoin());
         function.put("len",new Len());
 
-        
-        
         
     }
     public FunctionTable registry(String name,IFunction fun){
