@@ -24,6 +24,7 @@ public class FunctionTable {
         function.put("http.post", new HttpPostFun());
         function.put("printf",new PrintFFunction());
         function.put("round", new RoundRfuntion());
+        function.put("Math.round", new RoundRfuntion());
         function.put("JSON.parse", new JsonParse());
         function.put("JSON.stringify", new JsonStringify());
         function.put("String.toUpperCase", new StringUpper());
