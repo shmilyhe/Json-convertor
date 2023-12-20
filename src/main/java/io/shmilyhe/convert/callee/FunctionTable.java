@@ -7,6 +7,7 @@ import io.shmilyhe.convert.ext.HttpPostFun;
 import io.shmilyhe.convert.system.JsonParse;
 import io.shmilyhe.convert.system.JsonStringify;
 import io.shmilyhe.convert.system.Len;
+import io.shmilyhe.convert.system.Maps;
 import io.shmilyhe.convert.system.PrintFFunction;
 import io.shmilyhe.convert.system.RoundRfuntion;
 import io.shmilyhe.convert.system.StringJoin;
@@ -32,6 +33,8 @@ public class FunctionTable {
         function.put("String.substring", new StringSubstring());
         function.put("String.join", new StringJoin());
         function.put("len",new Len());
+        function.put("Maps.camelCase",Maps.camelCase());
+        function.put("Maps.unixLike",Maps.unixLike());
 
         
     }

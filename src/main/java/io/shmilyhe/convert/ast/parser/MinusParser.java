@@ -4,6 +4,9 @@ import io.shmilyhe.convert.ast.token.CacheTokenizer;
 import io.shmilyhe.convert.ast.token.ITokenizer;
 import io.shmilyhe.convert.ast.token.Token;
 
+/**
+ * 处理减号，当表达式之前出现“-”时合成一个TOKEN标记为取反
+ */
 public class MinusParser {
     
     public static ITokenizer parseMinus(ITokenizer tks){

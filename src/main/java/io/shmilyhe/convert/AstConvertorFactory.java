@@ -48,7 +48,7 @@ public class AstConvertorFactory {
     /**
      * 解析语法
      * @param commands  脚本
-     * @return 分板
+     * @return 段落
      */
     private Statement parse(String commands){
         VRLParser vrl = new VRLParser();
