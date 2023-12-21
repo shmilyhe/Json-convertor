@@ -4,6 +4,8 @@ import java.util.HashMap;
 
 import io.shmilyhe.convert.ext.HttpFun;
 import io.shmilyhe.convert.ext.HttpPostFun;
+import io.shmilyhe.convert.system.Base64;
+import io.shmilyhe.convert.system.Dates;
 import io.shmilyhe.convert.system.JsonParse;
 import io.shmilyhe.convert.system.JsonStringify;
 import io.shmilyhe.convert.system.Len;
@@ -35,8 +37,19 @@ public class FunctionTable {
         function.put("len",new Len());
         function.put("Maps.camelCase",Maps.camelCase());
         function.put("Maps.unixLike",Maps.unixLike());
-
-        
+        function.put("Maps.get",Maps.get());
+        function.put("Date.format",Dates.format());
+        function.put("Date.getTime",Dates.getTime());
+        function.put("Date.getDate",Dates.getDate());
+        function.put("Date.getDay",Dates.getDay());
+        function.put("Date.getHour",Dates.getHour());
+        function.put("Date.getMinute",Dates.getMinute());
+        function.put("Date.getMonth",Dates.getMonth());
+        function.put("Date.getSecond",Dates.getSecond());
+        function.put("Date.getWeek",Dates.getWeek());
+        function.put("Date.parse",Dates.parse());
+        function.put("Base64.decode",Base64.decode());
+        function.put("Base64.encode",Base64.encode());
     }
     public FunctionTable registry(String name,IFunction fun){
         function.put(name, fun);

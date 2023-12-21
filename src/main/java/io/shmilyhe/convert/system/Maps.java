@@ -34,6 +34,20 @@ public class Maps {
         };
     }
 
+    public static IFunction get(){
+        return (param,env)->{
+            if(param==null||param.size()<2) return null;
+            Object arg1 =param.get(0);
+            Object arg2 =param.get(1);
+            if(arg1==null)return null;
+            if(arg1 instanceof Map){
+                return ((Map)arg1).get(arg2);
+            }else{
+                return null;
+            }
+        };
+    }
+
     private static Map camelCase(Map map){
         if(map==null||map.size()==0)return map;
         HashMap nm= new HashMap();
