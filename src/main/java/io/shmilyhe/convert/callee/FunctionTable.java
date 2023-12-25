@@ -50,6 +50,7 @@ public class FunctionTable {
         function.put("Date.parse",Dates.parse());
         function.put("Base64.decode",Base64.decode());
         function.put("Base64.encode",Base64.encode());
+        function.put("Number",io.shmilyhe.convert.system.Number.number());
     }
     public FunctionTable registry(String name,IFunction fun){
         function.put(name, fun);
