@@ -10,6 +10,7 @@ import io.shmilyhe.convert.system.JsonFun;
 import io.shmilyhe.convert.system.Len;
 import io.shmilyhe.convert.system.Maps;
 import io.shmilyhe.convert.system.PrintFFunction;
+import io.shmilyhe.convert.system.Regex;
 import io.shmilyhe.convert.system.RoundRfuntion;
 import io.shmilyhe.convert.system.StringJoin;
 import io.shmilyhe.convert.system.StringLower;
@@ -50,6 +51,9 @@ public class FunctionTable {
         function.put("Base64.decode",Base64.decode());
         function.put("Base64.encode",Base64.encode());
         function.put("Number",io.shmilyhe.convert.system.Number.number());
+        function.put("Regex.group",Regex.group());
+        function.put("Regex.test",Regex.test());
+        function.put("Regex.replaceAll",Regex.replaceAll());
     }
     public FunctionTable registry(String name,IFunction fun){
         function.put(name, fun);
