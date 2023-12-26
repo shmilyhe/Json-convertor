@@ -207,8 +207,11 @@ public class SimpleJson {
 		}
 		tmp_read_len=i-off;
 		if(stop!=' ')tmp_read_len+=2;//没有引号的情况下算读取长度要加上两个引号
-		if(asString||isString)return value;
+		if(asString||isString)return firstChar=='"'?escape(value):value;
 		return valueOf(value);
+	}
+	private String escape(String v){
+		return v.replaceAll("\\\\\"","\"");
 	}
 
 	private Object valueOf(String v){

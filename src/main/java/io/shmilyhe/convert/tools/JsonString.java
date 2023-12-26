@@ -29,6 +29,9 @@ public class JsonString {
 			json.append("null");
 		}else if(o instanceof String){
 			String resp=(String)o;
+			if(resp.indexOf('"')>-1){
+				resp=resp.replaceAll("\\\"", "\\\\\"");
+			}
 			json.append('"').append(resp).append('"');
 			return;
 		}else if (o instanceof Integer
