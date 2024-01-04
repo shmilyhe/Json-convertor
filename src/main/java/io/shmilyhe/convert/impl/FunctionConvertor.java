@@ -23,7 +23,7 @@ public class FunctionConvertor extends ComplexConvertor {
     public ExpEnv callEnv(List args,ExpEnv env,IFunctionRegistry reg){
         ExpEnv e= new ExpEnv(env);
         int index=0;
-        //e.setFunctionRegistry(reg);
+        e.setFunctionRegistry(reg);
         for(Object v :args){
             try{
                 String n=argumentNames.get(index++);

@@ -94,7 +94,7 @@ public class AstConvertorFactory {
             IConvertor re=null;
             CalleeToken ctk =  fun.getCall();
             List<Statement> exps = fun.getBody();
-             System.out.println("zixe:"+exps.size());
+            //System.out.println("zixe:"+exps.size());
             FunctionConvertor comx = new FunctionConvertor();
             comx.setCallee(ctk);
             for(Statement s:exps){

@@ -1,16 +1,21 @@
 
 print('000000');
 
+function ee(){
+     return bb(1,2);
+}
+
 function aa(){
     print('000000');
     print('000000');
-    return 12310;
+    return ee()+"999999";
 }
 
 function bb(a,b){
     print(a);print(b);return "llll===========";
 }
 function getinfo(){
+    print(ee());
     resp=http.get("https://kaifa.baidu.com/rest/v1/cards?wd=http");
     return  String.substring(resp.data.data.summary,0,42);
 }
