@@ -1,0 +1,23 @@
+
+print('000000');
+
+function aa(){
+    print('000000');
+    print('000000');
+    return 12310;
+}
+
+function bb(a,b){
+    print(a);print(b);return "llll===========";
+}
+function getinfo(){
+    resp=http.get("https://kaifa.baidu.com/rest/v1/cards?wd=http");
+    return  String.substring(resp.data.data.summary,0,42);
+}
+
+v=bb(.ext,.persons)
+c=aa()
+print(c)
+.value=v
+d=getinfo()
+print(d);

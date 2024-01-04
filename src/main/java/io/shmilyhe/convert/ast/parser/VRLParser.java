@@ -5,6 +5,7 @@ import java.util.List;
 import io.shmilyhe.convert.ast.statement.BlockStatement;
 import io.shmilyhe.convert.ast.statement.EachStatement;
 import io.shmilyhe.convert.ast.statement.ExpressionStatement;
+import io.shmilyhe.convert.ast.statement.FunctionStatement;
 import io.shmilyhe.convert.ast.statement.IfStatement;
 import io.shmilyhe.convert.ast.statement.Statement;
 import io.shmilyhe.convert.ast.token.CacheTokenizer;
@@ -25,7 +26,13 @@ public class VRLParser {
         CacheTokenizer exptks= new CacheTokenizer();
         while(tks.hasNext()){
             Token t =tks.next();
-            if(t.getType()==Token.CALLEE){
+            if("function".equals(t.getRaw())){
+                FunctionStatement fun = getFunctionStatement(t,tks);
+                curr.addBody(fun);
+                fun.setLine(t.getLine());
+                curr=fun;
+                exptks=new CacheTokenizer();
+            }else if(t.getType()==Token.CALLEE){
                 if("if".equals(t.getRaw())){
                     IfStatement ifs = getIfStatement(t);
                     curr.addBody(ifs);
@@ -54,7 +61,7 @@ public class VRLParser {
                     exptks=new CacheTokenizer();
             }else if(t.getType()==Token.SYMBOL&&"{".equals(t.getRaw())){
                     
-            }else if(t.getType()==Token.NEWLINE){
+            }else if(t.getType()==Token.NEWLINE||";".equals(t.getRaw())){
                     if(exptks!=null&&exptks.size()>0){
                         ExpressionStatement exps = new ExpressionStatement();
                         exps.setLine(t.getLine());
@@ -100,6 +107,26 @@ public class VRLParser {
             curr.addBody(exps);
         }
         return root;
+    }
+
+
+    private FunctionStatement getFunctionStatement(Token t,ITokenizer tks){
+        if(!tks.hasNext()){}
+        Token tk=tks.next();
+        if(tk.getType()==Token.SPACE||tk.getType()==Token.NEWLINE){
+            if(tks.hasNext()){
+                tk=tks.next();
+            }
+        }
+        if(tk.getType()!=Token.CALLEE){
+            throw new RuntimeException("Syntax error at line:"+t.getLine()+" near "+t.getRaw());
+        }
+        CalleeToken call=(CalleeToken)tk;
+        FunctionStatement fs = new FunctionStatement();
+        fs.setLine(call.getLine());
+        fs.setName(call.getRaw());
+        fs.setCall(call);
+        return fs;
     }
 
     private IfStatement getIfStatement(Token t){

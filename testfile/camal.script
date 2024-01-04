@@ -1,1 +1,6 @@
 .=Maps.camelCase(.)
+.abe=""+1
+print(.abe);
+if(.abe=="1"){
+    .abc=true
+}

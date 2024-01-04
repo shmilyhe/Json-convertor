@@ -15,7 +15,7 @@ each(.names){
 #print(.names)
 #print(.names[13])
 if (.names[13]=="ooooo") {
-  print('exit')
+  #print('exit')
   exit(9)
 }
 

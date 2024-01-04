@@ -5,6 +5,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
+import io.shmilyhe.convert.api.IFunctionRegistry;
+import io.shmilyhe.convert.callee.IFunction;
+
 /**
  * 运行的上下文
  */
@@ -12,6 +15,22 @@ public class ExpEnv extends HashMap {
     private ExpEnv parent;
     private boolean exited=false;
     int level=1;
+
+    private IFunctionRegistry functionRegistry;
+
+    public IFunctionRegistry getFunctionRegistry() {
+        return functionRegistry;
+    }
+
+    public ExpEnv setFunctionRegistry(IFunctionRegistry functionRegistry) {
+        this.functionRegistry = functionRegistry;
+        return this;
+    }
+
+    public IFunction getFunction(String name){
+        if(functionRegistry==null)return null;
+        return functionRegistry.getFunction(name);
+    }
 
     public ExpEnv(ExpEnv p){
         parent=p;

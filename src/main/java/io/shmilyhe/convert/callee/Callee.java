@@ -20,16 +20,21 @@ public class Callee implements IGet{
         this.minus = minus;
         return this;
     }
+    private String name;
     public Callee(String name,List<IGet> args){
         this.args=args;
+        this.name=name;
         fun=talble.getFunction(name);
     }
 
     @Override
     public Object get(Object data, ExpEnv env) {
         List a =getArgs(args,data,env);
-        if(fun==null)return null;
-        Object res =fun.call(a,env);
+        IFunction f=env.getFunction(name);
+        //System.out.println("Call function:"+f);
+        if(f==null)f=fun;
+        if(f==null)return null;
+        Object res =f.call(a,env);
         if(isMinus()) return SystemFunction.revert(res);
         return res;
     }

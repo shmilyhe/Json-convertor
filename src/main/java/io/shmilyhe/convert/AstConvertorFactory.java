@@ -13,17 +13,20 @@ import io.shmilyhe.convert.ast.expression.Identifier;
 import io.shmilyhe.convert.ast.parser.VRLParser;
 import io.shmilyhe.convert.ast.statement.EachStatement;
 import io.shmilyhe.convert.ast.statement.ExpressionStatement;
+import io.shmilyhe.convert.ast.statement.FunctionStatement;
 import io.shmilyhe.convert.ast.statement.IfStatement;
 import io.shmilyhe.convert.ast.statement.Statement;
-
+import io.shmilyhe.convert.ast.token.CalleeToken;
 import io.shmilyhe.convert.impl.BaseConvertor;
 import io.shmilyhe.convert.impl.ComplexConvertor;
 
 import io.shmilyhe.convert.impl.EachConvertor;
+import io.shmilyhe.convert.impl.FunctionConvertor;
 import io.shmilyhe.convert.impl.IfConvertor;
 import io.shmilyhe.convert.impl.Setter;
 import io.shmilyhe.convert.system.SystemFunction;
 import io.shmilyhe.convert.tools.DEBUG;
+import io.shmilyhe.convert.tools.ExpEnv;
 
 /**
  * AST 生成转换器
@@ -78,7 +81,44 @@ public class AstConvertorFactory {
          parent.addConvertor(blockStatement(stat));
         }else if(stat.isIf()){
          parent.addConvertor(ifStatement(stat));
+        }else if(stat.isFuntion()){
+            func(stat,parent);
+         //parent.addConvertor(ifStatement(stat));
         }
+
+    }
+
+    public void func(Statement stat,BaseConvertor parent){
+        FunctionStatement fun = (FunctionStatement)stat;
+            //System.out.println("function:"+fun.getName());
+            IConvertor re=null;
+            CalleeToken ctk =  fun.getCall();
+            List<Statement> exps = fun.getBody();
+             System.out.println("zixe:"+exps.size());
+            FunctionConvertor comx = new FunctionConvertor();
+            comx.setCallee(ctk);
+            for(Statement s:exps){
+                if(s instanceof ExpressionStatement){
+                    ExpressionStatement exp=(ExpressionStatement)s;
+                    if(exp.getExperssion()!=null&&exp.getExperssion().isReturns()){
+                        IGet get =SystemFunction.getExp(exp.getExperssion());
+                        re=(data,env)->{
+                            return get.get(data, env);
+                        };
+                        comx.setReturns(re);
+                    }else{
+                        getConvertor(s,comx);
+                    }
+                    
+                }else{
+                    getConvertor(s,comx);
+                }
+            }
+            parent.registry(fun.getName(), (data,env)->{
+                //System.out.println("call:"+fun.getName());
+                ExpEnv e =  comx.callEnv(data, env,parent);
+                return comx.convert(comx, e);
+            });
     }
 
 
@@ -119,6 +159,26 @@ public class AstConvertorFactory {
         return (data,env)->{ 
             set.set(set.isVar()?env:data, get.get(data,env));
             return data;
+        };
+
+    }
+
+    private IConvertor returnStatement(Statement stat){
+        //System.out.println("exp:"+stat.getType());
+        ExpressionStatement es = (ExpressionStatement)stat;
+        if(es.getExperssion()==null||!es.getExperssion().isAssignment()){
+            return null;
+        }
+        AssignmentExpression ae =(AssignmentExpression)es.getExperssion();
+        String a=((Identifier)ae.getLeft()).getName();
+        final IGet get = getExp(ae.getRight());
+        if(".".equals(a)){
+            return (data,env)->{ return get.get(data,env);};
+        }
+        final Setter set =new Setter(SystemFunction.removeRootString(a));
+        set.setVar(!a.startsWith("."));
+        return (data,env)->{ 
+            return get.get(data,env);
         };
 
     }

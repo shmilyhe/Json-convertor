@@ -13,7 +13,9 @@ public class Token {
     public final static int SPACE=5;
     public final static int CALLEE=6;
     public final static int BRACKET=7;
-
+    public final static int FUNCTION=8;
+    public final static int RETURN=9;
+    
     /**
      * 值类型
      */
@@ -21,6 +23,7 @@ public class Token {
     public final static int V_STRING=0;
     public final static int V_BOOLEAN=2;
     public final static int V_NULL=3;
+    
 
     /**
      * 原始值

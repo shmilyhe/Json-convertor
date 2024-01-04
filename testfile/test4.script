@@ -2,6 +2,6 @@ resp=httpget("https://kaifa.baidu.com/rest/v1/cards?wd=http")
 #resp=httpget("https://www.baidu.com")
 .httpcode=resp.code
 .httpdata=resp.data
-resp2=httpget("https://tywloa.iot.ctc.com:30028/portal-web/login")
-.page=resp2.data
-.pagecode=resp2.code
+#resp2=httpget("https://tywloa.iot.ctc.com:30028/portal-web/login")
+#.page=resp2.data
+#.pagecode=resp2.code

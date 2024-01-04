@@ -17,6 +17,16 @@ public class Expression {
 
     protected boolean minus;
 
+    protected boolean returns;
+
+    public boolean isReturns() {
+        return returns;
+    }
+
+    public void setReturns(boolean returns) {
+        this.returns = returns;
+    }
+
     public boolean isMinus() {
         return minus;
     }

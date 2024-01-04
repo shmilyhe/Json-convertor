@@ -26,6 +26,10 @@ public class Statement {
         return TYPE_BLOCK.equals(getType());
     }
 
+    public boolean isFuntion(){
+        return TYPE_FUN.equals(getType());
+    }
+
     public boolean isExpression(){
         //System.out.println("isExpression:"+(TYPE_EXP.equals(getType()))+"|"+getType());
         return TYPE_EXP.equals(getType());

@@ -55,7 +55,7 @@ public class ExpressionParser {
     public static Expression getExpression(ITokenizer tks) throws RuntimeException {
         tks=BracketParser.parsebracket(tks);
         tks=MinusParser.parseMinus(tks);
-
+        boolean isReturns=false;
         /* 
         System.out.println("==================1");
         for(;tks.hasNext();){
@@ -80,6 +80,10 @@ public class ExpressionParser {
             Token temp=tks.next();
             //DEBUG.debug(temp);
             //System.out.println(temp+"|"+temp.getType());
+            if("return".equals(temp.getRaw())){
+                isReturns=true;
+                continue;
+            }
             if(temp.getType()==Token.SPACE||temp.getType()==Token.COMMONS||";".equals(temp.getRaw())||temp.isNewline())continue;
             content++;
             //for (String temp : tks) {
@@ -210,6 +214,9 @@ public class ExpressionParser {
         //IGet get =number.pop();
         //DEBUG.debug("LAST:",last);
         Expression  a1 = number.pop();
+        if(a1!=null){
+            a1.setReturns(isReturns);
+        }
         return a1;
     }
 
