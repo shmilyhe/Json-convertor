@@ -11,7 +11,9 @@ import io.shmilyhe.convert.ast.expression.CallExpression;
 import io.shmilyhe.convert.ast.expression.Expression;
 import io.shmilyhe.convert.ast.expression.Identifier;
 import io.shmilyhe.convert.ast.expression.Literal;
+import io.shmilyhe.convert.ast.expression.SequenceExpression;
 import io.shmilyhe.convert.callee.Callee;
+import io.shmilyhe.convert.impl.ArrayGeter;
 import io.shmilyhe.convert.impl.ConstantGetter;
 import io.shmilyhe.convert.impl.ExpGeter;
 import io.shmilyhe.convert.impl.Getter;
@@ -72,6 +74,15 @@ public class SystemFunction {
             //System.out.println("getOperater:"+be.getOperater());
             OperatorType oper =OperatorType.find(be.getOperater());
             return new ExpGeter(left,right,oper).setMinus(be.isMinus());
+        }else if(Expression.TYPE_ARRAY.equals(type)){
+            SequenceExpression be = (SequenceExpression)exp;
+            ArrayGeter ag = new ArrayGeter();
+            List<Expression> es = be.getExpressions();
+            if(es!=null)
+            for(Expression e:es){
+                ag.addGeter(getExp(e));
+            }
+            return ag;
         }
         return null;
     }

@@ -15,6 +15,7 @@ public class Token {
     public final static int BRACKET=7;
     public final static int FUNCTION=8;
     public final static int RETURN=9;
+    public final static int ARRAY=10;
     
     /**
      * 值类型
@@ -92,6 +93,10 @@ public class Token {
     
     public boolean isCallee(){
         return this.getType()==CALLEE;
+    }
+
+    public boolean isArray(){
+        return this.getType()==ARRAY;
     }
 
     public Token(){}

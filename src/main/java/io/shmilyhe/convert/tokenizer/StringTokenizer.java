@@ -99,11 +99,23 @@ public class StringTokenizer implements ITokenizer{
     @Override
     public String toSymbol() {
         StringBuilder sb = new StringBuilder();
+        int st=0;
         while(hasNext()){
             char c=next();
             if(SYMBOL.indexOf(c)>-1){
                 this.back(c);
                 break;
+            }
+            if(c=='['){
+                    st++;
+            }
+            if(c==']'){
+                if(st==0){
+                    this.back(c);
+                    break;
+                }else{
+                    st--;
+                }
             }
             sb.append(c);
                

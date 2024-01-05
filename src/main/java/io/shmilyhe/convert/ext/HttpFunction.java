@@ -127,6 +127,53 @@ public class HttpFunction {
 
    }
 
+   public static Map request(Map param,ExpEnv env){
+    Json jenv =new Json();
+        jenv.wrap(env);
+        Boolean cache=jenv.Q("http.config.cache").asBoolean();
+        Integer readTimeout=jenv.Q("http.config.readTimeout").asInt();
+        Integer connectTimeout=jenv.Q("http.config.connectTimeout").asInt();
+        if(cache==null)cache=false;
+        try{
+            Map rest =null;
+            if(rest!=null)return rest;
+            HTTP http = new HTTP();
+            http.setConnectTimeout(connectTimeout)
+            .setReadTimeout(readTimeout);
+            Map headers =(Map)jenv.Q("http.config.headers").getRaw();
+            if(headers!=null){
+                if(headers.get("Content-Type")==null){
+                    headers.put("Content-Type", "application/json");
+                    http.header(headers);
+                }
+            }else{
+                http.header("Content-Type", "application/json");
+            }
+            String resp = http.request(param).asString();
+            //System.out.println("rrr:"+resp);
+            int code=http.getResponseCode();
+            rest = new HashMap();
+            rest.put("code", code);
+            if(code!=200&&code!=201){
+                rest.put("data", http.getErrorMessage());
+                return rest;
+            }
+            String ctype = http.getResponseHeader("Content-Type");
+            if(ctype==null||ctype.indexOf("json")<0){
+                resp=resp.replaceAll("[\r\n]+", "\\\\n");
+                resp=resp.replaceAll("\"", "\\\\\"");
+                rest.put("data", resp);
+            }else{
+                Json j= Json.parse(resp);
+                rest.put("data", j.getRaw());
+            }
+            return rest;
+        }catch(Exception e){
+            return null;
+        }
+
+   }
+
     public static Map httpget(String url,ExpEnv env){
         Json jenv =new Json();
         jenv.wrap(env);

@@ -87,6 +87,9 @@ public class Tokenizer implements ITokenizer{
                 case '}':
                 case '^':
                 case '~':
+                case '[':
+                case ']':
+                case ':':
                 return new Token(String.valueOf(c))
                 .setType(Token.SYMBOL)
                 .setStart(start)

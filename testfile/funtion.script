@@ -50,3 +50,6 @@ print(Base64.encode(bs));
 print(1^2)
 print(1|2)
 print(1&2)
+.bytes=bs2
+.test[11]="c";
+.array=[1,2,.test];

@@ -9,6 +9,8 @@ public class Expression {
     public static final String TYPE_LIT="Literal";
     public static final String TYPE_ASSIGN="AssignmentExpression";
     public static final String TYPE_UPDATE="UpdateExpression";
+    public static final String TYPE_ARRAY="SequenceExpression";
+    
     
     protected String type;
     protected int start;

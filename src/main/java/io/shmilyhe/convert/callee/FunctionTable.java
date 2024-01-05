@@ -2,11 +2,10 @@ package io.shmilyhe.convert.callee;
 
 import java.util.HashMap;
 
-import io.shmilyhe.convert.ext.HttpFun;
-import io.shmilyhe.convert.ext.HttpPostFun;
 import io.shmilyhe.convert.system.Base64;
 import io.shmilyhe.convert.system.Bytes;
 import io.shmilyhe.convert.system.Dates;
+import io.shmilyhe.convert.system.Http;
 import io.shmilyhe.convert.system.JsonFun;
 import io.shmilyhe.convert.system.Len;
 import io.shmilyhe.convert.system.Maps;
@@ -22,9 +21,10 @@ public class FunctionTable {
     static HashMap<String,IFunction> function;
     static{
         function= new HashMap<>();
-        function.put("httpget", new HttpFun());
-        function.put("http.get", new HttpFun());
-        function.put("http.post", new HttpPostFun());
+        function.put("httpget", Http.get());
+        function.put("http.get", Http.get());
+        function.put("http.post", Http.post());
+        function.put("http.request", Http.request());
         function.put("printf",new PrintFFunction());
         function.put("round", new RoundRfuntion());
         function.put("Math.round", new RoundRfuntion());

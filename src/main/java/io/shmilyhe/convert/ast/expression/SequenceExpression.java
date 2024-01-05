@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SequenceExpression extends Expression {
+
+    public SequenceExpression(){
+        this.setType(TYPE_ARRAY);
+    }
     
     protected List<Expression> expressions;
 

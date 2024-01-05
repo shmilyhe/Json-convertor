@@ -4,7 +4,6 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -58,6 +57,9 @@ public class JsonString {
 				DateTimeFormatter.ofPattern("yyyy-MM-dd")
 			)).append('"');
 		}else if (isArray(o)){
+			if(o instanceof byte[]){
+				byteArray(json,(byte[])o, level);
+			}else
 			jsonArray(json,(Object[])o,level);
 		}else if (o instanceof Map){
 			jsonMap(json,(Map)o,level);
@@ -78,6 +80,15 @@ public class JsonString {
 		json.append(']');
 	}
 	private static void jsonArray(StringBuilder json,Object[] co,int level){
+		json.append('[');
+		boolean isFirst=true;
+		for(Object o:co){
+			if(isFirst){isFirst=false;}else{json.append(',');}
+			asJson(json,o,level+1);
+		}
+		json.append(']');
+	}
+	private static void byteArray(StringBuilder json,byte[] co,int level){
 		json.append('[');
 		boolean isFirst=true;
 		for(Object o:co){

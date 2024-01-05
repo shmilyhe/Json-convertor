@@ -52,7 +52,7 @@ public class Bytes {
             return null;
         };
     }
-    private static byte getByte(Object o){
+    public static byte getByte(Object o){
         if(o instanceof Byte)return (byte)o;
         if(o instanceof Integer)return ((Integer)o).byteValue();
         if(o instanceof Long)return ((Long)o).byteValue();

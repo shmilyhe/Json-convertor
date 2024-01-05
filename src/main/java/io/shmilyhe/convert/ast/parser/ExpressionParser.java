@@ -9,7 +9,10 @@ import io.shmilyhe.convert.ast.expression.CallExpression;
 import io.shmilyhe.convert.ast.expression.Expression;
 import io.shmilyhe.convert.ast.expression.Identifier;
 import io.shmilyhe.convert.ast.expression.Literal;
+import io.shmilyhe.convert.ast.expression.SequenceExpression;
+import io.shmilyhe.convert.ast.token.ArrayToken;
 import io.shmilyhe.convert.ast.token.BracketToken;
+import io.shmilyhe.convert.ast.token.CacheTokenizer;
 import io.shmilyhe.convert.ast.token.CalleeToken;
 import io.shmilyhe.convert.ast.token.ITokenizer;
 import io.shmilyhe.convert.ast.token.Token;
@@ -52,8 +55,29 @@ public class ExpressionParser {
           return  getExpression(bracket.getTokens()).setMinus(bracket.minus());
     }
 
+    static Expression getSequenceExpression(ArrayToken at){
+        SequenceExpression se = new SequenceExpression();
+        ITokenizer tk = at.getTokens();
+        CacheTokenizer ctks= new CacheTokenizer();
+        for(;tk.hasNext();){
+            Token t=tk.next();
+            if(t.isSymbol()&&",".equals(t.getRaw())){
+                se.addExpressions(getExpression(ctks));
+                ctks= new CacheTokenizer();
+                continue;
+            }
+            ctks.add(t);
+        }
+        System.out.println();
+        if (ctks.size()>0) {
+            se.addExpressions(getExpression(ctks));
+        }
+        return se;
+    }
+
     public static Expression getExpression(ITokenizer tks) throws RuntimeException {
         tks=BracketParser.parsebracket(tks);
+        tks=ArrayParser.parsebracket(tks);
         tks=MinusParser.parseMinus(tks);
         boolean isReturns=false;
         /* 
@@ -152,6 +176,10 @@ public class ExpressionParser {
                 }else if(temp.getType()==Token.CALLEE){
                     //System.out.println("callee:"+temp);
                     get = getCallExpression((CalleeToken)temp);
+                    get.setStart(temp.getStart()).setEnd(temp.getEnd())
+                    .setLine(temp.getLine());
+                }else if(temp.isArray()){
+                    get=getSequenceExpression((ArrayToken) temp);
                     get.setStart(temp.getStart()).setEnd(temp.getEnd())
                     .setLine(temp.getLine());
                 }else{

@@ -3,6 +3,7 @@ package io.shmilyhe.convert.ext;
 import javax.net.ssl.*;
 
 import io.shmilyhe.convert.Json;
+import io.shmilyhe.convert.tools.JsonString;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -13,6 +14,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
 /**
@@ -147,6 +149,37 @@ public class HTTP {
                 conn.setConnectTimeout(this.connectTimeout);
                 conn.setReadTimeout(this.readTimeout);
                 conn.setRequestMethod("POST");
+                setHeaders(conn, this.headers);
+                if (headers == null || !headers.containsKey("Content-Type"))
+                    conn.setRequestProperty("Content-Type", "application/json");
+                conn.connect();
+                OutputStream out = conn.getOutputStream();
+                out.write(bytes);
+                out.close();
+                int status = conn.getResponseCode();
+            } catch (Exception e) {
+                error = true;
+                errMsg = "can not access :" + url + " nmsg:" + e.getMessage();
+                //log.error("{}", e.getMessage(), e);
+            }
+        return this;
+    }
+    private HTTP doRequest(byte[] bytes,String method) {
+        if (bytes != null)
+            try {
+                if (isHTTPS(url)&&!sslIint) {
+                    HttpsURLConnection.setDefaultHostnameVerifier(new NullHostNameVerifier());
+                    SSLContext sc = SSLContext.getInstance("TLS");
+                    sc.init(null, trustCerts, new SecureRandom());
+                    HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+                }
+                URL uri = new URL(url);
+                conn = (HttpURLConnection) uri.openConnection();
+                conn.setDoOutput(true);
+                conn.setUseCaches(false);
+                conn.setConnectTimeout(this.connectTimeout);
+                conn.setReadTimeout(this.readTimeout);
+                conn.setRequestMethod(method);
                 setHeaders(conn, this.headers);
                 if (headers == null || !headers.containsKey("Content-Type"))
                     conn.setRequestProperty("Content-Type", "application/json");
@@ -313,6 +346,60 @@ public class HTTP {
         readTimeout = timeout;
         return this;
     }
+
+    public HTTP request(Map param){
+        Map header=(Map)param.get("headers");
+        this.header(param);
+        String method=(String)param.get("method");
+        if(method==null)method="GET";
+        method=method.toUpperCase();
+        Map query=(Map)param.get("query");
+        String url=(String)param.get("url");
+        this.url(getUrl(url,query));
+        if(method.equals("GET")){
+            this.get();
+            return this;
+        }
+        Object body=param.get("body");
+        if(body instanceof String){
+            this.doRequest(body.toString().getBytes(UTF_8), method);
+            return this;
+        }else if(body instanceof byte[]){
+            this.doRequest((byte[])body, method);
+            return this;
+        }else{
+            String type=(String)param.get("type");
+            if(type==null||"json".equals(type)){
+                this.doRequest(JsonString.asJsonString(body).getBytes(UTF_8), method);
+            }else{
+                this.doRequest(FormString.asForm(body).getBytes(UTF_8), method);
+            }
+            return this;
+        }
+
+    }
+
+    public String getUrl(String url,Map query){
+        if(query==null||query.size()==0)return url;
+        StringBuilder sb = new StringBuilder();
+        if(!url.toLowerCase().startsWith("http")){
+            sb.append("http://");
+        }
+        sb.append(url);
+        if(url.indexOf('?')<0){
+            sb.append('?');
+        }
+        boolean first=true;
+        for(Object o: query.entrySet()){
+            Map.Entry e =(Map.Entry )o;
+            if(first){
+                first=false;
+            }else{sb.append('&');}
+            sb.append(e.getKey()).append('=').append(e);
+        }
+        return sb.toString();
+    }
+
 
     static TrustManager[] trustCerts = new TrustManager[]{new X509TrustManager() {
         public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
