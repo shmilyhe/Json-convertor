@@ -38,7 +38,7 @@ public class B64 {
   
                 if (n++ >= 14) {  
                     n = 0;  
-                    buf.append(" ");  
+                    //buf.append(" ");  
                 }  
             }  
   

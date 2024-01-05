@@ -60,6 +60,23 @@ public class Tokenizer implements ITokenizer{
                 .setEnd(tks.offset())
                 .setLine(line);
                 case '/':
+                if(tks.hasNext()){
+                    char c1=tks.next();
+                    if(c1=='/'){
+                        return new Token("//"+tks.toLineEnd())
+                        .setType(Token.COMMONS)
+                        .setStart(start)
+                        .setEnd(tks.offset())
+                        .setLine(line);
+                    }else{
+                        tks.back(c1);
+                    }
+                }
+                return new Token(String.valueOf(c))
+                .setType(Token.SYMBOL)
+                .setStart(start)
+                .setEnd(tks.offset())
+                .setLine(line);
                 case '*':
                 case '%':
                 case '(':
@@ -69,6 +86,7 @@ public class Tokenizer implements ITokenizer{
                 case '{':
                 case '}':
                 case '^':
+                case '~':
                 return new Token(String.valueOf(c))
                 .setType(Token.SYMBOL)
                 .setStart(start)

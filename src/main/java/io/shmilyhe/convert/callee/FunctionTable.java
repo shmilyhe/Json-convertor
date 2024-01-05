@@ -5,17 +5,17 @@ import java.util.HashMap;
 import io.shmilyhe.convert.ext.HttpFun;
 import io.shmilyhe.convert.ext.HttpPostFun;
 import io.shmilyhe.convert.system.Base64;
+import io.shmilyhe.convert.system.Bytes;
 import io.shmilyhe.convert.system.Dates;
 import io.shmilyhe.convert.system.JsonFun;
 import io.shmilyhe.convert.system.Len;
 import io.shmilyhe.convert.system.Maps;
+import io.shmilyhe.convert.system.Numbers;
+import io.shmilyhe.convert.system.Objects;
 import io.shmilyhe.convert.system.PrintFFunction;
 import io.shmilyhe.convert.system.Regex;
 import io.shmilyhe.convert.system.RoundRfuntion;
-import io.shmilyhe.convert.system.StringJoin;
-import io.shmilyhe.convert.system.StringLower;
-import io.shmilyhe.convert.system.StringSubstring;
-import io.shmilyhe.convert.system.StringUpper;
+import io.shmilyhe.convert.system.Strings;
 
 
 public class FunctionTable {
@@ -30,10 +30,12 @@ public class FunctionTable {
         function.put("Math.round", new RoundRfuntion());
         function.put("JSON.parse", JsonFun.parse());
         function.put("JSON.stringify", JsonFun.stringify());
-        function.put("String.toUpperCase", new StringUpper());
-        function.put("String.toLowerCase", new StringLower());
-        function.put("String.substring", new StringSubstring());
-        function.put("String.join", new StringJoin());
+        function.put("String.toUpperCase", Strings.toUpperCase());
+        function.put("String.toLowerCase", Strings.toLowerCase());
+        function.put("String.substring", Strings.substring());
+        function.put("String.join", Strings.join());
+        function.put("String.getBytes", Strings.getBytes());
+        function.put("string", Strings.string());
         function.put("len",new Len());
         function.put("Maps.camelCase",Maps.camelCase());
         function.put("Maps.unixLike",Maps.unixLike());
@@ -50,10 +52,23 @@ public class FunctionTable {
         function.put("Date.parse",Dates.parse());
         function.put("Base64.decode",Base64.decode());
         function.put("Base64.encode",Base64.encode());
-        function.put("Number",io.shmilyhe.convert.system.Number.number());
+        function.put("Base64.decodeString",Base64.decodeString());
+        function.put("Number",Numbers.number());
         function.put("Regex.group",Regex.group());
         function.put("Regex.test",Regex.test());
         function.put("Regex.replaceAll",Regex.replaceAll());
+        function.put("typeof",Objects.typeof());
+        function.put("Object.typeof",Objects.typeof());
+        function.put("Byte.fromHex",Bytes.fromHex());
+        function.put("Byte.toHex",Bytes.toHex());
+        function.put("Number.byteValue",Numbers.toByte());
+        function.put("Number.intValue",Numbers.toInt());
+        function.put("Number.longValue",Numbers.toLong());
+        function.put("Number.doubleValue",Numbers.toDouble());
+        function.put("byteValue",Numbers.toByte());
+        function.put("intValue",Numbers.toInt());
+        function.put("longValue",Numbers.toLong());
+        function.put("doubleValue",Numbers.toDouble());
     }
     public FunctionTable registry(String name,IFunction fun){
         function.put(name, fun);

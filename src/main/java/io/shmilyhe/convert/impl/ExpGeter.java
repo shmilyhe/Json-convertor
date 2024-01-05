@@ -91,6 +91,16 @@ public class ExpGeter implements IGet{
             case NEQ:
             res= neq(param1, param2);
             break;
+            case SHIFT_LEFT:
+            case SHIFT_RIGHT:
+            case U_SHIFT_RIGHT:
+            res=shift(param1,getInteger(param2),operator);
+            break;
+            case BIT_AND:
+            case BIT_OR:
+            case BIT_XOR:
+            res=bitOp(param1, param2, operator);
+            break;
         }
         if(minus&&(
             operator.equals(OperatorType.ADD)
@@ -106,6 +116,96 @@ public class ExpGeter implements IGet{
         }
         DEBUG.debug("cal:",param1," ",operator," ",param2,"=",res);
         return res;
+    }
+
+    public static int getInteger(Object o){
+        if(o==null)return 0;
+        if(o instanceof Integer)return (Integer)o;
+        if(o instanceof Short)return ((Short)o).intValue();
+        if(o instanceof Long)return ((Long)o).intValue();
+        if(o instanceof String){
+            try{
+                return Integer.parseInt(o.toString());
+            }catch(Exception e){
+                return 0;
+            }
+        }
+        return 0;
+    }
+    public static byte getByte(Object o){
+        if(o==null)return 0;
+        if(o instanceof Integer)return ((Integer)o).byteValue();
+        if(o instanceof Short)return ((Short)o).byteValue();
+        if(o instanceof Long)return ((Long)o).byteValue();
+        if(o instanceof String){
+            try{
+                return Byte.valueOf(o.toString());
+            }catch(Exception e){
+                return 0;
+            }
+        }
+        return 0;
+    }
+    public static long getLong(Object o){
+        if(o==null)return 0;
+        if(o instanceof Integer)return ((Integer)o).longValue();
+        if(o instanceof Short)return ((Short)o).longValue();
+        if(o instanceof Long)return ((Long)o).longValue();
+        if(o instanceof String){
+            try{
+                return Long.valueOf(o.toString());
+            }catch(Exception e){
+                return 0;
+            }
+        }
+        return 0;
+    }
+
+    public static Object bitOp(Object num1, Object num2,OperatorType op){
+        if(num1==null||num2==null)return 0;
+        if(num1 instanceof Long||num2 instanceof Long){
+            long n1=getLong(num1);
+            long n2=getLong(num2);
+            switch (op) {
+                case BIT_AND:
+                    return n1&n2;
+                case BIT_OR:
+                    return n1|n2;
+                case BIT_XOR:
+                    return n1^n2;       
+                default:
+                    return 0;
+            }
+        }
+        if(num1 instanceof Integer||num2 instanceof Integer){
+            long n1=getInteger(num1);
+            long n2=getInteger(num2);
+            switch (op) {
+                case BIT_AND:
+                    return n1&n2;
+                case BIT_OR:
+                    return n1|n2;
+                case BIT_XOR:
+                    return n1^n2;       
+                default:
+                    return 0;
+            }
+        }
+        if(num1 instanceof Byte||num2 instanceof Byte){
+            long n1=getByte(num1);
+            long n2=getByte(num2);
+            switch (op) {
+                case BIT_AND:
+                    return n1&n2;
+                case BIT_OR:
+                    return n1|n2;
+                case BIT_XOR:
+                    return n1^n2;       
+                default:
+                    return 0;
+            }
+        }
+        return 0;
     }
 
     public static Boolean eq(Object num1, Object num2){
@@ -267,8 +367,43 @@ public class ExpGeter implements IGet{
         }
     }
 
-
-
+    public static Object shift(Object num1, int num2,OperatorType op){
+        if(num1==null)return 0;
+        if(num1 instanceof Byte){
+            switch(op){
+                case SHIFT_LEFT:
+                return (Byte)num1<<num2;
+                case SHIFT_RIGHT:
+                return (Byte)num1>>num2;
+                case U_SHIFT_RIGHT:
+                return (Byte)num1>>>num2;
+                default :return 0;
+            }
+        }
+        if(num1 instanceof Integer){
+            switch(op){
+                case SHIFT_LEFT:
+                return (Integer)num1<<num2;
+                case SHIFT_RIGHT:
+                return (Integer)num1>>num2;
+                case U_SHIFT_RIGHT:
+                return (Integer)num1>>>num2;
+                default :return 0;
+            }
+        }
+        if(num1 instanceof Long){
+            switch(op){
+                case SHIFT_LEFT:
+                return (Long)num1<<num2;
+                case SHIFT_RIGHT:
+                return (Long)num1>>num2;
+                case U_SHIFT_RIGHT:
+                return (Long)num1>>>num2;
+                default :return 0;
+            }
+        }
+        return 0;
+    }
 
     private static boolean isInteger(Number num) {
         return num instanceof Integer || num instanceof Long || num instanceof Short || num instanceof Byte;

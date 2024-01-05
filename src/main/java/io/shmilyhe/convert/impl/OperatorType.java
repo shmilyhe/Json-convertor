@@ -1,5 +1,7 @@
 package io.shmilyhe.convert.impl;
 
+import java.util.HashMap;
+
 public enum OperatorType {
 
   BIT_OR("|", 2),
@@ -69,12 +71,17 @@ public enum OperatorType {
     this.arity = operandCount;
   }
 
-  public static OperatorType find(String token){
+  static HashMap<String,OperatorType> tymap= new HashMap();
+  static {
     OperatorType[] ots= OperatorType.values();
     for(OperatorType o:ots){
-        if(o.token.equals(token))return o;
+      tymap.put(o.token, o);
     }
-    return UNKOWN;
+  }
+
+  public static OperatorType find(String token){
+   OperatorType ty= tymap.get(token);
+    return ty==null?UNKOWN:ty;
 
   }
 }

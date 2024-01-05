@@ -2,6 +2,7 @@ package io.shmilyhe.convert.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import io.shmilyhe.convert.tools.DEBUG;
 import io.shmilyhe.convert.tools.ExpEnv;
@@ -41,12 +42,20 @@ public class EachConvertor extends ComplexConvertor {
                 if(r!=null)ndata.add(r);
             }
             set.set(setroot, ndata);
-        }else if (isArray(data)){
-         Object[] els =  (Object[])data;
-         for(int i=0;i<els.length;i++){
-            els[i]=each(els[i],env);
-         }
-         set.set(setroot, els);
+        }else if (isArray(data)){  
+            List d=new ArrayList<>();
+            if (data instanceof byte[]) {
+                byte[] els =  (byte[])data;
+                for(int i=0;i<els.length;i++){
+                    d.add(each(els[i],env));
+                }
+            } else {
+                Object[] els =  (Object[])data;
+                for(int i=0;i<els.length;i++){
+                    d.add(each(els[i],env));
+                }
+            }
+        set.set(setroot, d); 
         }
         DEBUG.debug("========end:",this.getName(),"========"); 
          return root;
