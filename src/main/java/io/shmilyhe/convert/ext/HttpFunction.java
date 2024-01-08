@@ -81,6 +81,7 @@ public class HttpFunction {
         Integer connectTimeout=jenv.Q("http.config.connectTimeout").asInt();
         if(cache==null)cache=false;
         String key=null;
+        long start=System.currentTimeMillis();
         try{
             Map rest =null;
             if(cache){
@@ -106,8 +107,12 @@ public class HttpFunction {
             rest = new HashMap();
             rest.put("code", code);
             if(code!=200&&code!=201){
-                rest.put("data", http.getErrorMessage());
+                rest.put("error", http.getErrorMessage());
                 cache(url,rest);
+                long took=System.currentTimeMillis()-start;
+                rest.put("took", took);
+                rest.put("code", code);
+                rest.put("error", code<200?"网络不可达:"+url:http.getErrorMessage());
                 return rest;
             }
             String ctype = http.getResponseHeader("Content-Type");
@@ -120,20 +125,34 @@ public class HttpFunction {
                 rest.put("data", j.getRaw());
             }
             if(cache)cache(key,rest);
+            rest.put("took", http.getTook());
             return rest;
         }catch(Exception e){
-            return null;
+            //e.printStackTrace();
+            long took=System.currentTimeMillis()-start;
+            HashMap rest = new HashMap();
+            rest.put("took", took);
+            rest.put("code", 500);
+            rest.put("error", e.getMessage());
+            return rest;
         }
 
    }
 
    public static Map request(Map param,ExpEnv env){
-    Json jenv =new Json();
+        Json jenv =new Json();
         jenv.wrap(env);
-        Boolean cache=jenv.Q("http.config.cache").asBoolean();
-        Integer readTimeout=jenv.Q("http.config.readTimeout").asInt();
-        Integer connectTimeout=jenv.Q("http.config.connectTimeout").asInt();
-        if(cache==null)cache=false;
+
+        Json jparam =new Json();
+        jparam.wrap(param);
+        Integer readTimeout=jenv.Q("readTimeout").asInt();
+        Integer connectTimeout=jenv.Q("connectTimeout").asInt();
+        if(readTimeout==null)readTimeout=jenv.Q("http.config.readTimeout").asInt();
+        if(connectTimeout==null)connectTimeout=jenv.Q("http.config.connectTimeout").asInt();
+        if(readTimeout==null)readTimeout=3000;
+        if(connectTimeout==null)connectTimeout=1000;
+        String url=jparam.Q("url").asString();
+        long start=System.currentTimeMillis();
         try{
             Map rest =null;
             if(rest!=null)return rest;
@@ -149,13 +168,18 @@ public class HttpFunction {
             }else{
                 http.header("Content-Type", "application/json");
             }
+            http.setConnectTimeout(connectTimeout);
+            http.setReadTimeout(readTimeout);
             String resp = http.request(param).asString();
             //System.out.println("rrr:"+resp);
             int code=http.getResponseCode();
             rest = new HashMap();
             rest.put("code", code);
             if(code!=200&&code!=201){
-                rest.put("data", http.getErrorMessage());
+                long took=System.currentTimeMillis()-start;
+                rest.put("took", took);
+                rest.put("code", code);
+                rest.put("error", code<200?"网络不可达:"+url:http.getErrorMessage());
                 return rest;
             }
             String ctype = http.getResponseHeader("Content-Type");
@@ -167,9 +191,15 @@ public class HttpFunction {
                 Json j= Json.parse(resp);
                 rest.put("data", j.getRaw());
             }
+            rest.put("took", http.getTook());
             return rest;
         }catch(Exception e){
-            return null;
+            long took=System.currentTimeMillis()-start;
+            HashMap rest = new HashMap();
+            rest.put("took", took);
+            rest.put("code", 500);
+            rest.put("error", e.getMessage());
+            return rest;
         }
 
    }
@@ -181,11 +211,12 @@ public class HttpFunction {
         Integer readTimeout=jenv.Q("http.config.readTimeout").asInt();
         Integer connectTimeout=jenv.Q("http.config.connectTimeout").asInt();
         if(cache==null)cache=true;
+        long start=System.currentTimeMillis();
+        HTTP http = new HTTP();
         try{
             Map rest =null;
             if(cache)rest = getCache(url);
             if(rest!=null)return rest;
-            HTTP http = new HTTP();
             http.setConnectTimeout(connectTimeout)
             .setReadTimeout(readTimeout);
             String resp = http.url(url).get().asString();
@@ -194,7 +225,11 @@ public class HttpFunction {
             rest = new HashMap();
             rest.put("code", code);
             if(code!=200&&code!=201){
-                rest.put("data", http.getErrorMessage());
+                //rest.put("data", http.getErrorMessage());
+                long took=System.currentTimeMillis()-start;
+                rest.put("took", took);
+                rest.put("code", code);
+                rest.put("error", code<200?"网络不可达:"+url:http.getErrorMessage());
                 cache(url,rest);
                 return rest;
             }
@@ -208,9 +243,16 @@ public class HttpFunction {
                 rest.put("data", j.getRaw());
             }
             if(cache)cache(url,rest);
+            rest.put("took", http.getTook());
             return rest;
         }catch(Exception e){
-            return null;
+            System.out.println("rspcode:"+http.getResponseCode());
+            long took=System.currentTimeMillis()-start;
+            HashMap rest = new HashMap();
+            rest.put("took", took);
+            rest.put("code", 500);
+            rest.put("error", e.getMessage());
+            return rest;
         }
     }
 }

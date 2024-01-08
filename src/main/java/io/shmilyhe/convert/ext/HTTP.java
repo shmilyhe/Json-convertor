@@ -82,6 +82,7 @@ public class HTTP {
     }
 
     public HTTP get() {
+        start=System.currentTimeMillis();
         try {
             StringBuilder sb = new StringBuilder();
             if (param != null && param.size() > 0) {
@@ -132,8 +133,9 @@ public class HTTP {
             post(o.getBytes(UTF_8));
         return this;
     }
-
+    long start=0;
     public HTTP post(byte[] bytes) {
+        start=System.currentTimeMillis();
         if (bytes != null)
             try {
                 if (isHTTPS(url)&&!sslIint) {
@@ -164,7 +166,14 @@ public class HTTP {
             }
         return this;
     }
+    private long took=0;
+
+    public long getTook() {
+        return took;
+    }
+
     private HTTP doRequest(byte[] bytes,String method) {
+        start=System.currentTimeMillis();
         if (bytes != null)
             try {
                 if (isHTTPS(url)&&!sslIint) {
@@ -251,8 +260,10 @@ public class HTTP {
             out = null;
             byte[] bs = bos.toByteArray();
             bos.close();
+            took=System.currentTimeMillis()-start;
             return bs;
         } catch (IOException e) {
+            took=System.currentTimeMillis()-start;
             error = true;
             errMsg = e.getMessage();
             //log.error("{}", e.getMessage(), e);
@@ -277,8 +288,10 @@ public class HTTP {
             out = null;
             byte[] bs = bos.toByteArray();
             bos.close();
+            took=System.currentTimeMillis()-start;
             return bs;
         } catch (IOException e) {
+            took=System.currentTimeMillis()-start;
             error = true;
             errMsg = e.getMessage();
             //log.error("{}", e.getMessage(), e);

@@ -13,13 +13,23 @@ function aa(){
 
 //test
 function bb(a,b){
-    print(a);print(b);return "llll===========";
+    print(a*3);print(b);return "llll===========";
 }
 function getinfo(){
     print(ee());
     resp=http.get("https://kaifa.baidu.com/rest/v1/cards?wd=http");
+    print("took:"+resp.took+"ms");
+    print(resp);
     return  String.substring(resp.data.data.summary,0,42);
 }
+
+function datax(){
+    resp=http.get("https://www.163.com");
+    print("datax,took:"+resp.took+"ms");
+    //print(resp);
+    return  resp.data;
+}
+datax();
 //print("opq")
 v=bb(.ext,.persons)
 c=aa()
@@ -52,4 +62,4 @@ print(1|2)
 print(1&2)
 .bytes=bs2
 .test[11]="c";
-.array=[1,2,.test];
+.array=[1,2,getinfo()];
