@@ -4,10 +4,10 @@
 
 	<groupId>io.github.shmilyhe</groupId>
 	<artifactId>json-convert</artifactId>
-	<version>3.0.3</version>
+	<version>3.1.0</version>
 	<packaging>jar</packaging>
 	<description>json-convert</description>
-	<name>io.github.shmilyhe:uas-core</name>
+	<name>io.github.shmilyhe:json-convert</name>
 	<url>https://github.com/shmilyhe/json-convertor</url>
 
 	<properties>
