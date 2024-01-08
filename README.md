@@ -2,9 +2,12 @@
 
 > 这是一个简单且高效的JSON 转换组件，适合现有的JSON 进行一些加工，如属性，改变层级结构等。在API适配的场景非常有用。
 
+注意事项：
+组件实现了一个简单的AST（语法树），针对JSON数据进行转换。适应一些API转换的场景。组件采用在线编译的方法加载脚本，适合不停服务的在线业务。
 
 
-别外这个组件还提供了一个简单高效的[JSON组件，请点击这里](json.md "JSON组件")
+
+另外这个组件还提供了一个简单高效的[JSON组件，请点击这里](json.md "JSON组件")
 
 ## mvn 引入
 ```
@@ -34,6 +37,7 @@ public class TestJsonConvertor{
     public static void main(String []args){
         String json =ResourceReader.read("testfile/test1.json");
         String commands =ResourceReader.read("testfile/test1.script");
+        //一个脚本需只初始化一次，初始化脚本会做一次内存的编译，比较耗时。脚本初始化后执行的效率很高。
         JsonConvertor jc = new JsonConvertor(commands);
         String dest = jc.convert(json);
         System.out.println(dest);
@@ -99,6 +103,15 @@ tmp = 0
 
 ### 数组操作  
 .data[0] 代表JSON 的data属性的第0 个值
+### 序列
+支持序列的表达式，可以创建序列
+```
+array=[1,2,3];
+
+print(array[0])
+print(array[1])
+print(array[2])
+```
 
 ### 赋值
 给JSON 设置值
@@ -162,6 +175,8 @@ if (.name == "eric" ){
 //{"name":"eric"}==>{"name":"eric0000"}
 ```
 
+
+
 ### 遍历
 each(属性|变量){
         操作指令
@@ -190,7 +205,7 @@ each(.persons){
 ```
 .name="Alice"
 
-if .name == "Alice" {
+if (.name == "Alice") {
     exit()
 }
 .name="Bob"
@@ -223,11 +238,143 @@ each(.persons){
 示例：
 ```
 
-if messageType == "online" {
+if (messageType == "online") {
     namespace("onOffLine");
 }
 
 ```
+
+### 运算
+
+#### 四则运算
+```
+str="string";
+str=str+100
+print(str)//string100
+
+num=10
+num=(1+2)/3*4-num
+
+```
+
+#### 位运算
+
+```
+//位移
+a=1
+a1=a>>1
+//数符号右移
+a1=a>>>1
+a1=a<<1
+
+//与、或、异或
+b=1^2
+c=1|2
+d=1&2
+print(b)
+print(c)
+print(d)
+
+```
+
+#### 布尔运算
+
+```
+a  = 2;
+b1 = 2>2;
+b2 = 2>=2;
+b3 = a==2&&false;
+b4 = a==2||false;
+
+```
+
+
+
+### 函数
+支持自定义函数
+```
+
+//定义函数 ee
+function ee(){
+    print('ee');
+     return bb(1,2);
+}
+
+//定义函数 bb
+function bb(a,b){
+    print(a*3);print(b);return "llll===========";
+}
+
+//调用函数
+ee()
+```
+
+### 内置函数
+为了方便对数据进行转换，内置了一些常用函数
+[内置函数，请点击这里](functions.md "内置函数")
+
+### 函数扩展
+内置函数不满足的时候，可以使用JAVA语言添加函数，也可以覆盖内置函数
+
+#### 扩展函数定义
+扩展函需要实现IFunction 接口，IFunction定义如下：
+```
+/**
+ * 扩展函数
+ */
+public interface IFunction {
+    /**
+     * 函数调用入口
+     * @param args 参数LIST
+     * @param env 环境
+     * @return 返回值
+     */
+    Object call(List args,ExpEnv env);
+}
+```
+##### 参数说明：
+args ，调用函数的参数。调用函数时转换器会把参数从args传入。
+env，函数调用上下文，可以调用如全局变量，内置函数等
+
+##### 示例
+实现一个打印
+
+```
+import java.util.List;
+
+import io.shmilyhe.convert.callee.IFunction;
+import io.shmilyhe.convert.tools.ExpEnv;
+
+/**
+ * 类似  c 的printf 方法
+ */
+public class PrintFFunction implements IFunction{
+
+    @Override
+    public Object call(List args, ExpEnv env) {
+        try{
+            String text =(String)args.get(0);
+            Object a[] = new Object[args.size()-1];
+            int i=0;
+            for(Object o:args){
+                if(i>0){
+                    a[i-1]=o;
+                }
+                i++;
+            }
+            String str=String.format(text,a);
+            return str;
+        }catch(Exception e){
+            return null;
+        }
+        
+    }
+    //format
+}
+```
+
+
+
 
 
 
