@@ -97,6 +97,12 @@ public class Strings {
                 if(args.size()==2){
                     Integer start =(Integer)args.get(1);
                     if(start==null||start==0)return text;
+                    if(start<0){
+                        int end=text.length()+start;
+                        if(end<0)return "";
+                        return text.substring(0, end);
+
+                    }
                     return text.substring(start);
                 }else if(args.size()==3){
                     Integer start =(Integer)args.get(1);
