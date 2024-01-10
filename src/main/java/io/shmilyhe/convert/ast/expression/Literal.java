@@ -79,6 +79,7 @@ public class Literal extends Expression {
     Pattern intPattern =Pattern.compile("[0-9]+");
     private boolean isInt(String v){
         if(v==null)return false;
+        if(v.length()>18)return false;
         return intPattern.matcher(v).matches();
     }
 
