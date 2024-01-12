@@ -21,13 +21,15 @@ import io.shmilyhe.convert.impl.OperatorType;
 import io.shmilyhe.convert.impl.Remove;
 import io.shmilyhe.convert.impl.SelfGetter;
 import io.shmilyhe.convert.impl.Setter;
+import io.shmilyhe.convert.log.Log;
+import io.shmilyhe.convert.log.api.Logger;
 import io.shmilyhe.convert.tools.DEBUG;
 
 /**
  * 系统的内置方法
  */
 public class SystemFunction {
-
+    static Logger log = Log.getLogger(SystemFunction.class);
     public static String removeRootString(String s){
         if(s==null)return null;
         s=s.trim();
@@ -198,7 +200,8 @@ public class SystemFunction {
             final IGet get =getExp(args.get(0));
             return (data,env)->{ 
                 Object oldvalue=get.get(data,env);
-                System.out.println("[print]:"+oldvalue); 
+                //System.out.println("[print]:"+oldvalue); 
+                log.info("console:",oldvalue);
                 return data; 
             };
         }else if("namespace".equalsIgnoreCase(f.trim())){

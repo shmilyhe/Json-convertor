@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import io.shmilyhe.convert.log.Log;
+import io.shmilyhe.convert.log.api.Logger;
 import io.shmilyhe.convert.tools.DEBUG;
 import io.shmilyhe.convert.tools.ExpEnv;
 
@@ -11,6 +13,7 @@ import io.shmilyhe.convert.tools.ExpEnv;
  * 遍历
  */
 public class EachConvertor extends ComplexConvertor {
+    static Logger log = Log.getLogger(EachConvertor.class);
 
     Getter get ;
     Setter set ;
@@ -25,14 +28,15 @@ public class EachConvertor extends ComplexConvertor {
 
     @Override
     public Object convert(Object root,ExpEnv env) {
-        DEBUG.debug("========start:",this.getName(),"========"); 
+        log.debug("start each:{}", getName());
+        //DEBUG.debug("========start:",this.getName(),"========"); 
         ExpEnv p=env;
         Object setroot=root;
         if(set.isVar())setroot=env;
         DEBUG.debug(setroot.getClass());
         env= new ExpEnv(p);
          Object data =get.get(root,env);
-         DEBUG.debug("get:",data," is Var :",get.isVar());
+         //DEBUG.debug("get:",data," is Var :",get.isVar());
          if(data==null)return root;
         if (data instanceof Collection){
             Collection els =  (Collection)data;
@@ -57,7 +61,8 @@ public class EachConvertor extends ComplexConvertor {
             }
         set.set(setroot, d); 
         }
-        DEBUG.debug("========end:",this.getName(),"========"); 
+        //DEBUG.debug("========end:",this.getName(),"========"); 
+        log.debug("end each:{}" ,getName());
          return root;
     }
 

@@ -24,6 +24,8 @@ import io.shmilyhe.convert.impl.EachConvertor;
 import io.shmilyhe.convert.impl.FunctionConvertor;
 import io.shmilyhe.convert.impl.IfConvertor;
 import io.shmilyhe.convert.impl.Setter;
+import io.shmilyhe.convert.log.Log;
+import io.shmilyhe.convert.log.api.Logger;
 import io.shmilyhe.convert.system.SystemFunction;
 import io.shmilyhe.convert.tools.DEBUG;
 import io.shmilyhe.convert.tools.ExpEnv;
@@ -32,6 +34,7 @@ import io.shmilyhe.convert.tools.ExpEnv;
  * AST 生成转换器
  */
 public class AstConvertorFactory {
+    static Logger log = Log.getLogger(AstConvertorFactory.class);
     SystemFunction systemfunction=new SystemFunction();
 
     /**
@@ -42,6 +45,7 @@ public class AstConvertorFactory {
     public IConvertor getConvertor(String commands){
         Statement stat =parse(commands);
         BaseConvertor convertor = new ComplexConvertor().setName("root");
+        if(stat!=null&&stat.getBody()!=null)
         for(Statement s :stat.getBody()){
             getConvertor(s,convertor);
         }
@@ -54,6 +58,7 @@ public class AstConvertorFactory {
      * @return 段落
      */
     private Statement parse(String commands){
+        try{
         VRLParser vrl = new VRLParser();
         Statement stat = vrl.parse(commands);
         stat.clearParent();
@@ -61,6 +66,10 @@ public class AstConvertorFactory {
         //System.out.println(Json.asJsonString(stat));
         //System.out.println("=========================================================");
         return stat;
+        }catch(Exception e){
+            log.error("加载脚本失败！", e);
+        }
+        return null;
     }
 
     /**

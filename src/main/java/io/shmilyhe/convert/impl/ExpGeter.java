@@ -1,6 +1,8 @@
 package io.shmilyhe.convert.impl;
 
 import io.shmilyhe.convert.api.IGet;
+import io.shmilyhe.convert.log.Log;
+import io.shmilyhe.convert.log.api.Logger;
 import io.shmilyhe.convert.tools.DEBUG;
 import io.shmilyhe.convert.tools.ExpEnv;
 
@@ -9,6 +11,7 @@ import io.shmilyhe.convert.tools.ExpEnv;
  * 
  */
 public class ExpGeter implements IGet{
+    static Logger log = Log.getLogger(ExpGeter.class);
     static int TYPE_INT=0;
     static int TYPE_STRING=1;
     static int TYPE_FLOAT=2;
@@ -114,7 +117,8 @@ public class ExpGeter implements IGet{
         ){
             res= !((Boolean)res);
         }
-        DEBUG.debug("cal:",param1," ",operator," ",param2,"=",res);
+        //DEBUG.debug("cal:",param1," ",operator," ",param2,"=",res);
+        log.debug("exp: {} {} {} = {} ", param1,operator,param2,res);
         return res;
     }
 

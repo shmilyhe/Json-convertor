@@ -1,21 +1,22 @@
 package io.shmilyhe.convert.impl;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import io.shmilyhe.convert.api.IConvertor;
 import io.shmilyhe.convert.api.IFunctionRegistry;
 import io.shmilyhe.convert.ast.token.CalleeToken;
 import io.shmilyhe.convert.ast.token.ITokenizer;
-import io.shmilyhe.convert.tools.DEBUG;
+import io.shmilyhe.convert.log.Log;
+import io.shmilyhe.convert.log.api.Logger;
+//import io.shmilyhe.convert.tools.DEBUG;
 import io.shmilyhe.convert.tools.ExpEnv;
 
 /**
  * 遍历
  */
 public class FunctionConvertor extends ComplexConvertor {
-
+    static Logger log = Log.getLogger(FunctionConvertor.class);
 
     List<String> argumentNames = new ArrayList<>();
 
@@ -24,6 +25,7 @@ public class FunctionConvertor extends ComplexConvertor {
         ExpEnv e= new ExpEnv(env);
         int index=0;
         e.setFunctionRegistry(reg);
+        //log.debug("", reg.);
         for(Object v :args){
             try{
                 String n=argumentNames.get(index++);

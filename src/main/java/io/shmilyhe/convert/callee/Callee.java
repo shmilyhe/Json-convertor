@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.shmilyhe.convert.api.IGet;
+import io.shmilyhe.convert.log.Log;
 import io.shmilyhe.convert.system.SystemFunction;
 import io.shmilyhe.convert.tools.ExpEnv;
+import io.shmilyhe.convert.log.api.Logger;
 
 public class Callee implements IGet{
+    static Logger log = Log.getLogger(Callee.class);
     FunctionTable talble = new FunctionTable();
     IFunction fun;
     List<IGet> args;
@@ -29,11 +32,17 @@ public class Callee implements IGet{
 
     @Override
     public Object get(Object data, ExpEnv env) {
+        log.debug("call{}", name);
         List a =getArgs(args,data,env);
-        IFunction f=env.getFunction(name);
+        //先加载系统函数
+        IFunction f=fun;
+        if(f==null)f=env.getFunction(name);
         //System.out.println("Call function:"+f);
-        if(f==null)f=fun;
-        if(f==null)return null;
+        //if(f==null)f=fun;
+        if(f==null){
+            log.warn("function not found:{}", name);
+            return null;
+        }
         Object res =f.call(a,env);
         if(isMinus()) return SystemFunction.revert(res);
         return res;

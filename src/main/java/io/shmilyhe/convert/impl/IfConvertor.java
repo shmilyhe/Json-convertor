@@ -5,6 +5,8 @@ import java.util.List;
 
 import io.shmilyhe.convert.api.IConvertor;
 import io.shmilyhe.convert.api.IGet;
+import io.shmilyhe.convert.log.Log;
+import io.shmilyhe.convert.log.api.Logger;
 import io.shmilyhe.convert.tools.DEBUG;
 import io.shmilyhe.convert.tools.ExpCalculate;
 import io.shmilyhe.convert.tools.ExpEnv;
@@ -13,7 +15,7 @@ import io.shmilyhe.convert.tools.ExpEnv;
  * 分支计算
  */
 public class IfConvertor extends ComplexConvertor{
-
+    static Logger log = Log.getLogger(IfConvertor.class);
 
     protected List<IConvertor> elseList = new ArrayList<IConvertor>();
 
@@ -34,21 +36,29 @@ public class IfConvertor extends ComplexConvertor{
     }
     public IfConvertor(String exp){
         this.exp=exp;
-        DEBUG.debug("condexp1:",exp);
+        //DEBUG.debug("condexp1:",exp);
         
        cond = ExpCalculate.getExpression(exp);
     }
 
     @Override
     public Object convert(Object root,ExpEnv env) {
-        DEBUG.debug("========start:",this.getName(),"========"); 
+        log.debug("start if:{}", getName());
+        //DEBUG.debug("========start:",this.getName(),"========"); 
         if(calCondition(root,env)){
-            return super.convert(root,new ExpEnv(env));
+            Object o =super.convert(root,new ExpEnv(env));
+            log.debug("end if");
+            return o;
         }else{
             //System.out.println("条件不能成"+this);
-            DEBUG.debug("condexp:",exp," is ",false);
-            if(alternate!=null)
-            return this.alternate.convert(root, env);
+            //DEBUG.debug("condexp:",exp," is ",false);
+            if(alternate!=null){
+                log.debug("else");
+                Object o=this.alternate.convert(root, env);
+                log.debug("end if");
+                return o;
+            }
+            log.debug("end if");
             return root;
         }
         

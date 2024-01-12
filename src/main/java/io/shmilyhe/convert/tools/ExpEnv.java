@@ -18,18 +18,29 @@ public class ExpEnv extends HashMap {
 
     private IFunctionRegistry functionRegistry;
 
+    private FunctionChain fc = new FunctionChain();
+
+
     public IFunctionRegistry getFunctionRegistry() {
         return functionRegistry;
     }
 
     public ExpEnv setFunctionRegistry(IFunctionRegistry functionRegistry) {
         this.functionRegistry = functionRegistry;
+        fc.addFunction(functionRegistry);
         return this;
     }
 
+    public ExpEnv unsetFunctionRegistry(IFunctionRegistry functionRegistry){
+         //fc.revomeFunction();
+         return this;
+    }
+
     public IFunction getFunction(String name){
-        if(functionRegistry==null)return null;
-        return functionRegistry.getFunction(name);
+        IFunction f=fc.geFunction(name);
+        return f;
+        //if(functionRegistry==null)return null;
+        //return functionRegistry.getFunction(name);
     }
 
     public ExpEnv(ExpEnv p){
@@ -180,4 +191,43 @@ public class ExpEnv extends HashMap {
     }
 
     
+}
+
+class FunctionChain{
+    private IFunctionRegistry f;
+    FunctionChain parent;
+    public IFunction geFunction(String name){
+        IFunction fun =null;
+        if(f!=null){
+            fun=f.getFunction(name);
+            if(fun!=null)return fun;
+        }
+        if(parent==null){
+            return null;
+        }
+        return parent.geFunction(name);
+    }
+    public void addFunction(IFunctionRegistry f){
+        if(this.f==null){
+            this.f=f;
+        }else{
+            FunctionChain p= new FunctionChain();
+            p.f=this.f;
+            p.parent=this.parent;
+            this.parent=p;
+            this.f=f;
+        }
+    }
+
+    public void revomeFunction(){
+        if(parent!=null){
+            this.f=parent.f;
+            this.parent=parent.parent;
+        }
+    }
+
+    FunctionChain getParent(){
+        return parent;
+    }
+
 }

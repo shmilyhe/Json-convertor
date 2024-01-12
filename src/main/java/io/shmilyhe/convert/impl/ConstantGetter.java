@@ -4,9 +4,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import io.shmilyhe.convert.api.IGet;
+import io.shmilyhe.convert.log.Log;
+import io.shmilyhe.convert.log.api.Logger;
 import io.shmilyhe.convert.tools.ExpEnv;
 
 public class ConstantGetter implements IGet {
+    static Logger log = Log.getLogger(ConstantGetter.class);
 
     private Object v;
 

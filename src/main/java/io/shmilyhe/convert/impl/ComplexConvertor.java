@@ -20,6 +20,7 @@ public class ComplexConvertor  extends BaseConvertor {
                 break;
             }
         }
+        env.unsetFunctionRegistry(this);
         return o;
     }
 

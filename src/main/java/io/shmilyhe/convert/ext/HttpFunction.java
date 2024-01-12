@@ -10,11 +10,14 @@ import io.shmilyhe.convert.Json;
 import io.shmilyhe.convert.api.IConvertor;
 import io.shmilyhe.convert.api.IGet;
 import io.shmilyhe.convert.impl.Setter;
+import io.shmilyhe.convert.log.Log;
+import io.shmilyhe.convert.log.api.Logger;
 import io.shmilyhe.convert.tools.ExpCalculate;
 import io.shmilyhe.convert.tools.ExpEnv;
 import io.shmilyhe.convert.tools.JsonString;
 
 public class HttpFunction {
+    static Logger log = Log.getLogger(HttpFunction.class);
     static Pattern p =Pattern.compile(" *(.+) *= *httpget *\\((.*)\\) *| *httpget *\\((.+)\\) *");
     static IHttpGetCache cache;
     public static void setCache(IHttpGetCache c){
@@ -113,6 +116,7 @@ public class HttpFunction {
                 rest.put("took", took);
                 rest.put("code", code);
                 rest.put("error", code<200?"网络不可达:"+url:http.getErrorMessage());
+                log.warn("web error url{} statusCode:{}",url,code);
                 return rest;
             }
             String ctype = http.getResponseHeader("Content-Type");
@@ -129,6 +133,7 @@ public class HttpFunction {
             return rest;
         }catch(Exception e){
             //e.printStackTrace();
+            log.warn("request fail:"+url, e);
             long took=System.currentTimeMillis()-start;
             HashMap rest = new HashMap();
             rest.put("took", took);
@@ -180,6 +185,7 @@ public class HttpFunction {
                 rest.put("took", took);
                 rest.put("code", code);
                 rest.put("error", code<200?"网络不可达:"+url:http.getErrorMessage());
+                log.warn("web error url{} statusCode:{}",url,code);
                 return rest;
             }
             String ctype = http.getResponseHeader("Content-Type");
@@ -199,12 +205,14 @@ public class HttpFunction {
             rest.put("took", took);
             rest.put("code", 500);
             rest.put("error", e.getMessage());
+            log.warn("request fail:"+url, e);
             return rest;
         }
 
    }
 
     public static Map httpget(String url,ExpEnv env){
+        //log.info("http get {}", url);
         Json jenv =new Json();
         jenv.wrap(env);
         Boolean cache=jenv.Q("http.config.cache").asBoolean();
@@ -231,6 +239,7 @@ public class HttpFunction {
                 rest.put("code", code);
                 rest.put("error", code<200?"网络不可达:"+url:http.getErrorMessage());
                 cache(url,rest);
+                log.warn("web error url{} statusCode:{}",url,code);
                 return rest;
             }
             String ctype = http.getResponseHeader("Content-Type");

@@ -13,9 +13,12 @@ import io.shmilyhe.convert.ast.token.CalleeToken;
 import io.shmilyhe.convert.ast.token.ITokenizer;
 import io.shmilyhe.convert.ast.token.Token;
 import io.shmilyhe.convert.ast.token.Tokenizer;
+import io.shmilyhe.convert.log.Log;
+import io.shmilyhe.convert.log.api.Logger;
 import io.shmilyhe.convert.tokenizer.StringTokenizer;
 
 public class VRLParser {
+    static Logger log = Log.getLogger(VRLParser.class);
 
     public Statement parse(String str){
         ITokenizer tks= new Tokenizer(new StringTokenizer(str));
