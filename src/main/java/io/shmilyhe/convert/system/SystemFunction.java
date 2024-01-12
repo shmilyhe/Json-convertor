@@ -201,7 +201,7 @@ public class SystemFunction {
             return (data,env)->{ 
                 Object oldvalue=get.get(data,env);
                 //System.out.println("[print]:"+oldvalue); 
-                log.info("console:",oldvalue);
+                log.info("console:{}",oldvalue);
                 return data; 
             };
         }else if("namespace".equalsIgnoreCase(f.trim())){

@@ -1,0 +1,212 @@
+#FROM scripts/BASE/circuitBreaker/default.script
+
+.step1=true
+## 处理指令
+#if(.messageType=="commandRespone"){
+#    .stepA=true
+#    status=.result.resultDetail.act_result
+#    breakerId=result.resultDetail.breaker_id
+#    rst.commandID=.taskId
+#    if(status==0||status=="0"){
+#    rst.returnSuccess=1
+#    rst.returnInfo="success"
+#    }else{
+#    rst.returnSuccess=0
+#    rst.returnInfo="false"
+#    }
+#    rst.channelId=breakerId
+#    cmdresp=http.get("http://message-paas/db/get/ln/command?aep_task_id="+.taskId+"&device_id="+deviceId)
+#    # 从服务中查询指令信息
+#
+#    rst.actionHour=cmdresp.data.data.ACTION_HOUR
+#    rst.validTime=cmdresp.data.data.GMT_CREATE
+#    rst.endHour=cmdresp.data.END_HOUR
+#    detail=result.resultDetail
+#    id=cmdresp.data.data.ID
+#    rst.resultMessage==Maps.camelCase(detail)
+#    rst.timeStamp=timestamp
+#    tmp.commandResult=rst
+#    .=tmp
+#    # 更新表里的执行状态
+#    ud.data.status=status
+#    ud.where.id=id
+#    http.post("http://message-paas/db/update/ln/command",ud)
+#    exit()
+#}
+.step2=true
+
+# start datareport
+if (.messageType == "dataReport"){
+.step3=true
+    if(.serviceId==2||.serviceId=="2"||.serviceId=="signal_report"){
+    .step4=true
+      exit(3)
+    }
+
+
+    ##device_sub_breaker
+    breakerId=.payload.breaker_id
+    breakerMac=.payload.breaker_mac
+    subresp=http.get("http://message-paas/db/fetch/ln/device_sub_breaker?device_id="+deviceId+"&breaker_id="+breakerId)
+    subId=subresp.data.data.ID
+    bkMac=subresp.data.data.BREAKER_MAC
+    aauId=subresp.data.data.BASE_STATION_AUU_ID
+    # table:base_station
+    # base_station_auu_id
+    aauresp=http.get("http://message-paas/db/fetch/ln/base_station_aau?id="+aauId)
+    aauCode=aauresp.data.data.data.AUU_CODE
+    stationId=aauresp.data.data.data.BASE_STATION_ID
+    staresp=http.get("http://message-paas/db/fetch/ln/base_station?id="+stationId)
+    provinceId=staresp.data.data.PROVINCE_ID
+     .step5=true
+    if(.serviceId==3||.serviceId=="3"||.serviceId=="info_report"){
+         .step6=true
+        if(bkMac!=null){
+            #已经上报过数据了
+            exit(3)
+        }
+         .step7=true
+        tmp=.payload
+        tmp.AAUCode=aauCode
+        tmp.EMID=subId
+        tmp.ProvinceID=provinceId
+        tmp.ChannelID=breakerMac
+        tmp.TimeStamp=now
+        tmp.AddDelete=1
+        tmp.IMEI=imei
+        rst.DataCellInfoUp=tmp
+        .=rst
+        where.id=subId
+        data.breaker_mac=breakerMac
+        data.is_push=1
+        record.where=where
+        record.data=data
+        #更新数据
+        http.post("http://message-paas/db/update/ln/device_sub_breaker",record)
+        #清除缓存
+        http.get("http://message-paas/db/evict/ln/device_sub_breaker?device_id="+.deviceId+"&breaker_id="+breakerId)
+        exit()
+    }
+    pl=.payload
+    if(.serviceId==4||.serviceId=="4"||.serviceId=="energy_frozen_report"){
+         
+        tmp.PowerValue=pl.import_active_energy
+        tmp.AAUCode=aauCode
+        tmp.EMID=subId
+        tmp.ProvinceID=provinceId
+        tmp.ChannelID=breakerMac
+        tmp.TimeStamp=now
+        rst.DataPower=tmp
+        .=rst
+        .step8=true
+        exit()
+    }
+    if(.serviceId==1||.serviceId=="1"||.serviceId=="data_report"){
+        .step9=true
+        tmp=Maps.camelCase(pl)
+        tmp.AAUCode=aauCode
+        tmp.EMID=subId
+        tmp.ProvinceID=provinceId
+        tmp.ChannelID=breakerMac
+        tmp.TimeStamp=now
+        rst.DataSwitchMonitor=tmp
+        .=rst
+        .step9=true
+        exit()
+    }
+    exit()
+}
+# end datareport
+.step10=true
+# start eventReport
+if (.messageType == "eventReport"){
+    data=.eventContent
+    breakerId=.eventContent.breaker_id
+    breakerMac=.eventContent.breaker_mac
+    serviceId=.serviceId
+    # 从服务中查找
+    subresp=http.get("http://message-paas/db/fetch/ln/device_sub_breaker?device_id="+deviceId+"&breaker_id="+breakerId)
+    subId=subresp.data.data.ID
+    aauId=subresp.data.data.BASE_STATION_AUU_ID
+    # table:base_station
+    # base_station_auu_id
+    aauresp=http.get("http://message-paas/db/fetch/ln/base_station_aau?id="+aauId)
+    aauCode=aauresp.data.data.data.AUU_CODE
+    stationId=aauresp.data.data.data.BASE_STATION_ID
+    staresp=http.get("http://message-paas/db/fetch/ln/base_station?id="+stationId)
+    provinceId=staresp.data.data.PROVINCE_ID
+    tmp=.payload
+    tmp.AAUCode=aauCode
+    tmp.EMID=subId
+    tmp.ProvinceID=provinceId
+    tmp.ChannelID=breakerMac
+    tmp.TimeStamp=now
+    tmp.IMEI=imei
+    AlarmType=null
+    AlarmContent=null
+    if(data.breaker_switch_state!=null){
+        AlarmType=1
+        if(data.breaker_switch_state==0){
+            AlarmContent="分闸"
+        }else{
+            AlarmContent="合闸"
+        } 
+    }else if(data.over_voltage_state!=null){
+        AlarmType=2
+        if(data.over_voltage_state==0){
+            AlarmContent="正常"
+        }else{
+            AlarmContent="过压告警"
+        } 
+    }else if(data.under_voltage_state!=null){
+        AlarmType=3
+        if(data.under_voltage_state==0){
+            AlarmContent="正常"
+        }else{
+            AlarmContent="欠压告警"
+        } 
+    }else if(data.leakage_current_state!=null){
+        AlarmType=4
+        if(data.leakage_current_state==0){
+            AlarmContent="正常"
+        }else{
+            AlarmContent="漏电告警"
+        } 
+    }else if(data.temperature_state!=null){
+        AlarmType=5
+        if(data.temperature_state==0){
+            AlarmContent="正常"
+        }else{
+            AlarmContent="过温告警"
+        } 
+    }else if(data.overload_state!=null){
+        AlarmType=6
+        if(data.overload_state==0){
+            AlarmContent="正常"
+        }else{
+            AlarmContent="过载告警"
+        } 
+    }else if(data.short_circuit_state!=null){
+        AlarmType=7
+        if(data.short_circuit_state==0){
+            AlarmContent="正常"
+        }else{
+            AlarmContent="短路告警"
+        } 
+    }else if(data.over_current_state!=null){
+        AlarmType=8
+        if(data.over_current_state==0){
+            AlarmContent="正常"
+        }else{
+            AlarmContent="过流动告警"
+        } 
+    }
+    if(AlarmType==null){
+        exit(3)
+    }
+    rst.DataAlarm=tmp
+    .=rst
+    exit()
+}
+# end eventReport
+

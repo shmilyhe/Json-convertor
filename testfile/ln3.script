@@ -1,0 +1,12 @@
+
+.step5=true
+//.step7= .messageType == "dataReport"
+//if (.messageType == "dataReport" ){
+//.step4=true
+//}
+.ttttttttt = .messageType
+//.step6= .messageType == "dataReport"
+.step7="pppp"
+
+aa();
+cc("qer");

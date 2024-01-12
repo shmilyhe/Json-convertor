@@ -1,0 +1,24 @@
+{
+    "upPacketSN": -1,
+    "deviceType": "",
+    "step5": true,
+    "productId": "16665095",
+    "IMEI": "",
+    "deviceId": "99003757866769066206098",
+    "protocol": "mqtt",
+    "messageType": "dataReport",
+    "payload": {
+        "pci": 414,
+        "rsrp": -550,
+        "cell_id": 20794637,
+        "sinr": 0,
+        "ecl": 0
+    },
+    "assocAssetId": "",
+    "tenantId": "2000160141",
+    "IMSI": "",
+    "topic": "ad",
+    "upDataSN": -1,
+    "serviceId": "signal_report",
+    "timestamp": 1704948900602
+}

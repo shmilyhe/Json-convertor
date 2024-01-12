@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import io.shmilyhe.convert.system.Base64;
 import io.shmilyhe.convert.system.Bytes;
+import io.shmilyhe.convert.system.Console;
 import io.shmilyhe.convert.system.Dates;
 import io.shmilyhe.convert.system.Http;
 import io.shmilyhe.convert.system.JsonFun;
@@ -35,6 +36,9 @@ public class FunctionTable {
         function.put("String.substring", Strings.substring());
         function.put("String.join", Strings.join());
         function.put("String.getBytes", Strings.getBytes());
+        function.put("String.contains", Strings.contains());
+        function.put("String.printf", Strings.printf());
+        function.put("String.split", Strings.split());
         function.put("string", Strings.string());
         function.put("len",new Len());
         function.put("Maps.camelCase",Maps.camelCase());
@@ -69,6 +73,11 @@ public class FunctionTable {
         function.put("intValue",Numbers.toInt());
         function.put("longValue",Numbers.toLong());
         function.put("doubleValue",Numbers.toDouble());
+        function.put("console.debug",Console.debug());
+        function.put("console.info",Console.info());
+        function.put("console.log",Console.info());
+        function.put("console.warn",Console.warn());
+        function.put("console.error",Console.error());
     }
     public FunctionTable registry(String name,IFunction fun){
         function.put(name, fun);

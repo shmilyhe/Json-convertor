@@ -1,0 +1,31 @@
+{
+    "upPacketSN": -1,
+    "deviceType": "",
+    "productId": "15551742",
+    "IMEI": "",
+    "deviceId": "99003473G213000LZM",
+    "protocol": "mqtt",
+    "messageType": "dataReport",
+    "payload": {
+        "voltage_a": 54.099998,
+        "total_active_power": 534.599976,
+        "time": 1704939604000,
+        "switch_plan_state": 0,
+        "loop_type": 2,
+        "import_active_energy": 2978.039063,
+        "export_active_energy": 0,
+        "current_a": 9.9987,
+        "breaker_switch_state": 1,
+        "breaker_mac": "2",
+        "breaker_id": 2,
+        "breaker_control_mode": 0,
+        "active_power_a": 534.599976
+    },
+    "assocAssetId": "",
+    "tenantId": "2000160141",
+    "IMSI": "",
+    "topic": "ad",
+    "upDataSN": -1,
+    "serviceId": "data_report",
+    "timestamp": 1704939665407
+}

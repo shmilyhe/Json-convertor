@@ -55,7 +55,9 @@ each(temp1){
     at=at+1
 }
 .odd=temp1
-
+a.name="eric"
+a.age=13
 # 把自身往下移一个层
-move(.,.data)
+.=a
+//move(.,.data)
 

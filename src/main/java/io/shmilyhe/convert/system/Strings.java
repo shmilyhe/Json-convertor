@@ -4,6 +4,7 @@ import java.nio.charset.Charset;
 import java.util.Collection;
 
 import io.shmilyhe.convert.callee.IFunction;
+import io.shmilyhe.convert.log.impl.Formater;
 
 public class Strings {
     
@@ -116,6 +117,83 @@ public class Strings {
                 return text;
             }catch(Exception e){
                 return text;
+            }
+        };
+    }
+
+    public static IFunction split(){
+        return (args,env)->{
+            String text=null;
+            try{
+                Object o =args.get(0);
+                if(o==null)return o;
+                if(o instanceof String){
+                    text =(String)o;
+                }else{
+                    text =String.valueOf(o);
+                }
+                if(text==null)return new String[0];
+                if(args.size()>1){
+                    String str =(String)args.get(1);
+                    if(str==null)return new String[]{text};
+                    return text.split(str);
+                }
+                return  new String[]{text};
+            }catch(Exception e){
+                return  new String[]{text};
+            }
+        };
+    }
+
+    public static IFunction printf(){
+        return (args,env)->{
+            String format=null;
+            try{
+                //Object o =args.get(0);
+               
+                Object[] ar = new Object[args.size()-1];
+                int i=0;
+                for(Object o:args){
+                    if(i==0){
+                        if(o instanceof String){
+                            format=(String)o;
+                        }else{
+                            format=String.valueOf(o);
+                        }
+                    }else{
+                        ar[i-1]=o;
+                    }
+                    i++;
+                }
+                return Formater.format(format, ar);
+
+            }catch(Exception e){
+                return  format;
+            }
+        };
+    }
+
+
+
+    public static IFunction contains(){
+        return (args,env)->{
+            String text=null;
+            try{
+                Object o =args.get(0);
+                if(o==null)return o;
+                if(o instanceof String){
+                    text =(String)o;
+                }else{
+                    text =String.valueOf(o);
+                }
+                if(text==null)return new String[0];
+                if(args.size()>1){
+                    String str =(String)args.get(1);
+                    return text.contains(str);
+                }
+                return  false;
+            }catch(Exception e){
+                return  false;
             }
         };
     }

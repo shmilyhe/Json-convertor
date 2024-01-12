@@ -1,0 +1,31 @@
+{
+    "upPacketSN": -1,
+    "deviceType": "",
+    "productId": "16666237",
+    "IMEI": "",
+    "deviceId": "99003757866769066160709",
+    "protocol": "mqtt",
+    "messageType": "dataReport",
+    "payload": {
+        "voltage_a": 53.89,
+        "total_active_power": 0.58,
+        "time": 1704883406000,
+        "switch_plan_state": 1,
+        "loop_type": 2,
+        "import_active_energy": 3157.06,
+        "export_active_energy": 0.0,
+        "current_a": 10.87,
+        "breaker_switch_state": 1,
+        "breaker_mac": "90:66:16:07:09:01",
+        "breaker_id": 1,
+        "breaker_control_mode": 0,
+        "active_power_a": 0.58
+    },
+    "assocAssetId": "",
+    "tenantId": "2000160141",
+    "IMSI": "",
+    "topic": "ad",
+    "upDataSN": -1,
+    "serviceId": "data_report",
+    "timestamp": 1704883407363
+}

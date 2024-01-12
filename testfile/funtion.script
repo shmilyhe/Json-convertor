@@ -63,3 +63,13 @@ print(1&2)
 .bytes=bs2
 .test[11]="c";
 .array=[1,2,getinfo()];
+
+.sp=String.split("1,2,3,6,a,c",",");
+.contains=String.contains("1,2,3,6,a,c","a");
+.pf=String.printf(" hi {} my name is {}!","eric","lee");
+
+console.info("出错了{} 第{}个参数错了","9",4);
+console.debug("出错了{} 第{}个参数错了","8",4);
+console.log("出错了{} 第{}个参数错了","!",4);
+console.warn("出错了{} 第{}个参数错了","!",4);
+console.error("出错了{} 第{}个参数错了","!",4);
