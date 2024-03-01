@@ -1,5 +1,7 @@
 package io.shmilyhe.convert.impl;
 
+import java.math.BigDecimal;
+
 import io.shmilyhe.convert.api.IGet;
 import io.shmilyhe.convert.log.Log;
 import io.shmilyhe.convert.log.api.Logger;
@@ -355,7 +357,8 @@ public class ExpGeter implements IGet{
         if (isInteger(n1) && isInteger(n2)) {
             return n1.longValue() * n2.longValue();
         } else {
-            return n1.doubleValue()*n2.doubleValue();
+            BigDecimal result = new BigDecimal(n1.doubleValue()).multiply(new BigDecimal(n2.doubleValue()));
+            return result.doubleValue();
         }
     }
     public static Object mod(Object num1, Object num2) {
