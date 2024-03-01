@@ -14,7 +14,7 @@
 <dependency>
 	<groupId>io.github.shmilyhe</groupId>
 	<artifactId>json-convert</artifactId>
-	<version>3.1.0</version>
+	<version>3.1.3</version>
 </dependency>
 ```
 
