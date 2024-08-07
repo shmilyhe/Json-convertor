@@ -21,6 +21,10 @@ public class DefaultLogger  implements Logger{
     public DefaultLogger(Class clazz){
         if(clazz!=null)className=clazz.getName();
     }
+
+    public DefaultLogger(){
+        className="";
+    }
     
     protected void log(String level,String format, Object... arguments){
         StringBuilder sb = new StringBuilder();

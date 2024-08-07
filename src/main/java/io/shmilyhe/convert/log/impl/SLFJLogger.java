@@ -11,6 +11,14 @@ public class SLFJLogger  implements Logger{
         }
         System.out.println(raw.getClass());
     }
+
+    public SLFJLogger(){
+        raw =  org.slf4j.LoggerFactory.getLogger("");
+        if(raw.getClass().getName().indexOf("NOPLogger")>-1){
+            throw new RuntimeException("SLF4J: Failed to load class \"org.slf4j.impl.StaticLoggerBinder\".");
+        }
+        //System.out.println(raw.getClass());
+    }
     
     @Override
     public void debug(String format, Object... arguments) {

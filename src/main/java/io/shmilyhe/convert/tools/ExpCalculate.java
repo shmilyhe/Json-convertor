@@ -267,7 +267,7 @@ public class ExpCalculate {
             } else {// 遇到数字，直接压入数字栈
                 IGet get = null;
                 if (temp.equals(".")) {
-                    get = new SelfGetter();
+                    get = new SelfGetter(".");
                 }else if (temp.startsWith(".")) {
                     get = new Getter(temp);
                 }else if (temp.startsWith("-")) {

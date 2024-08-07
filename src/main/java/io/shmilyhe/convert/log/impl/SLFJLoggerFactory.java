@@ -9,5 +9,10 @@ public class SLFJLoggerFactory implements ILoggerFactory{
     public Logger getLogger(Class clazz) {
         return new SLFJLogger(clazz);
     }
+
+    @Override
+    public Logger getLogger() {
+        return new SLFJLogger();
+    }
     
 }

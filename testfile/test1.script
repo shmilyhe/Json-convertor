@@ -60,5 +60,37 @@ a.age=13
 # 把自身往下移一个层
 .=a
 .b=3.14*10.01
-//move(.,.data)
+move(.,.data)
+
+//声明函数
+function contains(src,el){
+    cts=false;
+    each(src){
+        if(.==el){
+            cts=true;
+        }
+    }
+    return cts;
+}
+//创建list
+list=[1,2,3,4];
+//判断 是否包含
+print(contains(list,5));
+print(contains(list,3));
+print(contains(list,"3"));
+
+console.info("是否包含:{}",Collection.contains(list,3));
+console.info("是否包含:{}",Collection.contains(list,5));
+
+each(.){
+    console.info("key:{},value:{}",.key,.value);
+    if(.key=="data"){
+        .key="data2";
+    }
+
+    if(.value.name=="eric"){
+        .value.greet="hello !"
+    }
+}
+
 

@@ -2,7 +2,10 @@ package io.shmilyhe.convert.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import io.shmilyhe.convert.log.Log;
 import io.shmilyhe.convert.log.api.Logger;
@@ -17,10 +20,17 @@ public class EachConvertor extends ComplexConvertor {
 
     Getter get ;
     Setter set ;
+    String express;
     public EachConvertor(String exp){
         DEBUG.debug("each ===",exp);
+        express=exp;
         String path=removeRootString(exp);
-        get= new Getter(path);
+        if(".".equals(exp)){
+            get= new SelfGetter(".");
+        }else{
+            get= new Getter(path);
+        }
+        
         get.setVar(!exp.startsWith("."));
         set= new Setter(path);
         set.setVar(!exp.startsWith("."));
@@ -28,15 +38,16 @@ public class EachConvertor extends ComplexConvertor {
 
     @Override
     public Object convert(Object root,ExpEnv env) {
-        log.debug("start each:{}", getName());
+        //log.debug("start each:{}", express);
         //DEBUG.debug("========start:",this.getName(),"========"); 
         ExpEnv p=env;
         Object setroot=root;
         if(set.isVar())setroot=env;
-        DEBUG.debug(setroot.getClass());
+        //DEBUG.debug(setroot.getClass());
         env= new ExpEnv(p);
          Object data =get.get(root,env);
          //DEBUG.debug("get:",data," is Var :",get.isVar());
+         DEBUG.debug("each map:{}",data,express);
          if(data==null)return root;
         if (data instanceof Collection){
             Collection els =  (Collection)data;
@@ -60,9 +71,31 @@ public class EachConvertor extends ComplexConvertor {
                 }
             }
         set.set(setroot, d); 
+        }else if (data instanceof Map){
+            Map els =  (Map)data;
+            Map nmap =  new HashMap<>();
+            for(Object el:els.entrySet()){
+                Entry en=(Entry)el;
+                Map em= new HashMap();
+                em.put("key", en.getKey());
+                em.put("value", en.getValue());
+                Object r=each(em,env);
+                if(r!=null){
+                    Map m=(Map)r;
+                    Object k=m.get("key");
+                    if(k!=null)nmap.put(k, m.get("value"));
+                }
+            }
+            if(".".equals(express)){
+                root=nmap;
+            }else{
+                set.set(setroot, nmap); 
+            }
+            
+            
         }
         //DEBUG.debug("========end:",this.getName(),"========"); 
-        log.debug("end each:{}" ,getName());
+        //log.debug("end each:{}" ,getName());
          return root;
     }
 

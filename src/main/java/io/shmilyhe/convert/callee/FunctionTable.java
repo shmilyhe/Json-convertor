@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import io.shmilyhe.convert.system.Base64;
 import io.shmilyhe.convert.system.Bytes;
+import io.shmilyhe.convert.system.CollectionFun;
 import io.shmilyhe.convert.system.Console;
 import io.shmilyhe.convert.system.Dates;
 import io.shmilyhe.convert.system.Http;
@@ -78,6 +79,9 @@ public class FunctionTable {
         function.put("console.log",Console.info());
         function.put("console.warn",Console.warn());
         function.put("console.error",Console.error());
+        function.put("Collection.contains",CollectionFun.contains());
+
+        
     }
     public FunctionTable registry(String name,IFunction fun){
         function.put(name, fun);

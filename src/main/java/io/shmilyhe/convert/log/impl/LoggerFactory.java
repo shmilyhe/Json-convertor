@@ -9,5 +9,10 @@ public class LoggerFactory implements ILoggerFactory {
     public Logger getLogger(Class clazz) {
         return new DefaultLogger(clazz);
     }
+
+    @Override
+    public Logger getLogger() {
+        return new DefaultLogger();
+    }
     
 }

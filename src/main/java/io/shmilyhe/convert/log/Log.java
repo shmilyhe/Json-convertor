@@ -35,4 +35,8 @@ public class Log {
     public static Logger getLogger(Class clazz){
         return fac.getLogger(clazz);
     }
+
+    public static Logger getLogger(){
+        return fac.getLogger();
+    }
 }

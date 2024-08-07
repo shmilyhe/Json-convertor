@@ -49,7 +49,7 @@ public class SystemFunction {
             String a =((Identifier)exp).getName();
             IGet g = null;
             if(".".equals(a)){
-                g= new SelfGetter();
+                g= new SelfGetter(".");
             }else{
                 g=new Getter(SystemFunction.removeRootString(a)).setMinus(exp.isMinus())
                 .setVar(!a.startsWith("."));
@@ -153,7 +153,7 @@ public class SystemFunction {
             ||!dest.startsWith(".")){throw  new RuntimeException("syntax error(move): at line:"+line+" near :"+name);}
             if(".".equals(gStr)){
                 final Setter set = new Setter(removeRootString(dest));
-                final SelfGetter get = new SelfGetter();
+                final SelfGetter get = new SelfGetter(".");
                 return (data,env)->{
                     HashMap m= new HashMap(); set.set(m, get.get(data,env));
                     return m;};
